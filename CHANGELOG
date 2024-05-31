@@ -1,5 +1,10 @@
 CHANGELOG
 
+Author: Enrico Maschietto <emw7.github.fraying845@simplelogin.com>
+Date: 2024-05-31
+Version: 0.0.2
+- [WIP] Add acme controller
+
 Author: Enrico Maschietto <emw7.github.fraying845@simplelogin.com>  
 Date: 2024-05-24
 Version: 0.0.1
