@@ -1,6 +1,7 @@
 package com.github.emw7.flexms.server.acme;
 
 import com.github.emw7.flexms.commons.acme.Foo;
+import com.github.emw7.flexms.server.acme.logic.AcmeService;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -37,12 +38,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/server/vx/acme")
 public class AcmeControllerRest implements AcmeController {
 
+  private final AcmeService acmeService;
+
+  public AcmeControllerRest(final AcmeService acmeService) {
+    this.acmeService = acmeService;
+  }
+
   // region API
   // create
   @PostMapping("/foo")
-  public @NonNull Foo fooPost(@NonNull @RequestBody final Foo foo) {
+  public @NonNull Foo fooPost(@NonNull @RequestBody final Foo foo) throws Exception {
     System.out.printf("[EMW7] %s; foo: %s%n", "fooPost", foo);
-    return new Foo(UUID.randomUUID().toString(), foo.name(), foo.i());
+    //return new Foo(UUID.randomUUID().toString(), foo.name(), foo.i());
+    final Foo fooCreated= acmeService.create(foo);
+    return foo;
   }
 
   // retrieve
