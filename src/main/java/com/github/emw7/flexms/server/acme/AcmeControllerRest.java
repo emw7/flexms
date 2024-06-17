@@ -49,9 +49,8 @@ public class AcmeControllerRest implements AcmeController {
   @PostMapping("/foo")
   public @NonNull Foo fooPost(@NonNull @RequestBody final Foo foo) throws Exception {
     System.out.printf("[EMW7] %s; foo: %s%n", "fooPost", foo);
-    //return new Foo(UUID.randomUUID().toString(), foo.name(), foo.i());
     final Foo fooCreated= acmeService.create(foo);
-    return foo;
+    return fooCreated;
   }
 
   // retrieve
