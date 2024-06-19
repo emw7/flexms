@@ -1,0 +1,4 @@
+- WIP format date with offset "dateTime":"2024-06-03T08:37:44.001695363" => "dateTime":"2024-06-03T08:37:44.001695363+0000"
+- see the FIXME and the TODO in the code
+- how to force in code spring.data.web.pageable.prefix and spring.data.web.sort.sort-parameter;
+  (spring.data.web.pageable.prefix=app- and spring.data.web.sort.sort-parameter=app-sort)
