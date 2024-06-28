@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.Marker;
 import org.springframework.lang.NonNull;
 
-public class LogEvent /*implements AutoCloseable*/{
+public class LogEvent {
 
   private final Marker marker;
   private final String pattern;
@@ -15,16 +15,8 @@ public class LogEvent /*implements AutoCloseable*/{
   private final String uuid;
 
   private final Logger log;
-//  private boolean consumed= false;
-//
-//  @Override
-//  public void close() throws Exception {
-//    if ( !consumed ) {
-//      EventLogger.done(log, this);
-//    }
-//  }
 
-  public LogEvent(@NonNull final Logger log, @NonNull final Marker marker, @NonNull final String pattern, @NonNull final Object[] params) {
+  LogEvent(@NonNull final Logger log, @NonNull final Marker marker, @NonNull final String pattern, @NonNull final Object[] params) {
     this.uuid= UUID.randomUUID().toString();
     this.log = log;
     this.marker = marker;
@@ -32,21 +24,20 @@ public class LogEvent /*implements AutoCloseable*/{
     this.params = params;
   }
 
-  public @NonNull String getUuid() {
+  @NonNull String getUuid() {
     return uuid;
   }
 
-  public Logger getLog() {
+  Logger getLog() {
     return log;
   }
 
-  public @NonNull String getPattern() {
+  @NonNull String getPattern() {
     return pattern;
   }
 
-  public @NonNull Object[] getParams() {
+  @NonNull Object[] getParams() {
     return params;
   }
-
 
 }

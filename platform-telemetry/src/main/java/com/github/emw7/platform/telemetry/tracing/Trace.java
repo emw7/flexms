@@ -30,7 +30,7 @@ public final class Trace {
    *
    * @return an unmodifiable view of the spans of this trace
    */
-  public @NonNull List<Span> getSpans() {
+  public @NonNull /*unmodifiable*/ List<Span> getSpans() {
     return Collections.unmodifiableList(spans);
   }
 

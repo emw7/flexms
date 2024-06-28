@@ -1,4 +1,4 @@
-package com.github.emw7.platform.rest.error;
+package com.github.emw7.platform.app.rest.error;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.emw7.platform.app.error.handler.AbstractClientExceptionHandler;

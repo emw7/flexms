@@ -2,6 +2,7 @@ package com.github.emw7.platform.app.config;
 
 import java.util.UUID;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;

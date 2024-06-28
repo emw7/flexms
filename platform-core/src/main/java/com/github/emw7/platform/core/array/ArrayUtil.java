@@ -11,27 +11,22 @@ public class ArrayUtil {
    *
    * @param a the first array
    * @param b the second array (the one to be appended to the first)
-   *
    * @return a new array which is the result of appending {@code b} to {@code a}
    */
-  public static @Nullable Object[] join (@Nullable Object[] a, @Nullable Object[] b)
-  {
-    if ( a == null && b == null ) {
+  public static @Nullable Object[] join(@Nullable Object[] a, @Nullable Object[] b) {
+    if (a == null && b == null) {
       return null;
-    }
-    else if ( a == null ) {
+    } else if (a == null) {
       // b is NOT null... use b only.
-      final Object[] ret= new Object[b.length];
-      System.arraycopy(b,0,ret,0,b.length);
+      final Object[] ret = new Object[b.length];
+      System.arraycopy(b, 0, ret, 0, b.length);
       return ret;
-    }
-    else if ( b == null ) {
+    } else if (b == null) {
       // a is NOT null... use a only.
-      final Object[] ret= new Object[a.length];
-      System.arraycopy(a,0,ret,0,a.length);
+      final Object[] ret = new Object[a.length];
+      System.arraycopy(a, 0, ret, 0, a.length);
       return ret;
-    }
-    else {
+    } else {
       // both a and b are NOT null
       final Object[] ret = new Object[a.length + b.length];
       System.arraycopy(a, 0, ret, 0, a.length);
@@ -46,4 +41,5 @@ public class ArrayUtil {
   private ArrayUtil() {
   }
   //endregion Constructors
+
 }

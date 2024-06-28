@@ -26,7 +26,5 @@ public final class AppReadyEventListener {
     // FIXME either notice or info.
     notice(logger,"{} application {} started with id {}","[EMW7]",appConfigProperties.name(),
         appConfigProperties.instanceId());
-    logger.info("[EMW7] application {} started with id {}", appConfigProperties.name(),
-        appConfigProperties.instanceId());
   }
 }

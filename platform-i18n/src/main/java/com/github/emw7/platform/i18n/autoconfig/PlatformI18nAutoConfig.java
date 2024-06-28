@@ -1,5 +1,6 @@
 package com.github.emw7.platform.i18n.autoconfig;
 
+import com.github.emw7.platform.core.mapper.MapMapper;
 import com.github.emw7.platform.i18n.Translator;
 import java.util.Locale;
 import java.util.Map;
@@ -34,8 +35,7 @@ public class PlatformI18nAutoConfig {
       @Override
       public String translate(@NonNull final String language, @NonNull final String label,
           @Nullable final Map<String, Object> params) {
-        // TODO use mapToString instead of Optional.ofNullable(params).orElse(Map.of())
-        return language + ':' + label + '[' + Optional.ofNullable(params).orElse(Map.of()) + ']';
+        return language + ':' + label + '[' + MapMapper.mapToString(params) + ']';
       }
 
       @Override

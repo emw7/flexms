@@ -1,12 +1,11 @@
-package com.github.emw7.platform.core.stringizer;
+package com.github.emw7.platform.core.mapper;
 
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
-public final class MapToString {
+public final class MapMapper {
 
   //region Private static methods
 
@@ -22,7 +21,7 @@ public final class MapToString {
    * @param <V>
    */
   private static <K, V> void map(@NonNull final StringBuilder sb,
-      @NonNull final Map.Entry<K, V> e) {
+      @NonNull final java.util.Map.Entry<K, V> e) {
     K key = e.getKey();
     V value = e.getValue();
     sb.append((key == null) ? "null" : key.toString()).append('=')
@@ -34,12 +33,12 @@ public final class MapToString {
   //endregion Private static methods
 
   //region API
-  //region Unordered
+  //region Sorted
 
   /**
    * Returns the string representation of the specified map where keys are sorted.
    * <p>
-   * The method behaves as {@link #mapToString(Map)} but key ares sorted.
+   * The method behaves as {@link #mapToString(java.util.Map)} but key ares sorted.
    *
    * @param map the map for which string representation is wanted
    * @param <K> the key type
@@ -47,7 +46,7 @@ public final class MapToString {
    * @return the string representation of the specified map
    */
   public static @NonNull <K extends Comparable<K>, V> String mapToStringSortedByKey(
-      @Nullable final Map<K, V> map) {
+      @Nullable final java.util.Map<K, V> map) {
     if (map == null) {
       return "null";
     } else if (map.isEmpty()) {
@@ -58,10 +57,10 @@ public final class MapToString {
     sb.append('{');
 
     return map.entrySet().stream().sorted(Entry.comparingByKey())
-        .collect(() -> sb, MapToString::map, (a, b) -> a.append(b.toString()))
+        .collect(() -> sb, MapMapper::map, (a, b) -> a.append(b.toString()))
         .replace(sb.length() - 2, sb.length(), "}").toString();
   }
-  //endregion Unordered
+  //endregion Sorted
 
   //region Unsorted
 
@@ -93,7 +92,7 @@ public final class MapToString {
    * @param <V> the value type
    * @return the string representation of the specified map
    */
-  public static @NonNull <K, V> String mapToString(@Nullable final Map<K, V> map) {
+  public static @NonNull <K, V> String mapToString(@Nullable final java.util.Map<K, V> map) {
     if (map == null) {
       return "null";
     } else if (map.isEmpty()) {
@@ -104,7 +103,7 @@ public final class MapToString {
     sb.append('{');
 
     return map.entrySet().stream()
-        .collect(() -> sb, MapToString::map, (a, b) -> a.append(b.toString()))
+        .collect(() -> sb, MapMapper::map, (a, b) -> a.append(b.toString()))
         .replace(sb.length() - 2, sb.length(), "}").toString();
   }
   //endregion Unsorted
@@ -112,7 +111,7 @@ public final class MapToString {
 
   //region Constructors
   // prevents instantiation.
-  private MapToString() {
+  private MapMapper() {
   }
   //endregion Constructors
 

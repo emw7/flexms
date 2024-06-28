@@ -1,45 +1,12 @@
 package com.github.emw7.platform.log;
 
-import java.util.Stack;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
 import org.slf4j.event.Level;
 import org.springframework.lang.NonNull;
 
 public final class EventLogger {
-
-  //region Static
-  private static final Logger logger = LoggerFactory.getLogger(EventLogger.class);
-
-//  private static final ThreadLocal<Stack<LogEvent>> events;
-//
-//  private static void set() {
-//    events.set(new Stack<>());
-//  }
-//
-//  private static Stack<LogEvent> get() {
-//    if (events.get() == null) {
-//      set();
-//    }
-//    return events.get();
-//  }
-//
-//  private static LogEvent pop(@NonNull final String eventUuid) {
-//    while (!events.get().empty()) {
-//      final LogEvent event = events.get().pop();
-//      if (event.getUuid().equals(eventUuid)) {
-//        return event;
-//      }
-//    }
-//    return null;
-//  }
-//
-//  static {
-//    events = new ThreadLocal<>();
-//  }
-  //endregion Static
 
   private static final Marker MARKER_ENTRY = MarkerFactory.getMarker("entry");
   private static final Marker MARKER_EXIT = MarkerFactory.getMarker("exit");
@@ -49,51 +16,28 @@ public final class EventLogger {
   private static final Marker MARKER_THROWING = MarkerFactory.getMarker("throwing");
   private static final Marker MARKER_NOTICE = MarkerFactory.getMarker("notice");
 
-//  public static void reset() {
-//    if (!get().empty()) {
-//      logger.error("[LOGGING] stack for thread '{}' was not empty",
-//          Thread.currentThread().getName());
-//    }
-//    set();
-//  }
-  /*
+  public static class LogEventBuilder {
+    private Logger log;
+    private String pattern;
+    private Object[] params;
+    private Level level;
+    private Marker marker;
+    private String event;
 
-     methodA
-       final event;
-       try {
-         event= doing(...)
-         do...
-         done(event) [pop event]
-       } catch ( Exception e ) {
-           caught(event) [pop event]
-           throwing(new Exception(e), event, ...)
-       }
+    public void log() {
+      log.atLevel(level).addMarker(MARKER_NOTICE).log(event + pattern, params);
+    }
 
-     methodB
-       final event
-       try {
-         event= doing(...)
-         methodA(...)
-         done(event) [pop event]
-       } catch ( Exception e ) {
-           caught(e, event, ...) [pop event]
-       }
-
-     methodC
-       try {
-         methodB(...)
-       } catch ( Exception e ) {
-           caught(...) [NO pop... there isn't event]
-           throwing(...)
-       }
-   */
+    public LogEventBuilder level(Level level) {this.level= level; return this;}
+    public LogEventBuilder pattern(String pattern) {this.pattern= pattern; return this;}
+    public LogEventBuilder params(Object... params) {this.params= params; return this;}
+  }
 
   public static LogEvent doing(@NonNull final Logger log, @NonNull final String pattern,
       Object... params) {
     final LogEvent logEvent = new LogEvent(log, MARKER_DOING, pattern, params);
     //noinspection StringConcatenationArgumentToLogCall
     log.info(MARKER_DOING, "[   DOING] " + pattern, params);
-//    get().push(logEvent);
     return logEvent;
   }
 
@@ -102,16 +46,8 @@ public final class EventLogger {
   }
 
   public static void done(@NonNull final Logger log, @NonNull final LogEvent logEvent) {
-//    final LogEvent doingEvent = pop(logEvent.getUuid());
-//    if (doingEvent != null) {
-//      log.info(MARKER_DONE, "[    DONE] " + doingEvent.getPattern(), doingEvent.getParams());
-//    } else {
-//      log.atWarn().log(
-//          "[LOGGING] done event called for event with uuid '{}' that cannot be found in the event stack",
-//          logEvent.getUuid());
       log.atInfo().addMarker(MARKER_DONE)
           .log("[    DONE] " + logEvent.getPattern(), logEvent.getParams());
-//    }
   }
 
   public static <E extends Throwable> void caught(@NonNull final E e,
@@ -121,17 +57,8 @@ public final class EventLogger {
 
   public static <E extends Throwable> void caught(@NonNull final Logger log, @NonNull final E e,
       @NonNull final LogEvent logEvent) {
-//    final LogEvent doingEvent = pop(logEvent.getUuid());
-//    if (doingEvent != null) {
-//      log.atError().addMarker(MARKER_CAUGHT).setCause(e).addArgument(e.getMessage())
-//          .log("[  CAUGHT] error '{}' while " + doingEvent.getPattern(), doingEvent.getParams());
-//    } else {
-//      log.atWarn().log(
-//          "[LOGGING] caught event called for event with uuid '{}' that cannot be found in the event stack",
-//          logEvent.getUuid());
       log.atError().addMarker(MARKER_CAUGHT).setCause(e)
           .log("[  CAUGHT] " + logEvent.getPattern(), logEvent.getParams());
-//    }
   }
 
   public static <E extends Throwable> void caught(@NonNull final Logger log, @NonNull final E e,
@@ -146,20 +73,10 @@ public final class EventLogger {
 
   public static <E extends Throwable> @NonNull E throwing(@NonNull final Logger log,
       @NonNull final E e, @NonNull final LogEvent logEvent) {
-//    final LogEvent doingEvent = pop(logEvent.getUuid());
-//    if (doingEvent != null) {
-//      log.atError().addMarker(MARKER_THROWING).addArgument(e.getMessage()).addArgument(e.getCause())
-//          .log("[THROWING] error '{}' caused by '{}' while " + doingEvent.getPattern(),
-//              doingEvent.getParams());
-//    } else {
-//      log.atWarn().log(
-//          "[LOGGING] throwing event called for event with uuid '{}' that cannot be found in the event stack",
-//          logEvent.getUuid());
       log.atError().addMarker(MARKER_THROWING).setCause(e).addArgument(e.getMessage())
           .addArgument(e.getCause())
           .log("[THROWING] error '{}' caused by by '{}' while " + logEvent.getPattern(),
               logEvent.getParams());
-//    }
     return e;
   }
 
@@ -167,6 +84,17 @@ public final class EventLogger {
       @NonNull final E e, @NonNull final String pattern, Object... params) {
     log.atError().addMarker(MARKER_THROWING).log("[THROWING] " + pattern, params);
     return e;
+  }
+
+  public static LogEventBuilder noticeLogEvent(@NonNull final Logger log) {
+    LogEventBuilder logEvent= new LogEventBuilder();
+    logEvent.log= log;
+    logEvent.pattern="";
+    logEvent.params= new Object[0];
+    logEvent.level= Level.INFO;
+    logEvent.marker= MARKER_NOTICE;
+    logEvent.event= "[  NOTICE]";
+    return logEvent;
   }
 
   public static void notice(@NonNull final Logger log, @NonNull Level level,
