@@ -2,6 +2,8 @@ package com.github.emw7.flexms.server.acme;
 
 import com.github.emw7.flexms.commons.acme.Foo;
 import com.github.emw7.flexms.server.acme.logic.AcmeService;
+import com.github.emw7.platform.app.request.context.RequestContextHolder;
+import com.github.emw7.platform.telemetry.tracing.TracingContainer;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -10,10 +12,13 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Function;
+import org.springframework.core.style.DefaultToStringStyler;
+import org.springframework.core.style.DefaultValueStyler;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +27,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.data.web.PagedModel;
 import org.springframework.data.web.SortDefault;
+import org.springframework.http.HttpHeaders;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,9 +36,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.condition.RequestConditionHolder;
 
 @RestController
 @RequestMapping("/server/vx/acme")
@@ -55,8 +63,15 @@ public class AcmeControllerRest implements AcmeController {
 
   // retrieve
   @GetMapping("/foo/{uuid}")
-  public @NonNull Foo fooGet(@NonNull final @PathVariable String uuid) {
+  public @NonNull Foo fooGet(@RequestHeader @NonNull final HttpHeaders httpHeaders, @NonNull final @PathVariable String uuid) {
     System.out.printf("[EMW7] %s; uuid: %s%n", "fooGet", uuid);
+
+    System.out.printf("trace %s, span %s%n", TracingContainer.traceId(), TracingContainer.spanId());
+
+    System.out.printf("Caller: %s%n", RequestContextHolder.get().caller());
+    System.out.printf("Originator: %s%n", RequestContextHolder.get().originator());
+
+    System.out.println(new DefaultValueStyler().style(Map.of("name","enrico", "age", 47)));
     return new Foo(uuid, "", 0);
   }
 

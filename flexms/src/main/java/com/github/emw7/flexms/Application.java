@@ -14,10 +14,6 @@ public class Application {
 	private static final Logger log= LoggerFactory.getLogger(Application.class);
 
 	public static void main(String[] args) {
-
-		LogEvent logEvent= doing(log, "launch application");
-		done(logEvent);
-
 		SpringApplication.run(Application.class, args);
 	}
 

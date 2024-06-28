@@ -128,42 +128,6 @@ public abstract sealed class RequestErrorException extends Exception permits
     return String.format("%s @%s", buildRef(code, id), usedMessage);
   }
 
-  // TODO move to project platform-util
-//  private static @NonNull String mapToString(@Nullable final Map<String, Object> params) {
-//    class EntryMapper {
-//
-//      //private final StringBuilder sb = new StringBuilder(1024);
-//
-//      private @NonNull String map(@Nullable final String key) {
-//        // this is to avoid the warning Method invocation 'get' may produce 'NullPointerException'
-//        //  at params.get below (params is then mapToString parameter that is @Nullable).
-//        if (params == null) {
-//          return "";
-//        }
-//        // TODO check performance with StringBuilder and without with a @Test.
-//        //sb.setLength(0);
-//        //sb.append((key == null) ? "null" : key).append('=')
-//        //    .append(Optional.ofNullable(params.get(key)).map(Object::toString).orElse("null"));
-//        //return sb.toString();
-//        return ((key == null) ? "null" : key) + "=" + Optional.ofNullable(params.get(key))
-//            .map(Object::toString).orElse("null");
-//      }
-//    }
-//
-//    if (params == null) {
-//      return "null";
-//    } else if (params.isEmpty()) {
-//      return "{}";
-//    }
-//    // else... params has elements.
-//    final EntryMapper entryMapper = new EntryMapper();
-//
-//    final String mapString = "{" + params.keySet().stream().sorted().map(entryMapper::map)
-//        .collect(Collectors.joining(", ")) + "}";
-//
-//    return mapString;
-//  }
-
   /**
    * Returns the REFerence built from specified {@code code} and {@code id}.
    *
