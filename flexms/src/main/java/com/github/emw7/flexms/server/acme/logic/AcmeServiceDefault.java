@@ -1,11 +1,9 @@
 package com.github.emw7.flexms.server.acme.logic;
 
-import static com.github.emw7.platform.error.RequestErrorException.appClientErrorLabel;
-
 import com.github.emw7.flexms.commons.acme.Foo;
 import com.github.emw7.platform.error.AlreadyExistsClientException;
 import com.github.emw7.platform.error.BadPropertiesClientException;
-import com.github.emw7.platform.app.error.exception.DependencyUnavailableServerException;
+import com.github.emw7.platform.error.ServiceNotFoundServerException;
 import com.github.emw7.platform.error.Id;
 import com.github.emw7.platform.error.NotFoundClientException;
 import com.github.emw7.platform.error.RequestErrorException;
@@ -26,13 +24,13 @@ public class AcmeServiceDefault implements AcmeService {
     switch (requestedException) {
       case "#already-exists":
         throw new AlreadyExistsClientException(new Id("SETKH"),
-            appClientErrorLabel("foo.already-exists"), "foo", 1, null) {
+            "acme", 1, null) {
         };
       case "#bad-properties":
         throw new BadPropertiesClientException(null, new Id("3V6VI"),
             List.of(BadPropertiesClientException.min("i", -1, 0)));
       case "#dependency-unavailable":
-        throw new DependencyUnavailableServerException(null, new Id("5OMN5"), "master", "slave",
+        throw new ServiceNotFoundServerException(null, new Id("5OMN5"), "master", "slave",
             null);
       case "#not-found":
         throw new NotFoundClientException(new Id("WV4KE"), "foo", "y", null) {

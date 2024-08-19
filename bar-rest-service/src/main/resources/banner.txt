@@ -1,0 +1,11 @@
+  _
+ | |
+ | |__   __ _ _ __
+ | '_ \ / _` | '__|
+ | |_) | (_| | |
+ |_.__/ \__,_|_|
+
+
+
+Version ${application.version}
+Spring boot ${spring-boot.version}

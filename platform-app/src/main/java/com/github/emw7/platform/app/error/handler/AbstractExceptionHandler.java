@@ -18,15 +18,16 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
-import org.springframework.util.StringUtils;
 
 // WARNING TEST: it is not easy to test because uses static/singleton TracingContainer.
 public abstract sealed class AbstractExceptionHandler permits AbstractClientExceptionHandler,
@@ -57,20 +58,20 @@ public abstract sealed class AbstractExceptionHandler permits AbstractClientExce
   //region Constructors
   protected AbstractExceptionHandler(@NonNull final ObjectMapper objectMapper,
       @NonNull final Translator translator) {
-    this.objectReader = objectMapper.reader();
+    this.objectReader = objectMapper.reader().forType(Map.class);
     this.translator = translator;
   }
   //endregion Constructors
 
   //region API
 
-  protected final @Nullable RequestError retrieveRequestError(
+  private final @Nullable RequestError retrieveRequestError(
       @NonNull Class<? extends RequestErrorException> clazz) {
     return AnnotationUtils.findAnnotation(clazz, RequestError.class);
   }
 
   // requestError == null => programming error, but try to manage the case.
-  protected final @NonNull Map<String, Object> annotationProperties(
+  private final @NonNull Map<String, Object>  annotationProperties(
       @NonNull final RequestErrorException e) {
     for (Class<? extends Annotation> annotationType : REQUEST_ERROR_TYPES) {
       final Annotation requestErrorAnnotation = findAnnotation(e.getClass(), annotationType);
@@ -94,7 +95,7 @@ public abstract sealed class AbstractExceptionHandler permits AbstractClientExce
   protected @NonNull String label(@NonNull final Map<String, Object> annotationProperties,
       @Nullable final RequestError requestError) {
     final String label = (String) annotationProperties.get("label");
-    if (StringUtils.hasLength(label)) {
+    if (StringUtils.isNotEmpty(label)) {
       return label;
     } else if (requestError != null) {
       return requestError.label();
@@ -103,9 +104,9 @@ public abstract sealed class AbstractExceptionHandler permits AbstractClientExce
     }
   }
 
-  protected final @NonNull Map<String, Object> params(
+  private final @NonNull Map<String, Object> params(
       @NonNull final Map<String, Object> annotationProperties) {
-    final String params = Optional.ofNullable((String)annotationProperties.get("params")).orElse("");
+    final String params = Optional.ofNullable((String)annotationProperties.get("params")).orElse("{}");
     try {
       return objectReader.readValue(params);
     } catch (JsonProcessingException e) {
@@ -128,9 +129,13 @@ public abstract sealed class AbstractExceptionHandler permits AbstractClientExce
     final String label = label(annotationProperties, requestError);
     final Map<String, Object> params = params(annotationProperties);
 
+    final
+
     final RequestErrorResponse requestErrorResponse = new RequestErrorResponse(
         ZonedDateTime.now(ZoneOffset.UTC), e.getType(), status, e.getRef(),
         traceId(), spanId(), translate(label, params), label, params,
+        // TODO verify it works
+        e.getClass().getName(),
         e.getErrors());
     return requestErrorResponse;
   }
@@ -161,9 +166,10 @@ public abstract sealed class AbstractExceptionHandler permits AbstractClientExce
     return annotation;
   }
 
-  private @Nullable String translate(@NonNull final String label,
+  private @NonNull String translate(@NonNull final String label,
       @NonNull Map<String, Object> params) {
-    return translator.translate(label, params);
+    // FIXME locale deve essere null o devo prendere da quello dello user?
+    return translator.translate((Locale)null, label, params);
   }
   //endregion Private methods
 

@@ -1,0 +1,33 @@
+services:
+
+    sidecar:
+        depends_on:
+            service:
+                condition: service_started
+        container_name: ${COMPOSE_PROJECT_NAME}-sidecar
+        build:
+            context: sidecar
+            dockerfile: Dockerfile
+        image: ${COMPOSE_PROJECT_NAME}-sidecar:latest
+        environment:
+            - SERVICE=${COMPOSE_PROJECT_NAME}
+        # ports:
+        #     - ${SIDECAR_PORT}:80
+        networks:
+             - emw7-network
+
+    service:
+        container_name: ${COMPOSE_PROJECT_NAME}-service
+        build:
+            context: .
+            dockerfile: Dockerfile
+            args:
+                - SERVICE=${COMPOSE_PROJECT_NAME}
+                - VERSION=${VERSION}
+        image: ${COMPOSE_PROJECT_NAME}-service:latest
+        networks:
+             - emw7-network
+
+networks:
+     emw7-network:
+        external: true

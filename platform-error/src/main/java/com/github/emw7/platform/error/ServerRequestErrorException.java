@@ -10,6 +10,16 @@ public abstract non-sealed class ServerRequestErrorException extends RequestErro
 
   private static final String TYPE = "SERVER";
 
+  public static boolean is (@Nullable final String type)
+  {
+    return TYPE.equals(type);
+  }
+
+  public static boolean is (@Nullable final RequestErrorException requestErrorException)
+  {
+    return requestErrorException != null && is(requestErrorException.getType());
+  }
+
   protected ServerRequestErrorException(@NonNull final Code code, @NonNull final Id id,
       @NonNull Error error) {
     super(TYPE, code, id, error);

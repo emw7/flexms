@@ -20,7 +20,7 @@ public final class BadPropertiesClientException extends BadRequestClientExceptio
    * violating minimum constraint
    */
   public static Error min(String property, Number val, Number min, Object... params) {
-    return new Error(appClientErrorLabel("property-violate-min"),
+    return new Error(appClientErrorLabel("property-violates-min"),
         enrichParams(null, "property", property, "val", val, "min", min, params));
   }
   //endregion Public static methods

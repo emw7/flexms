@@ -10,6 +10,16 @@ public abstract non-sealed class ClientRequestErrorException extends RequestErro
 
   private static final String TYPE = "CLIENT";
 
+  public static boolean is (@Nullable final String type)
+  {
+    return TYPE.equals(type);
+  }
+
+  public static boolean is (@Nullable final RequestErrorException requestErrorException)
+  {
+    return requestErrorException != null && is(requestErrorException.getType());
+  }
+
   protected ClientRequestErrorException(@Nullable final Throwable cause, @NonNull final Code code, @NonNull final Id id,
       @Nullable List<Error> errors) {
     super(cause, TYPE, code, id, errors);

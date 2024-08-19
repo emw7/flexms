@@ -1,11 +1,12 @@
 package com.github.emw7.platform.error;
 
 import com.github.emw7.platform.i18n.Translator;
-import com.github.emw7.platform.i18n.autoconfig.PlatformI18nAutoConfig.TranslatorContainer;
+import com.github.emw7.platform.i18n.TranslatorContainer;
 import com.github.emw7.platform.telemetry.tracing.TracingContainer;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import org.springframework.lang.NonNull;
@@ -60,10 +61,9 @@ public abstract sealed class RequestErrorException extends Exception permits
    */
   public static @NonNull /*unmodifiable*/ Map<String, Object> enrichParams(
       @Nullable Map<String, Object> params, @NonNull final Object... enrichment) {
-    Map<String, Object> enrichedParams = new HashMap<>(
+    final Map<String, Object> enrichedParams = new HashMap<>(
         Optional.ofNullable(params).orElse(Map.of()));
-    enum T {KEY, VALUE}
-    ;
+    enum T {KEY, VALUE};
     T t = T.KEY;
     String key = null;
     for (Object o : enrichment) {
@@ -86,7 +86,7 @@ public abstract sealed class RequestErrorException extends Exception permits
   //region Private static methods
 
   /**
-   * If no-errors OR 2+ errors then buildRed else buildMessage(error,code,id)
+   * If no-errors OR 2+ errors then buildRef else buildMessage(error,code,id)
    *
    * @param errors
    * @param code
@@ -101,7 +101,7 @@ public abstract sealed class RequestErrorException extends Exception permits
     // else... errors has exactly 1 element, and it is *NOT* null (see errors.getFirst() == null
     //  above.
     final Error error = errors.getFirst();
-    // it is not true that errors.parmas() can be null as Error forces params to be empty map in case
+    // it is not true that errors.params() can be null as Error forces params to be empty map in case
     //  null is passed.
     return buildMessage(error.message(), error.label(), error.params(), code, id);
   }
@@ -123,7 +123,7 @@ public abstract sealed class RequestErrorException extends Exception permits
     if (message != null) {
       usedMessage = message;
     } else {
-      usedMessage = TranslatorContainer.getTranslator().translate(label, params);
+      usedMessage = TranslatorContainer.getTranslator().translate((Locale)null, label, params);
     }
     return String.format("%s @%s", buildRef(code, id), usedMessage);
   }
@@ -174,7 +174,7 @@ public abstract sealed class RequestErrorException extends Exception permits
       // error message is not null... use it and do not set from label translation.
       return error;
     } else {
-      return new Error(TranslatorContainer.getTranslator().translate(error.label(), error.params()),
+      return new Error(TranslatorContainer.getTranslator().translate((Locale)null, error.label(), error.params()),
           error.label(), error.params());
     }
   }
@@ -197,6 +197,7 @@ public abstract sealed class RequestErrorException extends Exception permits
    * @param label the label with which retrieve the error message translation
    * @param params the params to be used actual values in the label placeholders; if {@code null} then it is forced to an unmodifiable empty map
    */
+  // TODO rename label in i18nLabel
   public record Error(@Nullable String message, @NonNull String label,
                       @Nullable Map<String, Object> params) {
 
@@ -246,8 +247,8 @@ public abstract sealed class RequestErrorException extends Exception permits
     this.code = code;
     this.id = id;
     this.errors = translate(errors);
-    traceId = TracingContainer.get().traceId();
-    spanId = TracingContainer.get().spanId();
+    this.traceId = TracingContainer.get().traceId();
+    this.spanId = TracingContainer.get().spanId();
   }
 
   protected RequestErrorException(@NonNull final String type, @NonNull final Code code,

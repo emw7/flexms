@@ -5,7 +5,6 @@ import static com.github.emw7.platform.log.EventLogger.notice;
 import com.github.emw7.platform.app.config.AppConfigProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.event.Level;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.lang.NonNull;

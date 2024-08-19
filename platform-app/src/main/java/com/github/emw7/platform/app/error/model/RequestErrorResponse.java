@@ -29,8 +29,10 @@ public record RequestErrorResponse(ZonedDateTime timestamp,
                                    String spanId,
 
                                    String message,
-                                   String label,
+                                   String label, // TODO rename in i18nLabel
                                    Map<String, Object> params,
+
+                                   String clazz,
 
                                    List<Error> errors) {
 

@@ -1,0 +1,15 @@
+# TODO
+
+- 1 gestione errori quando arriva una eccezione rest ma non in formato RequestErrorResponse (tipo verificare se i (certi) campi sono null dopo la conversione in json?)
+- V [CompositeMessageSource] sistemare le traduzioni che NON usano tutti i messages*.properties (per fare delle prove avevo messo un xmessageSource che quindi va rimosso)
+-- 6 documentazione per framework CompositeMessageSource
+- V gestire ServerNotFound (che è una internal exception) come ServerRequestErrorException (vedi TODO implement DependencyUnavailableServerException)
+- 1 mettere in RequestErrorResponse la classe da creare se la richiesta NON è fatta da un "umano", ma da m2m
+
+- 5 how to force in code spring.data.web.pageable.prefix and spring.data.web.sort.sort-parameter;
+  (spring.data.web.pageable.prefix=app- and spring.data.web.sort.sort-parameter=app-sort)
+- 5 format date with offset "dateTime":"2024-06-03T08:37:44.001695363" => "dateTime":"2024-06-03T08:37:44.001695363+0000"
+- 4 see the FIXME and the TODO in the code
+
+- 2 platform-error NON è proprio il massimo in quanto ha un po' di tutto... è da spostare le cose dentro i platform più indicati
+- ApiDefinition (Endpoint(s)) con full o solo partial?

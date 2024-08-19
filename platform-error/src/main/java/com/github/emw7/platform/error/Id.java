@@ -2,13 +2,13 @@ package com.github.emw7.platform.error;
 
 import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.lang.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.lang.NonNull;
 
 public final class Id {
 
-  private static final Logger logger= LoggerFactory.getLogger(Id.class);
+  private static final Logger logger = LoggerFactory.getLogger(Id.class);
 
   private static final byte LENGTH = 5;
 
@@ -26,14 +26,11 @@ public final class Id {
    *   length(id) > 5 (example abcdefghij) => kept as it is (abcdefghij)
    * </pre>
    *
-   * @param id the id
+   * @param id the id; to be generated with
+   *           https://www.random.org/strings/?num=1&len=5&digits=on&upperalpha=on&unique=on&format=html&rnd=new
    */
   public Id(@NonNull final String id) {
-    if ( StringUtils.isEmpty(id) || id.length() > LENGTH )  {
-      logger.warn("[ILLEGAL-ARGUMENT] provided id '{}' is not valid: must be not null and with length in 1..5", id);
-    }
-    // it's true that id should not be null because of @NonNull, but
-    this.id = StringUtils.leftPad(Optional.ofNullable(id).orElse(""), LENGTH,'0');
+    this.id = StringUtils.leftPad(id == null ? "" : id, LENGTH, '0');
   }
 
   @Override

@@ -13,18 +13,13 @@ public abstract class NotFoundClientException extends ResourceIdClientException 
   //  https://www.random.org/strings/?num=1&len=5&digits=on&upperalpha=on&unique=on&format=html&rnd=new.
   private static final Code CODE = new Code("RY19P");
 
-  private static final String LABEL = appClientErrorLabel("resource-not-found");
+  private static final String LABEL_BASE = appClientErrorLabel("not-found");
 
+  // TODO [DOC]: error label is "app.error.client." + "not-found" + "." + resourceName.
   protected NotFoundClientException(@NonNull final Id id, @NonNull final String resourceName,
       @NonNull final Object resourceId,
       @Nullable final Map<String, Object> params) {
-    this(id,LABEL, resourceName, resourceId, params);
-  }
-
-  protected NotFoundClientException(@NonNull final Id id, @NonNull final String label, @NonNull final String resourceName,
-      @NonNull final Object resourceId,
-      @Nullable final Map<String, Object> params) {
-    super(CODE, id, label, resourceName, resourceId, params);
+    super(CODE, id, LABEL_BASE + '.' + resourceName, resourceName, resourceId, params);
   }
 
 }

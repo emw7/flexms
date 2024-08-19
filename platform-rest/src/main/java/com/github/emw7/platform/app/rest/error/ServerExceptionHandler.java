@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
  * <p>
  * Answer is {@link RequestErrorResponse}.
  */
+// TODO can be final?
 @ControllerAdvice
 public class ServerExceptionHandler extends AbstractServerExceptionHandler {
 
@@ -27,7 +28,6 @@ public class ServerExceptionHandler extends AbstractServerExceptionHandler {
   //endregion Constructors
 
   //region API
-
   /**
    * Returns the error response built from the specified {@link ServerRequestErrorException}.
    *

@@ -1,5 +1,6 @@
 package com.github.emw7.platform.error.category;
 
+import com.github.emw7.platform.error.Constants;
 import com.github.emw7.platform.error.RequestError;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
@@ -7,7 +8,7 @@ import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@RequestError(errorCode = 409, label = "app.error.request.already-exists")
+@RequestError(errorCode = 409, label = Constants.I18N_LABEL_REQUEST_PREFIX + "already-exists")
 public @interface AlreadyExists {
 
   //  /**

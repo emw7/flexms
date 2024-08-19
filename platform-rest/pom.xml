@@ -27,6 +27,7 @@
 			<artifactId>spring-boot-starter-aop</artifactId>
 		</dependency>
 
+		<!-- TODO valutare se abilitare qua se ogni servizio lo abilita se serve... io lo metterei qui -->
 		<!-- <dependency>
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-commons</artifactId>

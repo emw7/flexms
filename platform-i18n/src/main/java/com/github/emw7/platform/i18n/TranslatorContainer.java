@@ -1,6 +1,7 @@
 package com.github.emw7.platform.i18n;
 
 import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 // https://sultanov.dev/blog/access-spring-beans-from-unmanaged-objects/
 //  section '4. OPTION 2: IMPLEMENT PROVIDER'.
@@ -9,7 +10,7 @@ public final class TranslatorContainer {
   private static Translator translator;
 
   // returns null is called before any object instantiation
-  public static Translator getTranslator() {
+  public static @Nullable Translator getTranslator() {
     return translator;
   }
 

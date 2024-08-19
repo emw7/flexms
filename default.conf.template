@@ -1,0 +1,31 @@
+# Environment variables
+# From https://hub.docker.com/_/nginx:
+# Using environment variables in nginx configuration (new in 1.19)
+# Out-of-the-box, nginx doesn't support environment variables inside most 
+# configuration blocks. But this image has a function, which will extract 
+# environment variables before nginx starts.
+
+upstream foo {
+    server foo-rest-sidecar;
+}
+
+upstream bar {
+    server bar-rest-sidecar;
+}
+
+server {
+
+    listen       80;
+    server_name  localhost;
+
+    location /foo {
+        proxy_pass http://foo;
+        proxy_http_version 1.1;
+    }
+
+    location /bar {
+        proxy_pass http://bar;
+        proxy_http_version 1.1;
+    }
+
+}

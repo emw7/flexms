@@ -2,7 +2,7 @@ package com.github.emw7.platform.core.array;
 
 import org.springframework.lang.Nullable;
 
-public class ArrayUtil {
+public final class ArrayUtil {
 
   //region API
 

@@ -1,0 +1,5 @@
+- Add plural support https://lokalise.com/blog/spring-boot-internationalization/.
+- Add conditions:
+  com.github.emw7.conditional=The user {conditional:active?is:isn't} active
+  interpolate("com.github.emw7.conditional",Map.of("active",true)) => The user is active
+  interpolate("com.github.emw7.conditional",Map.of("active",true)) => The user isn't active

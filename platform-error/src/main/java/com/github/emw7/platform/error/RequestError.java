@@ -14,5 +14,5 @@ public @interface RequestError {
 
   int errorCode();
 
-  String label() default Constants.DEFAULT_ERROR_LABEL;
+  String label();// default Constants.DEFAULT_ERROR_LABEL;
 }

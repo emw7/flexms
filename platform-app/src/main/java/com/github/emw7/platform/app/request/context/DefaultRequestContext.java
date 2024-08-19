@@ -4,6 +4,7 @@ import com.github.emw7.platform.telemetry.tracing.Tracing;
 import java.util.Locale;
 import org.springframework.lang.NonNull;
 
+// record
 public final class DefaultRequestContext implements RequestContext {
 
   private final @NonNull Locale locale;
