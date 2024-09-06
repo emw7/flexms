@@ -3,18 +3,17 @@ package com.github.emw7.platform.protocol.rest;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
-import com.github.emw7.platform.app.PlatformAppConstants;
-import com.github.emw7.platform.app.rest.PlatformRestConstants;
 import com.github.emw7.platform.auth.api.token.AuthToken;
 import com.github.emw7.platform.discovery.api.model.Server;
 import com.github.emw7.platform.log.EventLogger;
 import com.github.emw7.platform.protocol.api.ProtocolRequest;
 import com.github.emw7.platform.protocol.api.ProtocolTemplate;
 import com.github.emw7.platform.protocol.api.error.DependencyErrorException;
-import com.github.emw7.platform.protocol.rest.error.AbstractRestDependencyErrorException;
-import com.github.emw7.platform.protocol.rest.error.RestDependencyErrorException;
+import com.github.emw7.platform.protocol.rest.error.ServerRestDependencyErrorException;
+import com.github.emw7.platform.protocol.rest.error.ClientRestDependencyErrorException;
 import com.github.emw7.platform.protocol.rest.error.RestUnknownDependencyErrorException;
 import com.github.emw7.platform.protocol.rest.request.RestProtocolRequest;
+import com.github.emw7.platform.rest.core.PlatformRestConstants;
 import java.util.Map;
 import java.util.function.Function;
 import org.slf4j.Logger;
@@ -26,7 +25,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
@@ -315,7 +313,7 @@ public final class RestProtocolOperation implements ProtocolTemplate {
       EventLogger.notice(log).level(Level.ERROR)
           .pattern("rest request failed; method: {}, error: {}")
           .params(restProtocolRequest.getHttpMethod(), e.getMessage()).log();
-      throw manageException(e);
+      throw manageException(e, callerId, server);
     }
   }
 
@@ -332,12 +330,15 @@ public final class RestProtocolOperation implements ProtocolTemplate {
     //  tutto molto bello... ma qui stiamo assumendo che tutti parlino json... ma è davvero così?
     //  forse deve essere il chiamante a definirlo...
     //final String bodyAsString= serializeBody(restProtocolRequest.getBody());
-    final RequestEntity<B> requestEntity = RequestEntity.method(restProtocolRequest.getHttpMethod(),
-            url).headers(buildHttpHeaders(restProtocolRequest))
-        // TODO remove .accept(...) and manage it in buildHttpHeaders
-        .accept(MediaType.APPLICATION_JSON).body(restProtocolRequest.getBody());
+//    final RequestEntity<B> requestEntity = RequestEntity.method(restProtocolRequest.getHttpMethod(),
+//            url).headers(buildHttpHeaders(restProtocolRequest))
+//        .body(restProtocolRequest.getBody());
 
-    return requestEntity;
+    // DataFlowIssue to avoid warning about .getBody() could be null, as it seems that
+    //  .body(...) manages  it gracefully.
+    //noinspection DataFlowIssue
+    return RequestEntity.method(restProtocolRequest.getHttpMethod(), url)
+        .headers(buildHttpHeaders(restProtocolRequest)).body(restProtocolRequest.getBody());
   }
 
 
@@ -449,15 +450,18 @@ public final class RestProtocolOperation implements ProtocolTemplate {
 
   /**
    * Maps spring rest client error to an implementation of
-   * {@link AbstractRestDependencyErrorException}.
+   * {@link ServerRestDependencyErrorException}.
    */
-  private @NonNull AbstractRestDependencyErrorException manageException(
-      @NonNull final RestClientException restClientException) {
+  private @NonNull DependencyErrorException manageException(
+      @NonNull final RestClientException restClientException, @NonNull final String callerId,
+      @NonNull final Server server) {
 
     return switch (restClientException) {
-      case HttpClientErrorException e -> new RestDependencyErrorException(e);
-      case HttpServerErrorException e -> new RestDependencyErrorException(e);
-      default -> new RestUnknownDependencyErrorException(restClientException);
+      case HttpClientErrorException e ->
+          new ClientRestDependencyErrorException(e, callerId, server.name(), server.version());
+      case HttpServerErrorException e ->
+          new ServerRestDependencyErrorException(e, callerId, server.name(), server.version());
+      default -> new RestUnknownDependencyErrorException(restClientException, callerId, server.name(), server.version());
     };
   }
   //endregion Manage exception

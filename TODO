@@ -1,4 +1,4 @@
-# TODO
+  # TODO
 
 - 1 gestione errori quando arriva una eccezione rest ma non in formato RequestErrorResponse (tipo verificare se i (certi) campi sono null dopo la conversione in json?)
 - V [CompositeMessageSource] sistemare le traduzioni che NON usano tutti i messages*.properties (per fare delle prove avevo messo un xmessageSource che quindi va rimosso)
@@ -13,3 +13,7 @@
 
 - 2 platform-error NON è proprio il massimo in quanto ha un po' di tutto... è da spostare le cose dentro i platform più indicati
 - ApiDefinition (Endpoint(s)) con full o solo partial?
+
+- 1 ServerException NON è mappata va definita ServerErrorDependencyError...
+- 1 Gli errori tipo 405 il service NON li mappa negli errori std di platform e quindi risulta unmapped: è giusto o va fatta meglio la cosa?
+

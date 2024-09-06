@@ -247,8 +247,8 @@ public abstract sealed class RequestErrorException extends Exception permits
     this.code = code;
     this.id = id;
     this.errors = translate(errors);
-    this.traceId = TracingContainer.get().traceId();
-    this.spanId = TracingContainer.get().spanId();
+    this.traceId = TracingContainer.traceId();
+    this.spanId = TracingContainer.spanId();
   }
 
   protected RequestErrorException(@NonNull final String type, @NonNull final Code code,

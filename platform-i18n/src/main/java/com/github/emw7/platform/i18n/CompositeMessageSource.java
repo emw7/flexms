@@ -47,7 +47,7 @@ public final class CompositeMessageSource extends MessageSourceSupport implement
       // FOUND!
       this.appMessageSource= appMessageSource;
       this.messageSources= messageSources.entrySet().stream().filter(e -> !e.getKey().equals("appMessageSource")).collect(
-                  Collectors.toUnmodifiableMap(Map.Entry::getKey, Map. Entry::getValue));
+                  Collectors.toUnmodifiableMap(Map.Entry::getKey, Map.Entry::getValue));
     }
     else {
       // NOT found!

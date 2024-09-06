@@ -4,13 +4,14 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
+import java.util.Locale;
 
 // an event that happens at time t, event is identified by type and each occurrence is identified
 // by id; event has a severity and a state either start / end or push.
 public record Bar(String id, String type, String descriptionLabel, Severity severity, State state,
                   ZonedDateTime t) {
 
-  public static final String RESOURCE_NAME= Bar.class.getName();
+  public static final String RESOURCE_NAME= Bar.class.getName().toLowerCase(Locale.ROOT);
 
   public static enum Severity {
     NONE(0), LOW(1), MEDIUM(2), HIGH(3), CRITICAL(4);

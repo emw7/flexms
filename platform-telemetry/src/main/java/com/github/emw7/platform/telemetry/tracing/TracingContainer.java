@@ -47,6 +47,7 @@ public final class TracingContainer {
   public static @Nullable Tracing get() {
     final Tracing tracing = tracingContainer.get();
     if (tracing == null) {
+      // TODO made it formal as for JSON-PROCESSING.
       log.warn("returning null tracing: either set not called or called with null parameter");
     }
     return tracingContainer.get();
@@ -55,7 +56,8 @@ public final class TracingContainer {
   public static @Nullable String traceId() {
     final Tracing tracing = tracingContainer.get();
     if (tracing == null) {
-      log.warn(MarkerFactory.getMarker("ciao"),
+      // TODO made it formal as for JSON-PROCESSING.
+      log.warn(MarkerFactory.getMarker("PROGRAMMING-ERROR"),
           "returning null traceId: either set not called or called with null parameter");
     }
     return Optional.ofNullable(get()).map(Tracing::traceId).orElse(null);
@@ -64,6 +66,7 @@ public final class TracingContainer {
   public static @Nullable String spanId() {
     final Tracing tracing = tracingContainer.get();
     if (tracing == null) {
+      // TODO made it formal as for JSON-PROCESSING.
       log.warn("returning null spanId: either set not called or called with null parameter");
     }
     return Optional.ofNullable(get()).map(Tracing::spanId).orElse(null);

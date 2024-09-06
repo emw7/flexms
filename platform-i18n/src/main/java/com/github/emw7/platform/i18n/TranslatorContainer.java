@@ -1,5 +1,7 @@
 package com.github.emw7.platform.i18n;
 
+import java.util.Locale;
+import java.util.Map;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
@@ -9,9 +11,14 @@ public final class TranslatorContainer {
 
   private static Translator translator;
 
+  /**
+   * Returns either {@link #translator} ot {@link FooTranslator} if {@link #translator} is {@code null}.
+   * @return either {@link #translator} ot {@link FooTranslator} if {@link #translator} is {@code null}
+   */
   // returns null is called before any object instantiation
-  public static @Nullable Translator getTranslator() {
-    return translator;
+  public static @NonNull Translator getTranslator() {
+    // TODO put a formal log about translator is null... as for log JSON-PROCESSING
+    return translator != null ? translator : new FooTranslator();
   }
 
   // if called programmatically can override translator.

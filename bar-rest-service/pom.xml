@@ -35,7 +35,7 @@
     </dependency>
     <dependency>
       <groupId>com.github.emw7</groupId>
-      <artifactId>platform-rest</artifactId>
+      <artifactId>platform-service-runtime-rest</artifactId>
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
     <!--endregion EMW7 -->

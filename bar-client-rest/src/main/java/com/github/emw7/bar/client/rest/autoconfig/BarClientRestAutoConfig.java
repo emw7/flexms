@@ -23,6 +23,7 @@ import org.springframework.web.client.RestOperations;
 @AutoConfiguration
 public class BarClientRestAutoConfig {
 
+  // TODO only for debug, to be removed.
   @ConditionalOnProperty(name = "com.github.emw7.bar.client.rest", havingValue = "default")
   @Bean
   public BarClient barClientRestDefault ()

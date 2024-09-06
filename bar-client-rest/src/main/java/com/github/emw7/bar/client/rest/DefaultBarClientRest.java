@@ -1,6 +1,7 @@
 package com.github.emw7.bar.client.rest;
 
 import com.github.emw7.bar.client.BarClient;
+import com.github.emw7.bar.logic.api.error.BarNotFoundException;
 import com.github.emw7.bar.model.Bar;
 import com.github.emw7.bar.model.Bar.Severity;
 import com.github.emw7.bar.model.Bar.State;
@@ -16,10 +17,11 @@ import java.util.stream.IntStream;
 import org.springframework.data.domain.Pageable;
 import org.springframework.lang.NonNull;
 
+// TODO only for debug, to be removed.
 public class DefaultBarClientRest implements BarClient {
 
   @Override
-  public @NonNull Bar create(@NonNull final Bar bar) throws RequestErrorException {
+  public @NonNull Bar create(@NonNull final Bar bar) {
     final String id = UUID.randomUUID().toString();
     return new Bar(id, bar.type(), bar.descriptionLabel(), bar.severity(), bar.state(),
         ZonedDateTime.now());

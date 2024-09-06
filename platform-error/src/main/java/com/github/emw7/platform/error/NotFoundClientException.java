@@ -11,7 +11,7 @@ public abstract class NotFoundClientException extends ResourceIdClientException 
 
   // generated with
   //  https://www.random.org/strings/?num=1&len=5&digits=on&upperalpha=on&unique=on&format=html&rnd=new.
-  private static final Code CODE = new Code("RY19P");
+  public static final Code CODE = new Code("RY19P");
 
   private static final String LABEL_BASE = appClientErrorLabel("not-found");
 

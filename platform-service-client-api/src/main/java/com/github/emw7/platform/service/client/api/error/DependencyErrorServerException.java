@@ -3,11 +3,16 @@ package com.github.emw7.platform.service.client.api.error;
 import com.github.emw7.platform.error.Code;
 import com.github.emw7.platform.error.Id;
 import com.github.emw7.platform.error.ServerRequestErrorException;
+import com.github.emw7.platform.protocol.api.error.DependencyErrorException;
+import com.github.emw7.platform.service.core.error.model.RequestErrorResponse;
 import java.util.Map;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
-public abstract class DependencyErrorServerException extends ServerRequestErrorException {
+/**
+ * When adding child likely its code must be added to the switch in {@link com.github.emw7.platform.service.client.api.AbstractClient#mapToStandardServerException(RequestErrorResponse, DependencyErrorException)}.
+ */
+abstract class DependencyErrorServerException extends ServerRequestErrorException {
 
   //region Public static properties
   public static final String CALLER_KEY = "caller";

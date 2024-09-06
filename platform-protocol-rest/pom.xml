@@ -33,6 +33,12 @@
       <artifactId>spring-data-commons</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-text</artifactId>
+      <version>1.12.0</version>
+    </dependency>
+
     <!--region EMW7 -->
     <dependency>
       <groupId>com.github.emw7</groupId>
@@ -41,7 +47,7 @@
     </dependency>
     <dependency>
       <groupId>com.github.emw7</groupId>
-      <artifactId>platform-rest</artifactId>
+      <artifactId>platform-rest-core</artifactId>
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
     <!--endregion EMW7 -->

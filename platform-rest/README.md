@@ -1,3 +1,0 @@
-# platform-rest
-
-TODO

@@ -1,5 +1,6 @@
 package com.github.emw7.bar.logic.api;
 
+import com.github.emw7.bar.logic.api.error.BarNotFoundException;
 import com.github.emw7.bar.model.Bar;
 import com.github.emw7.bar.model.Bar.Severity;
 import com.github.emw7.bar.model.Bar.State;
@@ -17,7 +18,7 @@ public interface BarService {
   // create
   @NonNull
   Bar create(@NonNull final Bar bar)
-      throws RequestErrorException;// throws /*BadPropertiesClientException,*/ ServerRequestErrorException;
+    throws RequestErrorException;
 
   // retrieve
   @NonNull

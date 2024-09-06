@@ -7,11 +7,16 @@ import com.github.emw7.bar.model.Bar.Severity;
 import com.github.emw7.bar.model.Bar.State;
 import com.github.emw7.platform.error.AlreadyExistsClientException;
 import com.github.emw7.platform.error.BadPropertiesClientException;
+import com.github.emw7.platform.error.Code;
+import com.github.emw7.platform.error.RequestErrorException.Error;
 import com.github.emw7.platform.error.ServiceNotFoundServerException;
 import com.github.emw7.platform.error.Id;
 import com.github.emw7.platform.error.NotFoundClientException;
 import com.github.emw7.platform.error.RequestErrorException;
 import com.github.emw7.platform.error.ServerRequestErrorException;
+import com.github.emw7.platform.protocol.api.error.DependencyErrorException;
+import com.github.emw7.platform.protocol.api.error.UnknownDependencyErrorException;
+import com.github.emw7.platform.service.client.api.error.UnknownDependencyErrorServerException;
 import java.lang.reflect.Field;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -74,10 +79,17 @@ public class DefaultBarService implements BarService {
 //      throw new DependencyUnavailableServerException(null, new Id("B31MY"), "caller", "callee",
 //          null);
 //    }
-    throwRequestedException(bar.id());
-    final String id=  UUID.randomUUID().toString();
-    return new Bar(id, bar.type(), bar.descriptionLabel(), bar.severity(), bar.state(),
-        ZonedDateTime.now());
+    //throwRequestedException(bar.id());
+//    final String id=  UUID.randomUUID().toString();
+           // throw new BarNotFoundException(new Id("00000"), "0", null);
+
+    //throw new ServerRequestErrorException(new Code("xyz12"), new Id("21zyx"), new Error("a", "b", null)) {};
+
+    //throw new ServiceNotFoundServerException(null, new Id("12345"), "caller", "calleeName", "calleeVersion", null);
+      throw new UnknownDependencyErrorServerException(new UnknownDependencyErrorException(new Object(), "bar", "q", "v1", "ahia", null) {
+      },new Id("00000"));
+//    return new Bar(id, bar.type(), bar.descriptionLabel(), bar.severity(), bar.state(),
+//        ZonedDateTime.now());
   }
 
   /**

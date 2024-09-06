@@ -90,7 +90,7 @@ public class I18nEnabledExceptionTest {
   }
   //endregion A: I18nEnabledException(@NonNull final String label, @Nullable final Map<String, Object> params, final Throwable cause, final boolean enableSuppression, final boolean writableStackTrace)
 
-  //region B: I18nEnabledException(@NonNull final String label, @Nullable final Map<String, Object> params, final Throwable cause, final boolean enableSuppression, final boolean writableStackTrace)
+  //region B: I18nEnabledException(@NonNull final String label, @Nullable final Map<String, Object> params, final Throwable cause)
   @Test
   public void testB_WithoutCause() {
     when(messageSource.getMessage(anyString(), isNull(), any(Locale.class))).thenReturn("unknown")
@@ -146,9 +146,9 @@ public class I18nEnabledExceptionTest {
 
     verify(messageSource, times(1)).getMessage(eq("here.we.are"), isNull(), any(Locale.class));
   }
-  //endregion B: I18nEnabledException(@NonNull final String label, @Nullable final Map<String, Object> params, final Throwable cause, final boolean enableSuppression, final boolean writableStackTrace)
+  //endregion B: I18nEnabledException(@NonNull final String label, @Nullable final Map<String, Object> params, final Throwable cause)
 
-  //region C: I18nEnabledException(@NonNull final String label, @Nullable final Map<String, Object> params, final Throwable cause, final boolean enableSuppression, final boolean writableStackTrace)
+  //region C: I18nEnabledException(@NonNull final String label, @Nullable final Map<String, Object> params)
   @Test
   public void testC_WithoutCause() {
     when(messageSource.getMessage(anyString(), isNull(), any(Locale.class))).thenReturn("unknown")
@@ -175,9 +175,9 @@ public class I18nEnabledExceptionTest {
 
     verify(messageSource, times(1)).getMessage(eq("here.we.are"), isNull(), any(Locale.class));
   }
-  //endregion C: I18nEnabledException(@NonNull final String label, @Nullable final Map<String, Object> params, final Throwable cause, final boolean enableSuppression, final boolean writableStackTrace)
+  //endregion C: I18nEnabledException(@NonNull final String label, @Nullable final Map<String, Object> params)
 
-  //region D: I18nEnabledException(@NonNull final String label, @Nullable final Map<String, Object> params, final Throwable cause, final boolean enableSuppression, final boolean writableStackTrace)
+  //region D: I18nEnabledException(final Throwable cause)
   @Test
   public void testD_WithoutCause() {
     I18nEnabledException sut = new I18nEnabledException(null) {
@@ -193,9 +193,9 @@ public class I18nEnabledExceptionTest {
 
     assertThat(sut.getMessage()).isEqualTo("java.lang.NullPointerException");
   }
-  //endregion D: I18nEnabledException(@NonNull final String label, @Nullable final Map<String, Object> params, final Throwable cause, final boolean enableSuppression, final boolean writableStackTrace)
+  //endregion D: I18nEnabledException(final Throwable cause)
 
-  //region E: I18nEnabledException(@NonNull final String label, @Nullable final Map<String, Object> params, final Throwable cause, final boolean enableSuppression, final boolean writableStackTrace)
+  //region E: I18nEnabledException()
   @Test
   public void testE_WithoutCause() {
     I18nEnabledException sut = new I18nEnabledException() {
@@ -203,6 +203,6 @@ public class I18nEnabledExceptionTest {
 
     assertThat(sut.getMessage()).isEqualTo(null);
   }
-  //endregion E: I18nEnabledException(@NonNull final String label, @Nullable final Map<String, Object> params, final Throwable cause, final boolean enableSuppression, final boolean writableStackTrace)
+  //endregion E: I18nEnabledException()
 
 }

@@ -18,7 +18,7 @@ public final class ServiceNotFoundServerException extends ServerRequestErrorExce
   //region Private static properties
   // generated with
   //  https://www.random.org/strings/?num=1&len=5&digits=on&upperalpha=on&unique=on&format=html&rnd=new.
-  private static final Code CODE = new Code("MVI5T");
+  public static final Code CODE = new Code("MVI5T");
 
   @I18nLabel(label = "com.github.emw7.platform.error.service-not-found", params = {
       CALLER_KEY, SERVICE_NAME_KEY, SERVICE_VERSION_KEY})

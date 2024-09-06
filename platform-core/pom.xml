@@ -27,6 +27,12 @@
       <artifactId>spring-core</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>3.16.0</version>
+    </dependency>
+
     <!--region EMW7 -->
     <!-- **ATTENTION**: for platform-core this section must be kept empty, that is platform-core
            must not depend on other emw7 platform projects. -->
