@@ -2,7 +2,7 @@ package com.github.emw7.platform.service.runtime.rest.request.context;
 
 import com.github.emw7.platform.service.core.PlatformServiceCoreConstants;
 import com.github.emw7.platform.service.core.request.context.Caller;
-import com.github.emw7.platform.core.i18n.I18nUtil;
+import com.github.emw7.platform.i18n.util.I18nUtil;
 import com.github.emw7.platform.core.mapper.BooleanMapper;
 import com.github.emw7.platform.service.runtime.rest.autoconfig.RequestOriginatorConfigProperties;
 import jakarta.servlet.http.HttpServletRequest;

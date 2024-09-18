@@ -1,0 +1,7 @@
+# TODO
+
+- ATTENTION: the project was implemented to give to other projects an API for traces but the idea was and is
+  to replace it with a product available on the market (such a [Open Telemetry](https://opentelemetry.io/);
+  actually will be a partial replacement by creating an API the made the platform dependant from this
+  API and the implementing the facades for the third parties products; for sure the project is not
+  complete (spans for example are limited to 1) and needs lot of work.

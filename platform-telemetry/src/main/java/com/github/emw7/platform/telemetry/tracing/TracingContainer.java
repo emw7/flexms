@@ -50,7 +50,7 @@ public final class TracingContainer {
       // TODO made it formal as for JSON-PROCESSING.
       log.warn("returning null tracing: either set not called or called with null parameter");
     }
-    return tracingContainer.get();
+    return tracing;
   }
 
   public static @Nullable String traceId() {

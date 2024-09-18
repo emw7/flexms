@@ -1,6 +1,6 @@
 package com.github.emw7.platform.service.runtime.rest.request;
 
-import com.github.emw7.platform.core.i18n.I18nUtil;
+import com.github.emw7.platform.i18n.util.I18nUtil;
 import com.github.emw7.platform.service.runtime.rest.autoconfig.RequestCallerConfigProperties;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Locale;

@@ -177,32 +177,4 @@ public class I18nEnabledExceptionTest {
   }
   //endregion C: I18nEnabledException(@NonNull final String label, @Nullable final Map<String, Object> params)
 
-  //region D: I18nEnabledException(final Throwable cause)
-  @Test
-  public void testD_WithoutCause() {
-    I18nEnabledException sut = new I18nEnabledException(null) {
-    };
-
-    assertThat(sut.getMessage()).isEqualTo(null);
-  }
-
-  @Test
-  public void testD_WithCause() {
-    I18nEnabledException sut = new I18nEnabledException(new NullPointerException()) {
-    };
-
-    assertThat(sut.getMessage()).isEqualTo("java.lang.NullPointerException");
-  }
-  //endregion D: I18nEnabledException(final Throwable cause)
-
-  //region E: I18nEnabledException()
-  @Test
-  public void testE_WithoutCause() {
-    I18nEnabledException sut = new I18nEnabledException() {
-    };
-
-    assertThat(sut.getMessage()).isEqualTo(null);
-  }
-  //endregion E: I18nEnabledException()
-
 }

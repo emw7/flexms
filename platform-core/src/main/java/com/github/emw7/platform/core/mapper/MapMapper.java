@@ -17,8 +17,8 @@ public final class MapMapper {
    *
    * @param sb  the string builder to which append the string presentation of the entry
    * @param e   the entry which string representation must be appended to the string builder
-   * @param <K>
-   * @param <V>
+   * @param <K> the type of keys maintained by the provided map
+   * @param <V> the type of mapped values
    */
   private static <K, V> void map(@NonNull final StringBuilder sb,
       @NonNull final java.util.Map.Entry<K, V> e) {
@@ -41,9 +41,9 @@ public final class MapMapper {
    * The method behaves as {@link #mapToString(java.util.Map)} but key ares sorted.
    *
    * @param map the map for which string representation is wanted
+   * @return the string representation of the specified map
    * @param <K> the key type
    * @param <V> the value type
-   * @return the string representation of the specified map
    */
   public static @NonNull <K extends Comparable<K>, V> String mapToStringSortedByKey(
       @Nullable final java.util.Map<K, V> map) {
@@ -88,9 +88,9 @@ public final class MapMapper {
    * </pre>
    *
    * @param map the map for which string representation is wanted
+   * @return the string representation of the specified map
    * @param <K> the key type
    * @param <V> the value type
-   * @return the string representation of the specified map
    */
   public static @NonNull <K, V> String mapToString(@Nullable final java.util.Map<K, V> map) {
     if (map == null) {

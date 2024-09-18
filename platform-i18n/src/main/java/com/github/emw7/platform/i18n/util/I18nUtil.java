@@ -1,4 +1,4 @@
-package com.github.emw7.platform.core.i18n;
+package com.github.emw7.platform.i18n.util;
 
 import java.util.IllformedLocaleException;
 import java.util.Locale;
@@ -12,7 +12,7 @@ public final class I18nUtil {
    * Returns the locale corresponding to the specified language tag.
    * <p>
    * The method can return {@code null} if either {@code languageTag} is {@code null} or if
-   * `{@code Locale.Builder().setLanguageTag(languageTag)}` throws
+   * {@code Locale.Builder().setLanguageTag(languageTag)} throws
    * {@link IllformedLocaleException}.
    *
    * @param languageTag IETF BCP 47 language tag

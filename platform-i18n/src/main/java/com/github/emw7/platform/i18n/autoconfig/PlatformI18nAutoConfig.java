@@ -23,13 +23,6 @@ public class PlatformI18nAutoConfig {
     return new I18nLabelPrefixes(customPrefix);
   }
 
-//  @Bean
-//  public I18nLabelPrefixesContainer i18nLabelPrefixesContainer(
-//      @NonNull final I18nLabelPrefixes target) {
-//    //noinspection InstantiationOfUtilityClass
-//    return new I18nLabelPrefixesContainer(target);
-//  }
-
   @ConditionalOnBean(MessageSource.class)
   @Bean
   public Translator messageSourceTranslator(@NonNull final MessageSource messageSource,
@@ -39,10 +32,13 @@ public class PlatformI18nAutoConfig {
 
   /**
    * A useless default fallback translator that simply returns the specified label.
+   * <p>
+   * This is created to allow application works in case not {@code translator} has been
+   * provided.
    */
-  @ConditionalOnMissingBean
+  @ConditionalOnMissingBean(Translator.class)
   @Bean
-  public Translator translator() {
+  public FooTranslator translator() {
     return new FooTranslator();
   }
 
@@ -51,47 +47,5 @@ public class PlatformI18nAutoConfig {
     //noinspection InstantiationOfUtilityClass
     return new TranslatorContainer(translator);
   }
-
   //endregion Beans
-
-//  //region Public type: I18nLabelPrefixes container
-//  // https://sultanov.dev/blog/access-spring-beans-from-unmanaged-objects/
-//  //  section '4. OPTION 2: IMPLEMENT PROVIDER'.
-//  public static final class I18nLabelPrefixesContainer {
-//
-//    private static I18nLabelPrefixes target;
-//
-//    // returns null is called before any object instantiation
-//    public static I18nLabelPrefixes get() {
-//      return target;
-//    }
-//
-//    // if called programmatically can override translator.
-//    private I18nLabelPrefixesContainer(@NonNull final I18nLabelPrefixes target) {
-//      I18nLabelPrefixesContainer.target = target;
-//    }
-//
-//  }
-//  //endregion Public type: I18nLabelPrefixes container
-
-//  //region Public type: Translator container
-//  // https://sultanov.dev/blog/access-spring-beans-from-unmanaged-objects/
-//  //  section '4. OPTION 2: IMPLEMENT PROVIDER'.
-//  public static final class TranslatorContainer {
-//
-//    private static Translator translator;
-//
-//    // returns null is called before any object instantiation
-//    public static Translator getTranslator() {
-//      return translator;
-//    }
-//
-//    // if called programmatically can override translator.
-//    private TranslatorContainer(@NonNull final Translator translator) {
-//      TranslatorContainer.translator = translator;
-//    }
-//
-//  }
-  //endregion Public type: Translator container
-
 }

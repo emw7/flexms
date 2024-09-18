@@ -13,7 +13,7 @@
   <artifactId>platform-log</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <name>platform-log</name>
-  <description>platform-log</description>
+  <description>Platform log</description>
   <properties>
     <java.version>21</java.version>
   </properties>

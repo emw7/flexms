@@ -29,7 +29,6 @@
       <artifactId>platform-discovery-api</artifactId>
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
-
     <!--endregion EMW7 -->
 
     <!--region Test -->

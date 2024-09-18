@@ -12,6 +12,7 @@ import java.lang.annotation.Target;
 //  per cui forse vale la pena hardcodare... vero è che I18nLabel mi aiutava a cercare le label
 //  per vedere se ne avevo dimenticate nei .properties... e a tracciare i params... che altrimenti
 //  vanno cercati nei .properties
+//  Rimuovere label e rendere params senza default
 @Retention(RetentionPolicy.CLASS) // NOT used at runtime.
 @Target({ElementType.FIELD, ElementType.ANNOTATION_TYPE})
 @Documented

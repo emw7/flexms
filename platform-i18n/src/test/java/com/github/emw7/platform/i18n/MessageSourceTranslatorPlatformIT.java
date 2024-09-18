@@ -8,11 +8,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.lang.NonNull;
 
 // https://stackoverflow.com/a/58441082
 @SpringBootTest(classes = MessageSourceTranslatorPlatformIT.class)
 @EnableAutoConfiguration
+@Import(CompositeMessageSourceTestConfig.class)
 public class MessageSourceTranslatorPlatformIT {
 
   @BeforeAll

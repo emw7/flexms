@@ -15,13 +15,18 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 /**
- * A {@link MessageSource} that first try to resolve using an internally constructed
- * {@link ReloadableResourceBundleMessageSource} initialized with basename = "messages" and default
- * encoding = "UTF-8" and if such a resolving fails then delegates to the defined
- * {@link MessageSource} beans stopping at the first that resolves the code.
- * <p/>
- * The message source that resolves the code is cache for following resolution of the same code.
- * <p/>
+ * A {@link MessageSource} that first try to resolve using a selected message source and if such
+ * a resolving fails then delegates to the defined {@link MessageSource} beans stopping at the
+ * first that resolves the code.
+ * <p>
+ * The selected message source it is a {@link MessageSource} bean with name {@code appMessageSource} and
+ * if such a bean is not defined then the selected message source is used an internally
+ * constructed {@link ReloadableResourceBundleMessageSource} initialized with basename = "messages"
+ * and default encoding = "UTF-8"
+ * <p>
+ * For the sake of the performance, the message source that resolves the code is cached the
+ * following resolution of the same code.
+ * <p>
  * In case no message source resolves the code, and a default message is provided, it is "resolved"
  * through the internally constructed message source.
  */
@@ -32,15 +37,34 @@ public final class CompositeMessageSource extends MessageSourceSupport implement
   private final Map<String, MessageSource> messageSources;
   // code => message source.
   private final ConcurrentMap<String, MessageSource> cache;
-  //endregion Provate properties
+  //endregion Private properties
+
+  //region Private static methods
+  private static MessageSource buildAppMessageSource ()
+  {
+    ReloadableResourceBundleMessageSource appMessageSource = new ReloadableResourceBundleMessageSource();
+    appMessageSource.setBasename("messages");
+    appMessageSource.setDefaultEncoding("UTF-8");
+    return appMessageSource;
+  }
+  //endregion Private static methods
 
   //region Constructors
-  public CompositeMessageSource(@NonNull final MessageSource appMessageSource, @NonNull final Map<String, MessageSource> messageSources) {
-    this.appMessageSource = appMessageSource;
-    this.messageSources = messageSources;
-    this.cache = new ConcurrentHashMap<>();
-  }
+//  public CompositeMessageSource(@NonNull final MessageSource appMessageSource, @NonNull final Map<String, MessageSource> messageSources) {
+//    this.appMessageSource = appMessageSource;
+//    this.messageSources = messageSources;
+//    this.cache = new ConcurrentHashMap<>();
+//  }
 
+  /**
+   * Constructs the object with the defined {@link MessageSource} beans.
+   * <p>
+   * If in the defined {@link MessageSource} beans there is one which name is {@code appMessageSource}
+   * then it is selected as the first one with which try label resolving. If such a bean does not
+   * exist, then a default one is created to be used as the selected message source.
+   *
+   * @param messageSources the map of defined {@link MessageSource} beans
+   */
   public CompositeMessageSource(@NonNull final Map<String, MessageSource> messageSources) {
     final MessageSource appMessageSource= messageSources.get("appMessageSource");
     if ( appMessageSource != null ) {
@@ -57,17 +81,28 @@ public final class CompositeMessageSource extends MessageSourceSupport implement
 
     this.cache = new ConcurrentHashMap<>();
   }
-
-  private static MessageSource buildAppMessageSource ()
-  {
-    ReloadableResourceBundleMessageSource appMessageSource = new ReloadableResourceBundleMessageSource();
-    appMessageSource.setBasename("messages");
-    appMessageSource.setDefaultEncoding("UTF-8");
-    return appMessageSource;
-  }
   //endregion Constructors
 
   //region API
+
+  /**
+   * Returns the translation of {@code code} for the specified {@code locale}.
+   * <p>
+   * Returns {@code null} in case {@code code} is {@code null}<br/>
+   * Searches {@code code} using the selected message source first and then in other message sources
+   * if not found.<br/>
+   * If eventually, the code cannot be found then returns what selected message source returns
+   * with the call {@link MessageSource#getMessage(String, Object[], String, Locale)}.
+   *
+   * @param code code for which translation is wanted
+   * @param args actual arguments for message's placeholder
+   * @param defaultMessage message to be returned in case translation for {@code code} cannot be
+   *                       found
+   * @param locale locale for which translation of {@code code} is wanted
+   *
+   * @return the translation of the specified {@code code} or {@code defaultMessage} is such a code
+   * translation cannot be found.
+   */
   @Override
   public @Nullable String getMessage(@Nullable String code, @Nullable Object[] args,
       @Nullable String defaultMessage, @Nullable Locale locale) {
@@ -84,6 +119,23 @@ public final class CompositeMessageSource extends MessageSourceSupport implement
     }
   }
 
+  /**
+   * Returns the translation of {@code code} for the specified {@code locale}.
+   * <p>
+   * Returns {@code null} in case {@code code} is {@code null}<br/>
+   * Searches {@code code} using the selected message source first and then in other message sources
+   * if not found.<br/>
+   * If eventually, the code cannot be found then throws {@link NoSuchMessageException}.
+   *
+   * @param code code for which translation is wanted
+   * @param args actual argument for message's placeholder
+   * @param locale locale for which translation of {@code code} is wanted
+   *
+   * @return the translation of the specified {@code code} or {@code defaultMessage} is such a code
+   * translation cannot be found.
+
+   * @throws NoSuchMessageException if the code cannot be found
+   */
   @Override
   public @NonNull String getMessage(@Nullable String code, @Nullable Object[] args,
       @Nullable Locale locale) throws NoSuchMessageException {

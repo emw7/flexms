@@ -28,8 +28,12 @@ public final class EventLogger {
     private Level level;
     private Marker marker;
     private String event;
-    // this is a Map and not a list of MDCAutoclosable because
+    // this is a Map and not a list of MDCAutoclosable because TODO: ho interrotto così la frase...
+    //  cosa volevo dire?
     private Map<String, String> contextArguments;
+
+    // TODO aggiunto in un secondo momento, verificare se funziona!
+    private LogEventBuilder () {}
 
     public LogEvent log() {
       if (contextArguments != null) {
@@ -39,8 +43,37 @@ public final class EventLogger {
       return new LogEvent(log, MARKER_DOING, pattern, params, contextArguments);
     }
 
+    /**
+     * Deprecation note: use {@link #trace()}, {@link #debug()}, {@link #info()}, {@link #warn()}, {@link #error()}
+     */
+    @Deprecated
     public LogEventBuilder level(Level level) {
       this.level = level;
+      return this;
+    }
+
+    public LogEventBuilder trace() {
+      this.level = Level.TRACE;
+      return this;
+    }
+
+    public LogEventBuilder debug() {
+      this.level = Level.DEBUG;
+      return this;
+    }
+
+    public LogEventBuilder info() {
+      this.level = Level.INFO;
+      return this;
+    }
+
+    public LogEventBuilder warn() {
+      this.level = Level.WARN;
+      return this;
+    }
+
+    public LogEventBuilder error() {
+      this.level = Level.ERROR;
       return this;
     }
 

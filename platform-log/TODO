@@ -1,0 +1,6 @@
+# TODO
+
+- portare tutto a LogEventBuilder.
+- provare a implementare log() che mettere in una coda e da lì scoda un thread... per performance...
+- gestire le key in modo più formale (Args and Args da xlogger).
+- in generale è stato implementato in velocità: da verificare formato log e migliorare il codice.

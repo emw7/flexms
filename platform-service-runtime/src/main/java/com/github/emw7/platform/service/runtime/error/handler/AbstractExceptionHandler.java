@@ -113,7 +113,7 @@ public abstract sealed class AbstractExceptionHandler permits AbstractClientExce
       return objectReader.readValue(params);
     } catch (JsonProcessingException e) {
       // TODO made it formal with EventLogger.
-      logger.warn("[JSON-PROCESSING] cannot deserialize json '{}' to map: {}", params,
+      logger.warn("[JSON-PROCESSING] cannot deserialize json '{}' to map '{}'; returning empty map as fallback", params,
           e.getMessage());
       return Map.of();
     }

@@ -33,26 +33,6 @@
       <artifactId>platform-service-core</artifactId>
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
-    <!-- <dependency>
-      <groupId>com.github.emw7</groupId>
-      <artifactId>platform-i18n</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>com.github.emw7</groupId>
-      <artifactId>platform-error</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>com.github.emw7</groupId>
-      <artifactId>platform-telemetry</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>com.github.emw7</groupId>
-      <artifactId>platform-log</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
-    </dependency> -->
     <!--endregion EMW7 -->
 
     <!--region Test -->
