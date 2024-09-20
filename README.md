@@ -297,7 +297,7 @@ This section is not for end users, but it is for developers or for end users tha
   `ReloadableResourceBundleMessageSource` because it is not needed reloading the messages are they
   are statically included with the EMW7 platform project and that is not updatable.
 - *How is [goal #1](#goals) reached?*  
-  It is reached with `CompositeMessageSource` that collectes all message sources bean that are defined in the application 
+  It is reached with `CompositeMessageSource` that collects all message sources bean that are defined in the application 
   and that delegates message retrieval to them and treating in a special mean the `appMessageSource` (see [above](#enable-internationalisation-in-an-application) for more information).
 - *How must be named the code in the platform prooject messages file?*  
   They must be prefixed by `I18nLabelPrefixes#getPlatformPrefix` followed by platform project root package; example:  
