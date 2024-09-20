@@ -5,12 +5,11 @@ import com.github.emw7.platform.i18n.I18nLabelPrefixes;
 
 public final class Constants {
 
-  public static final String I18N_LABEL_REQUEST_PREFIX= I18nLabelPrefixes.PLATFORM_PREFIX + "request.";
+  //public static final String I18N_LABEL_REQUEST_PREFIX= I18nLabelPrefixes.PLATFORM_PREFIX + "request.";
 
   // TODO doc
-  @I18nLabel(label = "com.github.emw7.platform.generic-error")
-  public static final String DEFAULT_ERROR_LABEL =  I18N_LABEL_REQUEST_PREFIX
-    + "generic-error";
+  @I18nLabel(params = {})
+  public static final String DEFAULT_ERROR_LABEL = "com.github.emw7.platform.error.generic-error";
 
   /**
    * TODO doc
@@ -23,8 +22,7 @@ public final class Constants {
    */
   public static final int SERVER_ERROR_CODE = 500;
 
-  @I18nLabel(label = "com.github.emw7.platform.request.server-error")
-  public static final String SERVER_ERROR_LABEL = I18N_LABEL_REQUEST_PREFIX
-      + "server-error";
+  @I18nLabel(params= {})
+  public static final String SERVER_ERROR_LABEL = "com.github.emw7.platform.error.internal-server-error";
 
 }

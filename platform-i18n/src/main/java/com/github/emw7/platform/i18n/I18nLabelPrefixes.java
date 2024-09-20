@@ -54,7 +54,7 @@ public final class I18nLabelPrefixes {
       this.customPrefix= "";
     }
     else {
-      this.customPrefix = customPrefix + (customPrefix.endsWith(".'") ? "" : '.');
+      this.customPrefix = customPrefix + (customPrefix.endsWith(".") ? "" : '.');
     }
   }
   //endregion Constructors

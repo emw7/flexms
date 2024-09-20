@@ -1,5 +1,6 @@
 package com.github.emw7.platform.core.mapper;
 
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import org.springframework.lang.NonNull;
@@ -8,6 +9,20 @@ import org.springframework.lang.Nullable;
 public final class MapMapper {
 
   //region Private static methods
+  private static <K extends Comparable<? super K>, V> int compareByKeyNullSafe(
+      @NonNull final Entry<K, V> a, @NonNull final Entry<K, V> b) {
+    // for what concern test coverage: cannot find a mean for getting a.key == null,
+    //  for some reason the entry with null key is triggered always as the second element (b).
+    if (a.getKey() == null) {
+      return (b.getKey() == null) ? 0 : -1;
+    }
+    // a.key is not null!
+    else if (b.getKey() == null) {
+      return 1;
+    } else {
+      return Entry.<K,V>comparingByKey().compare(a, b);
+    }
+  }
 
   /**
    * Appends to the provided string builder the string representation of the specified map's entry.
@@ -45,7 +60,7 @@ public final class MapMapper {
    * @param <K> the key type
    * @param <V> the value type
    */
-  public static @NonNull <K extends Comparable<K>, V> String mapToStringSortedByKey(
+  public static <K extends Comparable<? super K>, V> @NonNull String mapToStringSortedByKey(
       @Nullable final java.util.Map<K, V> map) {
     if (map == null) {
       return "null";
@@ -56,7 +71,7 @@ public final class MapMapper {
     final StringBuilder sb = new StringBuilder(map.size() * 64);
     sb.append('{');
 
-    return map.entrySet().stream().sorted(Entry.comparingByKey())
+    return map.entrySet().stream().sorted(MapMapper::compareByKeyNullSafe)
         .collect(() -> sb, MapMapper::map, (a, b) -> a.append(b.toString()))
         .replace(sb.length() - 2, sb.length(), "}").toString();
   }

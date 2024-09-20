@@ -1,7 +1,7 @@
 package com.github.emw7.platform.i18n;
 
-import com.github.emw7.platform.i18n.util.I18nUtil;
 import com.github.emw7.platform.i18n.autoconfig.PlatformI18nAutoConfig;
+import com.github.emw7.platform.i18n.util.I18nUtil;
 import java.util.Locale;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -17,8 +17,8 @@ import org.springframework.lang.Nullable;
 /**
  * Translates using a {@link MessageSource}.
  * <p>
- * {@link PlatformI18nAutoConfig#messageSourceTranslator(MessageSource, I18nLabelPrefixes)} define
- * a bean of such a type passing as arguments the {@link CompositeMessageSource} that must be
+ * {@link PlatformI18nAutoConfig#messageSourceTranslator(MessageSource, I18nLabelPrefixes)} define a
+ * bean of such a type passing as arguments the {@link CompositeMessageSource} that must be
  * configured by the application and the bean of type {@code I18nLabelPrefixes} bean defined by
  * {@link PlatformI18nAutoConfig#i18nLabelPrefixes(String)}. Please refer to
  * <a href="https://github.com/emw7/flexms/blob/main/README.md">EMW7 reference
@@ -84,14 +84,13 @@ public class MessageSourceTranslator implements Translator {
    * Output:
    *  translate(locale, label, params) => El usuario john.doe tiene 33 años, está activo true y tiene un factor de riesgo de 3.14
    * </pre>
-   * @param locale locale for which translation of {@code label} is wanted;
-   *              set to {@code Locale.default()}d is {@code null}
    *
-   * @param label label for which translation is wanted
+   * @param locale locale for which translation of {@code label} is wanted; set to
+   *               {@code Locale.default()} is {@code null}
+   * @param label  label for which translation is wanted
    * @param params actual parameters for message's placeholder
-   *
-   * @return the translation related to the provided {@code label} and {@code locale} formatted
-   * with actual values specified in {@code params}
+   * @return the translation related to the provided {@code label} and {@code locale} formatted with
+   * actual values specified in {@code params}
    */
   @Override
   public @NonNull String translate(@Nullable final Locale locale, @NonNull final String label,
@@ -114,11 +113,14 @@ public class MessageSourceTranslator implements Translator {
   }
 
   /**
-   * Returns {@code translate(...)}
-   * @param language
-   * @param label
-   * @param params
-   * @return {copde translate(...)}
+   * Returns {@code translate(I18nUtil.locale(language), label, params)}.
+   *
+   * @param language IETF BCP 47 language tag (refer to {@link I18nUtil#locale(String)} for more
+   *                 information.
+   * @param label    label for which translation is wanted
+   * @param params   actual parameters for message's placeholder
+   * @return {code translate(I18nUtil.locale(language), label, params)}
+   * @see #translate(Locale, String, Map)
    */
   @Override
   public @NonNull String translate(@Nullable final String language, @NonNull final String label,
@@ -165,7 +167,7 @@ public class MessageSourceTranslator implements Translator {
   private @Nullable String retrieveForPrefix(@NonNull final Locale locale,
       @NonNull final String label) {
     try {
-           return getMessageSource().getMessage(label, null, locale);
+      return getMessageSource().getMessage(label, null, locale);
     } catch (NoSuchMessageException e) {
       return null;
     }

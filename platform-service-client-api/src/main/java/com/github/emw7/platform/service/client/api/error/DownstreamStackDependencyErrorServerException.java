@@ -25,13 +25,14 @@ public final class DownstreamStackDependencyErrorServerException extends
   public static final Code CODE = new Code("5XDNA");
   //endregion Private static final properties
 
-  @I18nLabel(label = "com.github.emw7.platform.service.client.api.downstream-stack-dependency-error",
-  params={CALLER_KEY, SERVICE_NAME_KEY, SERVICE_VERSION_KEY, CAUSE_KEY})
-  private static final String I18N_LABEL = I18nLabelPrefixes.PLATFORM_PREFIX +
-      "service.client.api." + "downstream-stack-dependency-error";
+  @I18nLabel(params={CALLER_KEY, SERVICE_NAME_KEY, SERVICE_VERSION_KEY, CAUSE_KEY})
+  private static final String I18N_LABEL = "com.github.emw7.platform.service.client.api.downstream-stack-dependency-error";
   //endregion Private static final properties
 
   //region Private properties
+  /**
+   * The reference ({@code ref} property) of the remote exception that caused this one.
+   */
   private final String causeRef;
   //endregion Private properties
 

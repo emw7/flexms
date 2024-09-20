@@ -2,9 +2,11 @@
 
 - 1 gestione errori quando arriva una eccezione rest ma non in formato RequestErrorResponse (tipo verificare se i (certi) campi sono null dopo la conversione in json?)
 - V [CompositeMessageSource] sistemare le traduzioni che NON usano tutti i messages*.properties (per fare delle prove avevo messo un xmessageSource che quindi va rimosso)
--- 6 documentazione per framework CompositeMessageSource
+-- V documentazione per framework CompositeMessageSource
 - V gestire ServerNotFound (che è una internal exception) come ServerRequestErrorException (vedi TODO implement DependencyUnavailableServerException)
 - 1 mettere in RequestErrorResponse la classe da creare se la richiesta NON è fatta da un "umano", ma da m2m
+^^^^l'ho fatto, ma probabilmente non serve o inutile, cmq NON la sto usando come cosa perché cmq anche se ho la classe,
+    poi dovrei conoscere anche il costrutture... quindi credo toglierò.
 
 - 5 how to force in code spring.data.web.pageable.prefix and spring.data.web.sort.sort-parameter;
   (spring.data.web.pageable.prefix=app- and spring.data.web.sort.sort-parameter=app-sort)
@@ -16,4 +18,6 @@
 
 - 1 ServerException NON è mappata va definita ServerErrorDependencyError...
 - 1 Gli errori tipo 405 il service NON li mappa negli errori std di platform e quindi risulta unmapped: è giusto o va fatta meglio la cosa?
+
+- 3 le label i18n secondo me devono avere i18n dopo com.githuib.emw7.... -> com.githuib.emw7.i18n....
 

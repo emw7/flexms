@@ -22,11 +22,8 @@ public final class UnmappedDependencyErrorServerException extends DependencyErro
   //  https://www.random.org/strings/?num=1&len=5&digits=on&upperalpha=on&unique=on&format=html&rnd=new.
   public static final Code CODE = new Code("TLR26");
 
-  @I18nLabel(label = "com.github.emw7.platform.service.client.api.unmapped-dependency-error", params = {
-      CALLER_KEY, SERVICE_NAME_KEY, SERVICE_VERSION_KEY})
-  private static final String I18N_LABEL =
-      I18nLabelPrefixes.PLATFORM_PREFIX +
-          "service.client.api." + "unmapped-dependency-error";
+  @I18nLabel(params = { CALLER_KEY, SERVICE_NAME_KEY, SERVICE_VERSION_KEY })
+  private static final String I18N_LABEL = "com.github.emw7.platform.service.client.api.unmapped-dependency-error";
   //endregion Private static final properties
 
   //region Private properties

@@ -1,10 +1,12 @@
 package com.github.emw7.platform.i18n;
 
 import com.github.emw7.platform.log.EventLogger;
+import jdk.jfr.Event;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.event.Level;
 import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 /**
  * @see <a href="https://sultanov.dev/blog/access-spring-beans-from-unmanaged-objects/">Section '4.
@@ -17,8 +19,25 @@ public final class TranslatorContainer {
   //endregion Private static final properties
 
   //region Private static properties
+  /*
+     DESIGN
+
+     Q: Why is it volatile?
+     A: https://www.cs.umd.edu/~pugh/java/memoryModel/DoubleCheckedLocking.html
+   */
   private static volatile Translator translator;
   //endregion Private static properties
+
+  //region Private static methods
+  private static void logIgnoring (@Nullable final Translator translator)
+  {
+    EventLogger.notice(log)
+        .warn()
+        .pattern("ignoring instance {} as translator already set with instance {}")
+        .params(( translator == null ) ? "null" : translator, getTranslator())
+        .log();
+  }
+  //endregion Public static methods
 
   //region Public static methods
 
@@ -62,7 +81,13 @@ public final class TranslatorContainer {
         if (TranslatorContainer.translator == null) {
           TranslatorContainer.translator = translator;
         }
+        else {
+          logIgnoring(translator);
+        }
       }
+    }
+    else {
+      logIgnoring(translator);
     }
   }
   //endregion Constructors

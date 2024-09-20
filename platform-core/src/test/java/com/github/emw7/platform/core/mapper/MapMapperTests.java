@@ -1,5 +1,7 @@
 package com.github.emw7.platform.core.mapper;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -36,19 +38,20 @@ public class MapMapperTests {
   // must test as NON-sorted as code is duplicated.
   @Test
   public void givenNull_whenToStringSortedByKey_thenStringNull() {
-    final String s = MapMapper.mapToString(null);
+    final String s = MapMapper.mapToStringSortedByKey(null);
     Assertions.assertThat(s).isEqualTo(MAP_NULL);
   }
 
   @Test
   public void givenEmpty_whenToStringSortedByKey_thenStringEmpty() {
-    final String s = MapMapper.mapToString(java.util.Map.of());
+    final Map<String, ?> sut= java.util.Map.of();
+    final String s = MapMapper.mapToStringSortedByKey(sut);
     Assertions.assertThat(s).isEqualTo(MAP_EMPTY);
   }
 
   @Test
   public void givenOneEntry_whenToStringSortedByKey_thenStringOneEntry() {
-    final String s = MapMapper.mapToString(java.util.Map.of("a", "s"));
+    final String s = MapMapper.mapToStringSortedByKey(java.util.Map.of("a", "s"));
     Assertions.assertThat(s).isEqualTo("{a=s}");
   }
 
@@ -69,6 +72,20 @@ public class MapMapperTests {
     Assertions.assertThat(s)
         .isEqualTo("{a=0, b=a, c=2.71828182845, d=1, e=b, f=3.14, g=true, h=false}");
   }
+
+  // cannot test with NON-sorted version as order is unpredictable.
+  // null key and value
+  @Test
+  public void givenNullKeysAndValues_whenToStringSortedByKey_thenSStringManyEntries() {
+    final Map<String,String> sut= new HashMap<>();
+    sut.put(null, "va");
+    sut.put("kb", null);
+    sut.put("kc", null);
+    sut.put("kd", "vd");
+    final String s = MapMapper.mapToStringSortedByKey(sut);
+    Assertions.assertThat(s).isEqualTo("{null=va, kb=null, kc=null, kd=vd}");
+  }
+
   //endregion SortedByKey
   //endregion Tests
 

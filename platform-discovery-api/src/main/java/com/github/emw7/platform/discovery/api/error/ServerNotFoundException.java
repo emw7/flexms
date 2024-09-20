@@ -17,10 +17,8 @@ public final class ServerNotFoundException extends ServerRegistryServerException
   // generated with https://www.random.org/strings/?num=1&len=5&digits=on&upperalpha=on&unique=on&format=html&rnd=new..
   private static final Code CODE = new Code("4EF1I");
 
-  @I18nLabel(label = "com.github.emw7.platform.discovery.api.server-not-found", params = {
-      "serverName", "serverVersion", "errorReason"})
-  private static final String I18N_LABEL =
-      I18nLabelPrefixes.PLATFORM_PREFIX + "discovery.api." + "server-not-found";
+  @I18nLabel(params = {"serverName", "serverVersion", "errorReason"})
+  private static final String I18N_LABEL = "com.github.emw7.platform.discovery.api.server-not-found";
   //endregion Private static properties
 
   //region Private static methods

@@ -41,13 +41,13 @@ Content:
 
 ## platform-i18n
 
-A set of functions related to internationalization.
+A set of functions related to internationalisation.
 
-Content: see [Internationalization](#internationalization)
+Content: see [Internationalisation](#internationalisation)
 
 **STATUS**: da completare  
 **Dependencies**: platform-core  
-**Autoconfigure**: see [Internationalization](#internationalization)
+**Autoconfigure**: see [Internationalisation](#internationalisation)
 
 [**TODO**](./platform-i18n/TODO)
 
@@ -174,22 +174,22 @@ A service provides some common modules:
 
 Containers are TODO : add description of containers that is not easy to be written.
 
-# Internationalization
+# Internationalisation
 
-The `platform-i18n` platform project provides a set of functions related to internationalization as:
+The `platform-i18n` platform project provides a set of functions related to internationalisation as:
 - An easy an a standard way for getting messages in the specified language for a code (example: code => com.github.emw7.i18n.this-is-a-test, language => es, translate(code, language) => esto es una prueba).
 - A base class for exception that needs/wants localized message. 
 
 ## Goals
 
-The goals to be reached with and that lead to the EM7 internationalization implementation are:
+The goals to be reached with and that lead to the EM7 internationalisation implementation are:
 
-1. <a name="internationalization-goal-1"></a>Platform projects provide their own translation in message sources.
-2. <a name="internationalization-goal-2"></a>Application can override the translation provided by EMW7 platform projects.
+1. <a name="internationalisation-goal-1"></a>Platform projects provide their own translation in message sources.
+2. <a name="internationalisation-goal-2"></a>Application can override the translation provided by EMW7 platform projects.
 
-## Enable internationalization in an application
+## Enable internationalisation in an application
 
-To enable internationalization, the following two things must be done:
+To enable internationalisation, the following two things must be done:
 
 1. Add to the application a dependency on [platform-i18n platform project](#platform-i18n).
 2. In the application create a bean of type `CompositeMessageSource` and name it `messageSource` as described below.
@@ -211,7 +211,7 @@ public class ApplicationConfig {
 
 **Note**: such a bean should not be used directly by the application, but the application should use `Translator` described below.
 
-Including the `platform-i18n` the following bean are autoconfigured[^1]:
+Including the `platform-i18n` the following bean are autoconfigured:
 
 - `I18nLabelPrefixes i18nLabelPrefixes`
 - `@ConditionalOnBean(MessageSource.class) Translator messageSourceTranslator`
@@ -221,7 +221,7 @@ Including the `platform-i18n` the following bean are autoconfigured[^1]:
 The `messageSourceTranslator` is constructed by using the `messageSource` created by the application.
 
 > The `messageSourceTranslator` bean can be injected in the other (application) beans and used to retrieve 
-message translantions. Objects not managed by Spring (created with `new` for example) can use `TranslatorContainer#getTranslator()` to get the `messageSourceTranslator` bean.  
+message translations. Objects not managed by Spring (created with `new` for example) can use `TranslatorContainer#getTranslator()` to get the `messageSourceTranslator` bean.  
 
 If the code to be translated is prefixed with EMW7 platform prefix (`com.github.emw7.platform.`, see `I18nLabelPrefixes#getPlatformPrefix`, all messages provided by 
 each platform project are prefixed with such a prefix), and if 
@@ -231,7 +231,7 @@ prefix with the one returned by `I18nLabelPrefixes#getCustomPrefix`. By default,
 by `I18nLabelPrefixes#getCustomPrefix` is an empty string and can be customized using the system property `com.github.emw7.platform.i18n.label-custom-prefix`.
 
 ![PE8 Componenet diagram](/extra/doc/V1P%20Internationalisation%20-%20PE8%20Componenet%20diagram.png)
-*PE8 Componenet diagram.*
+*PE8 Components diagram.*
 
 This is better explained with an example:  
 Setting `com.github.emw7.platform.i18n.label-custom-prefix=foo.acme.app.` (if trailing dot is missing then it is added by platform), the statement 
@@ -262,13 +262,13 @@ Note that if the code to be translated is not prefixed by the EMW7 platform pref
 
 ## Internals
 
-This sections is not for end users but it is for developers or for end users that want understanding how internationalization has been desigend and why internationalization has been designed in such a way.
+This section is not for end users, but it is for developers or for end users that want to understand how internationalisation has been designed and why internationalisation has been designed in such a way.
 
 - *Why it is the application that must define the bean of type `MessageSource messageSource` and name `messageSource`?*  
   Because for reason (due to bean creation priorities I guess) it seems that if `platform-i18n` defines a bean 
   with such a name, it clashes with the bean that spring creates anyway.
-- *How must named the platform projects resouce bundles for the messages?*  
-  They must named after the root package of the project with dots (.) replced by underscores (_) and suffixed by `messages`; with reference to `platform-service-client-api` (maven) platform project, the sources will apper as follow:
+- *How must be named the platform projects resource bundles for the messages?*  
+  They must named after the root package of the project with dots (.) replaced by underscores (_) and suffixed by `messages`; with reference to `platform-service-client-api` (maven) platform project, the sources will apper as follow:
   ```
   src/main/resources/
       com_github_emw7_platform_service_client_api_messages.properties
@@ -298,7 +298,7 @@ This sections is not for end users but it is for developers or for end users tha
   are statically included with the EMW7 platform project and that is not updatable.
 - *How is [goal #1](#goals) reached?*  
   It is reached with `CompositeMessageSource` that collectes all message sources bean that are defined in the application 
-  and that delegates message retrieval to them and treating in a special mean the `appMessageSource` (see [above](#enable-internationalization-in-an-application) for more information).
+  and that delegates message retrieval to them and treating in a special mean the `appMessageSource` (see [above](#enable-internationalisation-in-an-application) for more information).
 - *How must be named the code in the platform prooject messages file?*  
   They must be prefixed by `I18nLabelPrefixes#getPlatformPrefix` followed by platform project root package; example:  
   <pre>
@@ -343,5 +343,3 @@ It can be explained with an example.
 The project root package for a package which name is `platform-acme-foo-bar` is: `com.github.emw7.platform.acme.foo.bar`.
 
 # Notes
-
-[^1]: Auto configuration https://docs.spring.io/spring-boot/reference/using/auto-configuration.html

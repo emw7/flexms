@@ -7,6 +7,11 @@ import java.util.Map;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
+/*
+   This is a copy of I18nEnabledExceptionTest with reference to I18nEnabledExceptionTest
+   replaced with references to I18nEnabledRuntimeExceptionTest.
+ */
+
 /**
  * Base for runtime exception that needs/wants the exception message got from {@link Translator}.
  * <p>
@@ -49,7 +54,7 @@ public abstract class I18nEnabledRuntimeException extends RuntimeException {
 
 
   //region Private static properties
-  @I18nLabel(label = I18N_LABEL_UNKNOWN_ERROR_REASON)
+  @I18nLabel(params = {})
   private static final String I18N_LABEL_UNKNOWN_ERROR_REASON = "com.github.emw7.platform.i18n.unknown-error-reason";
   //endregion Private static properties
 

@@ -11,6 +11,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.lang.NonNull;
 
 @AutoConfiguration
@@ -46,6 +47,17 @@ public class PlatformI18nAutoConfig {
   public TranslatorContainer translatorContainer(@NonNull final Translator translator) {
     //noinspection InstantiationOfUtilityClass
     return new TranslatorContainer(translator);
+  }
+
+  /**
+   * <a href="https://github.com/emw7/flexms/blob/5-transform-flexms-service-to-a-frontend-service/README.md#Internationalisation">README :: Internationalisation</a>
+   */
+  @Bean
+  public MessageSource platformI18nMessageSource () {
+    ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+    messageSource.setBasename("com_github_emw7_platform_i18n_messages");
+    messageSource.setDefaultEncoding("UTF-8");
+    return messageSource;
   }
   //endregion Beans
 }

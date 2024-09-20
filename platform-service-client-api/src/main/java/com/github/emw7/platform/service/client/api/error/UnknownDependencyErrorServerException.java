@@ -27,10 +27,8 @@ public final class UnknownDependencyErrorServerException extends
   private final String causeRef;
   //endregion Private properties
 
-  @I18nLabel(label = "com.github.emw7.platform.service.client.api.unknown-dependency-error",
-  params={CALLER_KEY, SERVICE_NAME_KEY, SERVICE_VERSION_KEY, CAUSE_KEY})
-  private static final String I18N_LABEL = I18nLabelPrefixes.PLATFORM_PREFIX +
-      "service.client.api." + "unknown-dependency-error";
+  @I18nLabel(params = { CALLER_KEY, SERVICE_NAME_KEY, SERVICE_VERSION_KEY, CAUSE_KEY })
+  private static final String I18N_LABEL = "com.github.emw7.platform.service.client.api.unknown-dependency-error";
   //endregion Private static final properties
 
   //region Constructors

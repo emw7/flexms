@@ -48,7 +48,7 @@ import org.springframework.lang.Nullable;
 public abstract class I18nEnabledException extends Exception {
 
   //region Private static properties
-  @I18nLabel(label = I18N_LABEL_UNKNOWN_ERROR_REASON)
+  @I18nLabel(params = {})
   private static final String I18N_LABEL_UNKNOWN_ERROR_REASON = "com.github.emw7.platform.i18n.unknown-error-reason";
   //endregion Private static properties
 
@@ -93,8 +93,9 @@ public abstract class I18nEnabledException extends Exception {
    */
   private static @NonNull String messageFromLabel(@NonNull final String label,
       @Nullable final Map<String, Object> params, @Nullable final Throwable cause) {
-    return TranslatorContainer.getTranslator()
+    String msg= TranslatorContainer.getTranslator()
         .translate((Locale) null, label, addErrorReason(params, cause));
+    return msg;
   }
   //endregion Private static methods
 
