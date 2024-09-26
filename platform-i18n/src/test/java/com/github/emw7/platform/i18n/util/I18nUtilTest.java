@@ -11,6 +11,7 @@ class I18nUtilTest {
   void localeFromNullGivesNull() {
     //noinspection ConstantValue
     final Locale sut= I18nUtil.locale(null);
+    //noinspection ConstantValue
     Assertions.assertThat(sut).as("locale from null gives null").isNull();
   }
 

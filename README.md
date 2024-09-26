@@ -45,7 +45,7 @@ A set of functions related to internationalisation.
 
 Content: see [Internationalisation](#internationalisation)
 
-**STATUS**: da completare  
+**STATUS**: GA  
 **Dependencies**: platform-core  
 **Autoconfigure**: see [Internationalisation](#internationalisation)
 
@@ -53,7 +53,7 @@ Content: see [Internationalisation](#internationalisation)
 
 ## platform-telemetry
 
-TODO: after the refactoring (  a framework built after [Open Telemetry](https://opentelemetry.io/)
+TODO: produce documentation only after the refactoring (  a framework built after [Open Telemetry](https://opentelemetry.io/)
 traces concepts)
 **STATUS**: to be refactored
 **Dependencies**: platform-log  
@@ -61,7 +61,7 @@ traces concepts)
 
 ## platform-error
 
-TODO: after the refactoring
+TODO: produce documentation only after the refactoring
 **STATUS**: to be refactored  
 **Dependencies**: platform-i18n, platform-telemetry  
 [**TODO**](./platform-error/TODO)
@@ -182,7 +182,7 @@ The `platform-i18n` platform project provides a set of functions related to inte
 
 ## Goals
 
-The goals to be reached with and that lead to the EM7 internationalisation implementation are:
+The goals to be reached with and that lead to the EMW7 internationalisation implementation are:
 
 1. <a name="internationalisation-goal-1"></a>Platform projects provide their own translation in message sources.
 2. <a name="internationalisation-goal-2"></a>Application can override the translation provided by EMW7 platform projects.

@@ -28,7 +28,7 @@ import org.springframework.context.MessageSource;
    See [README :: Containers](https://github.com/emw7/flexms/blob/5-transform-flexms-service-to-a-frontend-service/README.md#Containers)
 
    Why do tests use the following construct?
-   Try (MockedStatic<TranslatorContainer> translatorContainer = Mockito.mockStatic(
+   try (MockedStatic<TranslatorContainer> translatorContainer = Mockito.mockStatic(
        TranslatorContainer.class)) {
 
    Because I18nEnabledException (not being managed by Spring) uses TranslatorContainer to retrieve
@@ -53,7 +53,7 @@ import org.springframework.context.MessageSource;
    That worked till not changed TranslatorContainer for not setting the translator static property if already
    not null: after such a change, only the test run as first was successfully while the others failed.
    What was happening was that messageSource mock at every test got a different instance that was injected into
-   translator (row 3) and in turn translator was injected into TranslatorContainer (row 4). That
+   translator (row 3) and in turn, translator was injected into TranslatorContainer (row 4). That
    worked before the changes because TranslatorContainer constructor overrode the translator static property, but
    after the changes the translator static property was not overridden and so while all was fine for the first test,
    the next ones, even if stubbed the new messageSource mock (rows 7, 8) (referenced by the new translator (row 3),

@@ -51,7 +51,6 @@ public final class TranslatorContainer {
    * @return either {@link #translator} ot {@link FooTranslator} if {@link #translator} is
    * {@code null}
    */
-  // returns null is called before any object instantiation
   public static @NonNull Translator getTranslator() {
     if (translator == null) {
       EventLogger.notice(log).warn().pattern(
@@ -72,6 +71,8 @@ public final class TranslatorContainer {
    * This is {@code public} only to be used in tests.
    * <p>
    * Sets {@link #translator} with the supplied translator if it is not {@code null}.
+   * If {@link #translator} is not {@code null} then a {@code warn} log is printed,
+   * and the supplied translator is ignored.
    *
    * @param translator translator to which set {@link #translator} if it is not {@code null}.
    */

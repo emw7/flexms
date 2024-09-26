@@ -50,12 +50,12 @@ public class MessageSourceTranslatorPlatformIT {
   }
 
   @Test
-  public void givenLabel_WhenTranslateForItalian_thenItalian() {
-    final String translation = getTranslator().translate(Locale.ITALIAN,
+  public void givenLabel_WhenTranslateForSpanish_thenSpanish() {
+    final String translation = getTranslator().translate(Locale.forLanguageTag("es"),
         "com.github.emw7.platform.discovery.api.test.label.unknown", null);
     Assertions.assertThat(translation)
         .as("given label when translate for non existent language then fallback to default language")
-        .isEqualTo("sconosciuto");
+        .isEqualTo("desconocido");
   }
 
   @Test

@@ -5,6 +5,8 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 
+// this is not for CompositeMessageSourceTest, but it is for
+// MessageSourceTranslator*IT.
 @TestConfiguration
 public class CompositeMessageSourceTestConfig {
 

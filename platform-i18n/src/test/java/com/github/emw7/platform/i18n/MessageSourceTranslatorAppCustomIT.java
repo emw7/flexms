@@ -33,6 +33,7 @@ public class MessageSourceTranslatorAppCustomIT {
   protected MessageSourceTranslator getTranslator() {
     return translator;
   }
+
   @Test
   public void givenPlainLabel_WhenTranslate_thenPlainRetrievedFromAppMessageSource() {
     final String translation = getTranslator().translate((Locale) null, "plain.test.label.foo", null);
