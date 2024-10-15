@@ -309,8 +309,8 @@ public final class RestProtocolOperation implements ProtocolTemplate {
           restProtocolRequest);
       return exchanger.apply(requestEntity);
     } catch (RestClientException e) {
-      //noinspection resource
-      EventLogger.notice(log).level(Level.ERROR)
+      /*//noinspection resource*/
+      EventLogger.notice(log).error()
           .pattern("rest request failed; method: {}, error: {}")
           .params(restProtocolRequest.getHttpMethod(), e.getMessage()).log();
       throw manageException(e, callerId, server);

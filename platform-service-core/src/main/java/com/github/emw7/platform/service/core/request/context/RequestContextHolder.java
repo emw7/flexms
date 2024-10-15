@@ -1,6 +1,6 @@
 package com.github.emw7.platform.service.core.request.context;
 
-import com.github.emw7.platform.log.EventLogger;
+import static com.github.emw7.platform.log.EventLogger.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.event.Level;
@@ -26,7 +26,7 @@ public final class RequestContextHolder {
   public static void set(@NonNull final RequestContext requestContext) {
     // TODO integrate with eventing service.
     if ( requestContext == null ) {
-      EventLogger.notice(log, Level.WARN, "[ILLEGAL-ARGUMENT] provided request context is not valid: must be not null");
+      notice(log).warn().pattern("[ILLEGAL-ARGUMENT] provided request context is not valid: must be not null");
     }
     holder.set(requestContext);
   }

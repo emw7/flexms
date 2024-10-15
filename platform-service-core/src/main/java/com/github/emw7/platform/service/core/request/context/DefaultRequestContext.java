@@ -33,8 +33,8 @@ public final class DefaultRequestContext implements RequestContext {
   }
 
   /**
-   * Returns {@link #caller()} if {@code originator == Caller#DEFAULT}, {@code originator} otherwise.
-   * @return {@link #caller()} if {@code originator == Caller#DEFAULT}, {@code originator} otherwise
+   * Returns {@link #caller()} if {@code originator == Caller#DEFAULT}; {@code originator} otherwise.
+   * @return {@link #caller()} if {@code originator == Caller#DEFAULT}; {@code originator} otherwise
    */
   @Override
   public @NonNull Caller originator() {

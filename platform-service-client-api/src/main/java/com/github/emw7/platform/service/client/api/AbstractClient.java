@@ -15,6 +15,7 @@ import com.github.emw7.platform.error.ServiceNotFoundServerException;
 import com.github.emw7.platform.error.category.NotFound;
 import com.github.emw7.platform.log.EventLogger;
 import com.github.emw7.platform.log.LogEvent;
+import com.github.emw7.platform.log.StackableLogEvent;
 import com.github.emw7.platform.protocol.api.ProtocolRequest;
 import com.github.emw7.platform.protocol.api.ProtocolTemplate;
 import com.github.emw7.platform.protocol.api.error.DependencyErrorException;
@@ -391,17 +392,20 @@ public abstract class AbstractClient {
       @Nullable final Map<Class<? extends Annotation>, Function<RequestErrorResponse, ? extends RequestErrorException>> requestErrorResponseToExceptionMappers,
       @NonNull Exchanger<T, B> exchanger) throws RequestErrorException {
 
-    try (final LogEvent logEvent = EventLogger.doing(log).level(Level.DEBUG)
-        .ctxArg("service-name", serviceName).ctxArg("service-version", serviceVersion)
-        .ctxArg("caller", callerId).ctxArg("endpoint", endpoint)
-        .pattern("call endpoint {} of service {}@{} ").params(endpoint, serviceName, serviceVersion)
-        .log()) {
+    try  {
+      // TODO fix for new log.
+      final LogEvent logEvent = EventLogger.doing(log).debug()
+          /*.ctxArg("service-name", serviceName).ctxArg("service-version", serviceVersion)
+          .ctxArg("caller", callerId).ctxArg("endpoint", endpoint)*/
+          .pattern("call endpoint {} of service {}@{} ", endpoint, serviceName, serviceVersion)
+          .log();
 
       final AuthToken token = authz.authorize();
       // can throw ServerNotFoundException
       final Server server = serverRegistry.discover(serviceName, serviceVersion);
       final String url = server.url();
-      logEvent.ctxArg("service-url", url);
+      // TODO fix ofr new log.
+      /*logEvent.ctxArg("service-url", url);*/
 
       // can throw ExchangerNestedRuntimeException
       T response = exchanger.apply(server, token);

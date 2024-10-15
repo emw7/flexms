@@ -7,7 +7,7 @@ import static com.github.emw7.platform.log.EventLogger.done;
 import static com.github.emw7.platform.log.EventLogger.notice;
 import static com.github.emw7.platform.log.EventLogger.throwing;
 
-import java.time.Duration;
+import org.apache.logging.log4j.LogManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;
@@ -17,8 +17,23 @@ public class PlatformLogApp {
   private static final Logger log = LoggerFactory.getLogger(PlatformLogApp.class);
 
   public static void main(String[] argv) {
+
+    Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+      try {
+        LogEvent.terminated.await();
+        LogManager.shutdown();
+      } catch (InterruptedException e) {
+        LogManager.shutdown();
+        Thread.currentThread().interrupt();
+      }
+    }));
+
     try (LogContext context = context(Arg.of("ex", "ex-v"))) {
       xxx(context);
+    }
+
+    for ( int i = 0 ; i < 5_000_000; i++ ) {
+      notice(log, "notice").arg("i", i).log();
     }
     notice(log, "fourth notice, who knows about ctx args").log();
 
@@ -26,10 +41,10 @@ public class PlatformLogApp {
         "throwing exception").log();
 
     caught(log, new Exception("un'altra eccezione", new NullPointerException()),
-        "caught exception").arg("oh","god").log();
+        "caught exception").arg("oh", "god").log();
 
 //    try {
-//      Thread.sleep(Duration.ofSeconds(5));
+//      Thread.sleep(Duration.ofMillis(2));
 //    } catch (InterruptedException e) {
 //      throw new RuntimeException(e);
 //    }
@@ -41,7 +56,8 @@ public class PlatformLogApp {
       notice(log, "second notice").log();
       context.addArg("post", "post-va");
       notice(log, "third notice should contain post ctx arg").log();
-      final DoingLogEvent somethingLogEvent = doing(log, "something {}", "beautiful").arg("greeting", "hello").log();
+      final DoingLogEvent somethingLogEvent = doing(log, "something {}", "beautiful").arg(
+          "greeting", "hello").log();
       if (false) {
         throw new Exception("while doing... cannot done");
       }
@@ -52,7 +68,7 @@ public class PlatformLogApp {
       // oh, no!
       caught(log, e, "oh, no!, this is a {}", "mess").log();
     } finally {
-      System.out.println("I cannot believe this");
+      //System.out.println("I cannot believe this");
     }
   }
 

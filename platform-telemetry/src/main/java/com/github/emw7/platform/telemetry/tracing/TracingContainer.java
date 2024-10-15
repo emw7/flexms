@@ -30,7 +30,7 @@ public final class TracingContainer {
   public static void set(@NonNull final Tracing tracing) {
     // TODO integrate with eventing service.
     if ( tracing == null ) {
-      EventLogger.notice(log, Level.WARN, "[ILLEGAL-ARGUMENT] provided tracing is not valid: must be not null");
+      EventLogger.notice(log).warn().pattern("[ILLEGAL-ARGUMENT] provided tracing is not valid: must be not null");
     }
     tracingContainer.set(tracing);
   }

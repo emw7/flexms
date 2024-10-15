@@ -23,7 +23,7 @@ public final class AppReadyEventListener {
   @EventListener
   public void onApplicationReadyEvent(@NonNull final ApplicationReadyEvent event) {
     // FIXME either notice or info.
-    notice(logger,"{} application {} started with id {}","[EMW7]",appConfigProperties.name(),
+    notice(logger).pattern("{} application {} started with id {}","[EMW7]",appConfigProperties.name(),
         appConfigProperties.instanceId());
   }
 }

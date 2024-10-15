@@ -1,6 +1,11 @@
 # TODO
 
-- portare tutto a LogEventBuilder.
-- provare a implementare log() che mettere in una coda e da lì scoda un thread... per performance...
-- gestire le key in modo più formale (Args and Args da xlogger).
-- in generale è stato implementato in velocità: da verificare formato log e migliorare il codice.
+V portare tutto a LogEventBuilder.
+V provare a implementare log() che mettere in una coda e da lì scoda un thread... per performance...
+- gestire le key in modo più formale (Args and Args da xlogger): non l'ho ancora fatto perché le
+  args dipendono dal progetto e quindi ogni progetto potrebbe definire le sue args... e magari utilizzare
+  un bean che le raccoglie Args.get("rest").callerId()... e platform-rest definisce il bean RestArgs che Args resitrato sotto "rest", ma c'è il problema del cast...
+  si potrebbe fare tutti con dei proxy...
+V in generale è stato implementato in velocità: da verificare formato log e migliorare il codice.
+- gestire trace-id e span-id in automatico (non deve passarlo il client) e configurabile.
+- gestire shutdown-timeout (see README)
