@@ -1,6 +1,8 @@
 package com.github.emw7.platform.log;
 
 import com.github.emw7.platform.core.mapper.BooleanMapper;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -123,17 +125,21 @@ public class LogEvent {
    */
   private static final boolean logOnThread;
 
-  private static final ExecutorService EXECUTOR;
+  private static final ExecutorService logThreadExecutor;
 
-  private static final ThreadFactory tf;
+  //private static final ThreadFactory tf;
 
   public static final CountDownLatch terminated;
+
+  private static final DateTimeFormatter formatter;
+
+  private static final boolean benchmark;
+  private static long benchmark_time;
+  private static long benchmark_entries;
   //endregion Private static final properties
 
   //region Static initialization
   static {
-
-    terminated = new CountDownLatch(1);
 
     final Environment environment = new StandardEnvironment();
 
@@ -145,11 +151,21 @@ public class LogEvent {
         "com.github.emw7.platform.log.log-on-thread", "false");
     logOnThread = BooleanMapper.fromString(envLogOnThread);
 
+    final String envBenchmark = environment.getProperty(
+        "com.github.emw7.platform.log.benchmark", "false");
+    benchmark = BooleanMapper.fromString(envBenchmark);
+    benchmark_time= 0;
+    benchmark_entries= 0;
+
     if (logOnThread) {
 
-      tf= Thread.ofPlatform().name("emw7-platform-log-", 1).daemon(true).factory();
+      terminated = new CountDownLatch(1);
 
-      EXECUTOR = Executors.newSingleThreadExecutor(new ThreadFactory() {
+      final ThreadFactory tf= Thread.ofVirtual().name("emw7-platform-log-", 1).factory();
+
+      formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
+
+      logThreadExecutor = Executors.newSingleThreadExecutor(new ThreadFactory() {
         @Override
         public @Nullable Thread newThread(@NonNull final Runnable r) {
 
@@ -164,31 +180,28 @@ public class LogEvent {
             MDC.setContextMap(parentContextMap);
             r.run();
           };
-          // disabled warning as it is not possible that tf is null as it is null only if logOn>thread
-          //  if false and in such a case we do not drop in this branch.
-          //noinspection DataFlowIssue
           return tf.newThread(wrapingRunnable);
         }
       });
 
       Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-        System.out.println("shutting down platform-log");
-        EXECUTOR.shutdown();
+        System.err.printf("[%s] shutting down platform-log%n", formatter.format(LocalDateTime.now()));
+        logThreadExecutor.shutdown();
         try {
           // Wait a while for existing tasks to terminate
-          if (!EXECUTOR.awaitTermination(60, TimeUnit.SECONDS)) {
+          if (!logThreadExecutor.awaitTermination(60, TimeUnit.SECONDS)) {
             // Cancel currently executing tasks forcefully
-            EXECUTOR.shutdownNow();
+            logThreadExecutor.shutdownNow();
             // Wait a while for tasks to respond to being cancelled
             //noinspection ResultOfMethodCallIgnored
-            EXECUTOR.awaitTermination(60, TimeUnit.SECONDS);
-            System.out.println("platform-log did not terminate properly");
+            logThreadExecutor.awaitTermination(60, TimeUnit.SECONDS);
+            System.err.printf("[%s] platform-log did not terminate properly%n",formatter.format(LocalDateTime.now()));
           } else {
-            System.out.println("platform-log terminated properly");
+            System.err.printf("[%s] platform-log terminated properly%n", formatter.format(LocalDateTime.now()));
           }
         } catch (InterruptedException ex) {
           // (Re-)Cancel if current thread also interrupted
-          EXECUTOR.shutdownNow();
+          logThreadExecutor.shutdownNow();
           // Preserve interrupt status
           Thread.currentThread().interrupt();
         } finally {
@@ -197,8 +210,10 @@ public class LogEvent {
       }));
     }
     else {
-      EXECUTOR= null;
-      tf= null;
+      terminated= new CountDownLatch(0);
+      logThreadExecutor = null;
+      //tf= null;
+      formatter= null;
     }
   }
   //endregion Static initialization
@@ -280,14 +295,30 @@ public class LogEvent {
    * different outputs as arguments are retrieved from {@code MDC} too.
    */
   public final void log() {
+    long t= 0;
+    if ( benchmark ) {
+      t=  System.nanoTime();
+    }
     if (logOnThread) {
       try {
-        EXECUTOR.submit(this::_log);
+        // logThreadExecutor cannot be null when logOnThread is true.
+        //noinspection DataFlowIssue
+        logThreadExecutor.submit(this::_log);
       } catch (RejectedExecutionException e) {
-        System.out.printf("rejected log %s%n", this);
+        // formatter cannot be null when logOnThread is true.
+        //noinspection DataFlowIssue
+        System.err.printf("[%s] rejected log %s%n", formatter.format(LocalDateTime.now()), this);
       }
     } else {
       _log();
+    }
+
+    if ( benchmark ) {
+      benchmark_time+= System.nanoTime() - t;
+      if ( ++benchmark_entries % 10000 == 0) {
+        System.err.printf("Printed %d log entries in %d nanoseconds (average: %d nanoseconds)%n", benchmark_entries, benchmark_time, benchmark_time/benchmark_entries);
+        //benchmark_time= 0;
+      }
     }
   }
 
@@ -360,7 +391,7 @@ public class LogEvent {
     return "[#" + tag + ':' + value + ']';
   }
 
-  private @NonNull String keyArg(@NonNull final String tag, @NonNull final String name,
+  private @NonNull String keyArg(@SuppressWarnings("SameParameterValue") @NonNull final String tag, @NonNull final String name,
       @NonNull final String value) {
     return "[#" + tag + ':' + name + '=' + value + ']';
   }

@@ -13,7 +13,7 @@ public final class MapUtil {
   //region API
 
   /**
-   * Returns a new unmodifiable map obtained by removing the specified key from the provided map.
+   * Returns a new unmodifiable map obtained by removing the specified keys from the provided map.
    * <p>
    * Returns {@code null} if provided the map is {@code null}.
    *
@@ -39,7 +39,7 @@ public final class MapUtil {
   }
 
   /**
-   * Returns a new unmodifiable map obtained by keeping only the specified key from the provided map.
+   * Returns a new unmodifiable map obtained by keeping only the specified keys from the provided map.
    * <p>
    * Returns {@code null} if the provided map is {@code null}.
    *

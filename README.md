@@ -4,6 +4,18 @@ A shelf of components for building a microservice flexibly using Spring.
 
 # Module descriptions and relationships
 
+In this chapters there are listed the projects that compose EMW7 framework.
+
+Each project has its own section with these information:
+- Project name (it is the section name).
+- A brief description of the project.
+- Content that can be a simple list if the project is simple or, if the project is complex, a link to a document that describes the project in detail.
+- STATUS: the status of the project:
+  - GA: General Available (that is the project is ready for production)
+- Dependencies: the other projects the project depends on.
+- Autoconfigure: spring autoconfiguration information.
+- TODO: a link to the TODOs of the project.
+
 ## platform-core
 
 A set of core functions not related to any technology.
@@ -12,8 +24,8 @@ Content:
 
 - Array util: common and frequent operations on arrays.
 - I18n utils: minimal i18n stuff that could be used and needed by who does not need all the i18n  
-  framework implemented in the platform-i18n framework.
-- Map utils: common and frequent operations on arrays.
+  framework implemented in the platform-i18n.
+- Map utils: common and frequent operations on maps.
 - Mappers: transformations from a type to another type:
     - Boolean: mapping from and to boolean.
     - Map: mapping from and to map.
@@ -31,7 +43,7 @@ approach.
 
 Content: see [Logging](./extra/doc/Logging/README.md)
 
-**STATUS**: da completare  
+**STATUS**: TODO: tests, integration with telemetry, OK: code doc  
 **Dependencies**: platform-core  
 **Autoconfigure**: /
 

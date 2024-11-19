@@ -2,20 +2,20 @@
 
 The platform-log platform project provides the EMW7 platform logging framework.  
 The EMW7 platform logging framework is based on the concept of log event.  
-Classic logging systems allow you to log messages by choosing the type of message:
+Classic logging systems allow to log messages by choosing the type of message:
 error, warning, informational, debug and tracing messages.  
-The instruction `logger.error("this is an error")` will print an error message,
-while the instruction logger.info("this is information") will print an informational message.  
-The message types are placed in a hierarchical scale, and you can enable only the types from a 
+The instruction `logger.error("this is an error")` prints an error message,
+while the instruction `logger.info("this is information")` prints an informational message.  
+The message types are placed in a hierarchical scale, and it is possible to enable only the types from a 
 certain level onwards. Usually the hierarchy (starting from the lowest level) is: `trace`, `debug`, 
 `info`, `warn`, `error`.  
-By enabling the info level, only info, warning and error messages will be printed and so the 
-instruction `logger.debug("this is for debugging")` will not produce any effect, that is, the 
-message will not be printed.  
+By enabling the info level, only info, warning and error messages are printed and so the 
+instruction `logger.debug("this is for debugging")` does not produce any effect, that is, the 
+message is not be printed.  
 
 The EMW7 platform logging system (from now on event logger) changes the message types by defining 
 the following types: `notice`, `doing`, `done`, `throwing` and `caught`.  
-These types are called log events.  
+These types are called log evenys.  
 Each of these types is associated with a classic type (which from now on will be called level) which,
 however, can be changed, with some constraints, when you write the logging instruction.  
 Example (we will see the details of these instructions in a bit, which are, however, partial):
@@ -43,7 +43,7 @@ The first form is assumed by the following keys: `event`, `uuid`, `ex-msg`, `ex-
 The second form is assumed by the following keys: `arg`.  
 Not all keys are applicable to all events. 
 Furthermore, not all keys are added by default by the various events. 
-For details, refer to the documentation of the various events.  
+For the details, refer to the documentation of the various events.  
 An example of a log message: `[#event:caught][#uuid:9c3ccda1-1196-4269-89da-ab1b1519a85a][#what:caught exception][#ex-msg:an exception][#ex-type:java.lang.Exception][#ex-cause-msg:null][#ex-cause-type:java.lang.NullPointerException][#arg:iid=123 ][#arg:tid:xyz]`
 
 ### Event key
@@ -53,9 +53,9 @@ changed in the log statement.
 
 ### What key
 
-The what key is composed of a pattern and a list of params.  
+The what key is composed of a pattern and a list of parameters.  
 The pattern is a string that can contain placeholders (in the form `{}`) that are replaced 
-positionally by the params.  
+positionally by the parameters.  
 Example:  
 > pattern: Today is {} and therefore I wear {}  
 > params: [hot, t-shirt]  
@@ -130,9 +130,9 @@ void callExampleAndCatch (...) {
 Before going into the details of event logger and therefore its architecture and design,
 it is useful to define the different events.
 - doing:
-  it is used to notify that something important is being done
-  ("deleting all users") and must be coupled with the done event:
-  it closes the doing, it may or may not have a result.
+  it is used to notify that something important is ongoing:
+  ("delete all users") and must be coupled with the done event
+- done: it closes the doingevent, it may or may not have a result.
 - notice:
   it is an extemporaneous event,
   for example, to notify that "the entity you were looking for has been found"
@@ -177,7 +177,7 @@ The following is the sequence diagram of the flow depicted above:
 **ATTENTION**: even if this feature has been designed to improve the performance, it has not been
 benchmarked so there is not proof that enabling it actually improves the performance.
 
-Log on thread is a feature that if enabled, then actual invocation of SLF4J is delegated, by log 
+Log on thread is a feature that, if enabled, actual invocation of SLF4J is delegated, by log 
 event, to a thread. This feature has been designed to improve the performance as actual printing 
 of a log message is time-consuming and so delegating it to a thread allows the application to go 
 ahead while the log message is printed. Printing to a thread arises three issues to be addressed: 
@@ -193,20 +193,6 @@ Point 2. is quite easy to be satisfied: using an executor and adding a shutdown 
 requests a clean shutdown of the executor in order to refuse new task but allowing for the already 
 submitted ones to complete.
 
-In realtà il punto 2.1 sembra essere necessario solo con LOG4J2 che registra uno shutdown hook 
-che, a quanto pare, impedisce di svuotare la coda di messaggi di log perché disabilita LOG4J2.  
-Comunque, siccome non stati provati tutti i sistemi di log potrebbe essere che lo stesso problema 
-ci sia con altri sistemi per cui se non tutti i messaggi di log vengono stampati, la causa 
-potrebbe essere la stessa di quella descritta per LOG4J2 e per cui va trovata una soluzione 
-specifica che esula dallo scopo di platform-log. Soluzione che potrebbe essere simile a quelle 
-proposte di seguito per LOG4J2.
-Per LOG4j2 ci sono 2 possibili soluzioni. 
-La prima è utilizzare l'attributo `shutdownHook` con valore `disable` nel tag `configuration`: 
-`<Configuration status="WARN" monitorInterval="30" shutdownHook="disable" ...>`. 
-Questo disabilita lo shutdown hook di LOG4J2 che però va spento in modo programmatico. L'applicazione 
-dovrà quindi registrare uno shutdown hook. Una possibile soluzione che sfrutta il count down latch 
-`terminated` azzerato dallo shutdown hook di `LogEvent` quando ha finito di fare il flushing dei log event 
-accodati:
 In fact, point 2.1 seems to be necessary only with LOG4J2, which registers a shutdown hook that,
 apparently, prevents the log message queue from being emptied because it disables LOG4J2. However,
 since not all logging systems have been tested, it’s possible that the same issue exists with other
@@ -231,11 +217,7 @@ Runtime.getRuntime().addShutdownHook(new Thread(() -> {
   }
 }));
 ```
-La seconda è utilizzare l'attributo `shutdownTimeout` il cui valore specifica i millisecondi da attendere prima di eseguire le azioni dello shutdown hook
-nel tag `configuration`:
-`<Configuration status="WARN" monitorInterval="30" shutdownTimeout="<milliseconds>" ...>`.
-Questa soluzione però non si è riusciti a farla funzionare (sembra che l'attributo sia del tutto 
-ignorato) e comunque si basa su una euristica per cui è preferibile la prima.
+
 The second solution is to use the `shutdownTimeout` attribute, whose value specifies the milliseconds
 to wait before executing the actions of the shutdown hook in the `configuration` tag: `<configuration
 status="WARN" monitorInterval="30" shutdownTimeout="<milliseconds>" ...>`. However, this solution has
@@ -252,131 +234,22 @@ More information is available at [Linking with a logging framework at deployment
 
 Description of [reload4j](https://reload4j.qos.ch/).
 
-These are the maven dependencies with scope `runtime` but they could be set as `provided`:
-```xml
-<dependencies>
-  <dependency>
-    <groupId>org.slf4j</groupId>
-    <artifactId>slf4j-reload4j</artifactId>
-    <version>${slf4j-reload4j.version}</version>
-    <scope>runtime</scope>
-  </dependency>
-  <!-- <dependency>
-    <groupId>ch.qos.reload4j</groupId>
-    <artifactId>reload4j</artifactId>
-    <version>1.2.25</version>
-    <scope>runtime</scope>
-  </dependency> -->
-</dependencies>
-```
-
-The `ch.qos.reload4j.ch.qos.reload4j` is commented out as `org.slf4j.slf4j-reload4j` depends on 
-it and it is not needed to be declared, but in case they will be `provided` then the jar defined 
-by `ch.qos.reload4j.ch.qos.reload4j` must be provided.
-
-And, because reload4j is a replacement for LOG4J 1.x then a `log4j.properties` must be provided. 
-Here a basic example:
-```properties
-# For the general syntax of property based configuration files see
-# the documentation of org.apache.log4j.PropertyConfigurator.
-
-# The root category uses two appenders: default.out and default.file.
-# The first one gathers all log output, the latter only starting with
-# the priority INFO.
-# The root priority is DEBUG, so that all classes can be logged unless
-# defined otherwise in more specific properties.
-log4j.rootLogger=DEBUG, default.out
-
-# System.out.println appender for all classes
-log4j.appender.default.out=org.apache.log4j.ConsoleAppender
-log4j.appender.default.out.threshold=DEBUG
-log4j.appender.default.out.layout=org.apache.log4j.PatternLayout
-log4j.appender.default.out.layout.ConversionPattern=%-5p %c: %m%n
-```
+Example available in [extra/examples/reload4j](../../../platform-log/extra/examples/reload4j).
 
 ### log4j2
 
-These ar ethe maven dependencies (scope considerations are the same-made for [reload4j](#reload4j): 
-```xml
-<dependencies>
-  <dependency>
-    <groupId>org.apache.logging.log4j</groupId>
-    <artifactId>log4j-slf4j2-impl</artifactId>
-    <version>${log4j-slf4j2-impl.version}</version>
-    <scope>runtime</scope>
-  </dependency>
-  <dependency>
-    <groupId>org.apache.logging.log4j</groupId>
-    <artifactId>log4j-core</artifactId>
-    <version>${log4j2.version}</version>
-  </dependency>
-</dependencies>
-```
-
-Note that the dependency against `org.apache.logging.log4j.log4j-core` it is not `runtime` scoped 
-because in the demo application it has been implemented the shutdown hook that depends on 
-`LogManager` that is in `org.apache.logging.log4j.log4j-core`. In case no shutdown hook was not
- implemented, then such a dependency could be `runtime` scoped. As for [reload4j](#reload4j) the 
-`runtime` scope can be `provided` if dependencies are provided.
-
-And the following there is a basic configuration example to be put in `log4j2.xml` for example:
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="WARN" monitorInterval="30" shutdownHook="disable">
-  <Properties>
-    <Property name="LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1} CTX-ARGS:%X - %m%n</Property>
-  </Properties>
-
-  <Appenders>
-    <Console name="console" target="SYSTEM_OUT" follow="true">
-      <PatternLayout pattern="${LOG_PATTERN}"/>
-    </Console>
-  </Appenders>
-
-  <Loggers>
-    <Root level="debug">
-      <AppenderRef ref="console"/>
-    </Root>
-  </Loggers>
-</Configuration>
-```
-
-Note the `shutdownHook` tag in the configuration above.
+Example available in [extra/examples/log4j2](../../../platform-log/extra/examples/log4j2).
 
 ### logback
 
 Description of [logback](https://logback.qos.ch/).
 
-These are the maven dependencies with scope `runtime` but they could be set as `provided` (see 
-[reload4j](#reload4j)):
-```xml
-<dependencies>
-  <dependency>
-    <groupId>ch.qos.logback</groupId>
-    <artifactId>logback-classic</artifactId>
-    <version>${logback-classic.version}</version>
-    <scope>runtime</scope>
-  </dependency>
-</dependencies>
-```
+Example available in [extra/examples/logback](../../../platform-log/extra/examples/logback).
 
-And the following there is a basic configuration example to be put in `logback.xml` for example:
-```xml
-<configuration>
+### log4j
 
-  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-    <!-- encoders are assigned the type
-         ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
-    <encoder>
-      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %X -%kvp- %msg%n</pattern>
-    </encoder>
-  </appender>
-
-  <root level="debug">
-    <appender-ref ref="STDOUT" />
-  </root>
-</configuration>
-```
+No configuration and no example are provided as SL4J redirects to [reload4j](#reload4j) ([excerpt from SLF4J documentation, slf4j-log4j12-2.0.16.jar section](https://www.slf4j.org/manual.html#swapping)):
+> Binding/provider for log4j version 1.2, a widely used logging framework. Given that log4j 1.x has been declared EOL in 2015 and again in 2022, as of SLF4J 1.7.35, the slf4j-log4j module automatically redirects to the slf4j-reload4j module at build time. Assuming you wish to continue to use the log4j 1.x framework, we strongly encourage you to use slf4j-reload4j instead.
 
 ## Architecture and design
 

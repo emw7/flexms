@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.github.emw7</groupId>
+  <artifactId>platform-log-examples-reload4j</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>platform-log-examples-reload4j</name>
+  <description>Platform log examples reload4j</description>
+  <properties>
+    <java.version>21</java.version>
+  </properties>
+  <dependencies>
+
+    <!--region EMW7 -->
+    <dependency>
+      <groupId>com.github.emw7</groupId>
+      <artifactId>platform-log</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+    <!--endregion EMW7 -->
+
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-reload4j</artifactId>
+      <version>2.0.16</version>
+      <scope>runtime</scope>
+    </dependency>
+    <!-- The `ch.qos.reload4j.ch.qos.reload4j` is commented out as `org.slf4j.slf4j-reload4j` depends on
+         it and it is not needed to be declared, but in case they will be `provided` then the jar defined
+         by `ch.qos.reload4j.ch.qos.reload4j` must be provided. -->
+    <!-- <dependency>
+      <groupId>ch.qos.reload4j</groupId>
+      <artifactId>reload4j</artifactId>
+      <version>1.2.25</version>
+      <scope>runtime</scope>
+    </dependency> -->
+
+  </dependencies>
+
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <archive>
+            <manifest>
+              <addClasspath>true</addClasspath>
+              <classpathPrefix>libs/</classpathPrefix>
+              <mainClass>
+                com.github.emw7.platform.log.examples.reload4j.PlatformLogApp
+              </mainClass>
+            </manifest>
+          </archive>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy-dependencies</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>
+                ${project.build.directory}/libs
+              </outputDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>

@@ -15,7 +15,7 @@ public final class InterruptedExceptionUtil {
    * try {
    *   // code that can cause InterruptedException...
    * } catch (InterruptedException e) {
-   *   InterruptedExceptionUtil.manage()
+   *   InterruptedExceptionUtil.restoreTheInterrupt()
    * }
    * </pre>
    */

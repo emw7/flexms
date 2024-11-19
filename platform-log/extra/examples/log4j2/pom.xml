@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.github.emw7</groupId>
+  <artifactId>platform-log-examples-log4j2</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>platform-log-examples-log4j2</name>
+  <description>Platform log examples log4j2</description>
+  <properties>
+    <java.version>21</java.version>
+  </properties>
+  <dependencies>
+
+    <!--region EMW7 -->
+    <dependency>
+      <groupId>com.github.emw7</groupId>
+      <artifactId>platform-log</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+    <!--endregion EMW7 -->
+
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-slf4j2-impl</artifactId>
+      <version>2.24.1</version>
+      <scope>runtime</scope>
+    </dependency>
+    <!-- Note that the dependency against `org.apache.logging.log4j.log4j-core` it is not `runtime` scoped
+         because in the demo application it has been implemented the shutdown hook that depends on
+         `LogManager` that is in `org.apache.logging.log4j.log4j-core`. In case no shutdown hook was not
+         implemented, then such a dependency could be `runtime` scoped. -->
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-core</artifactId>
+      <version>2.24.1</version>
+    </dependency>
+
+  </dependencies>
+
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <archive>
+            <manifest>
+              <addClasspath>true</addClasspath>
+              <classpathPrefix>libs/</classpathPrefix>
+              <mainClass>
+                com.github.emw7.platform.log.examples.log4j2.PlatformLogApp
+              </mainClass>
+            </manifest>
+          </archive>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy-dependencies</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>
+                ${project.build.directory}/libs
+              </outputDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>
