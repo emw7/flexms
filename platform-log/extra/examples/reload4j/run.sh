@@ -11,5 +11,5 @@ java \
   -Dlog4j.configuration=file:../log4j.properties \
   -Dcom.github.emw7.platform.log.log-on-thread=false \
   -classpath ./libs \
-  -jar platform-log-examples-reload4j-0.0.1-SNAPSHOT.jar \
+  -jar reload4j-0.0.1-SNAPSHOT.jar \
   2000000

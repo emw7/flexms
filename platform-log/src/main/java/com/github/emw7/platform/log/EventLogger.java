@@ -2,7 +2,6 @@ package com.github.emw7.platform.log;
 
 import static com.github.emw7.platform.log.LogEvent.UUID_ON;
 
-import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;

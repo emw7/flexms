@@ -32,7 +32,7 @@
 		<!--region EMW7 -->
 		<dependency>
 			<groupId>com.github.emw7</groupId>
-			<artifactId>platform-telemetry</artifactId>
+			<artifactId>platform-observability</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>

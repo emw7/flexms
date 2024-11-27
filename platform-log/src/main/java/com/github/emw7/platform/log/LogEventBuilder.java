@@ -30,9 +30,7 @@ public class LogEventBuilder {
   protected final boolean uuidOn;
 
   //region Customisable properties
-
   protected Level level;
-
   protected Set<Arg<?>> args;
   //endregion Customisable properties
 

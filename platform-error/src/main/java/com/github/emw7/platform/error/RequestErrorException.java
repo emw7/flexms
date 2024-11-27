@@ -2,7 +2,7 @@ package com.github.emw7.platform.error;
 
 import com.github.emw7.platform.i18n.Translator;
 import com.github.emw7.platform.i18n.TranslatorContainer;
-import com.github.emw7.platform.telemetry.tracing.TracingContainer;
+import com.github.emw7.platform.observability.tracing.TracingContainer;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;

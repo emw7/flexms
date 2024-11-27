@@ -4,7 +4,7 @@ import com.github.emw7.acme.model.Acme;
 import com.github.emw7.acme.service.logic.AcmeService;
 import com.github.emw7.platform.app.request.context.RequestContextHolder;
 import com.github.emw7.platform.error.RequestErrorException;
-import com.github.emw7.platform.telemetry.tracing.TracingContainer;
+import com.github.emw7.platform.observability.tracing.TracingContainer;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Comparator;

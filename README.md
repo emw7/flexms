@@ -43,7 +43,7 @@ approach.
 
 Content: see [Logging](./extra/doc/Logging/README.md)
 
-**STATUS**: TODO: tests, integration with telemetry, OK: code doc  
+**STATUS**: TODO: tests; OK: integration with telemetry, code, doc  
 **Dependencies**: platform-core  
 **Autoconfigure**: /
 
@@ -51,23 +51,27 @@ Content: see [Logging](./extra/doc/Logging/README.md)
 
 ## platform-i18n
 
-A set of functions related to internationalisation.
+A set of functions related to internationalization.
 
 Content: see [Internationalization](./extra/doc/Internationalization/README.md)
 
 **STATUS**: GA  
 **Dependencies**: platform-core  
-**Autoconfigure**: see [Internationalisation](#internationalisation)
+**Autoconfigure**: see [Internationalisation](./extra/doc/Internationalization/README.md#enable-internationalisation-in-an-application)
 
 [**TODO**](./platform-i18n/TODO)
 
-## platform-telemetry
+## platform-observability
 
-TODO: produce documentation only after the refactoring (  a framework built after [Open Telemetry](https://opentelemetry.io/)
-traces concepts)
-**STATUS**: to be refactored
-**Dependencies**: platform-log  
-[**TODO**](./platform-telemetry/TODO)
+Enables Observability and Tracing (tracing, actually) in the EMW7 platform.
+
+Content: see [Observability and Tracing](./extra/doc/Observability-and-Tracing/README.md)
+
+**STATUS**: TODO: doc  
+**Dependencies**: /  
+**Autoconfigure**: see [Observability](Observability-and-Tracing#TODO)  
+
+[**TODO**](./platform-observability/TODO)
 
 ## platform-error
 
@@ -205,3 +209,5 @@ It can be explained with an example.
 The project root package for a package which name is `platform-acme-foo-bar` is: `com.github.emw7.platform.acme.foo.bar`.
 
 # Notes
+
+1. Projects that do not depend from platform-log print messages to `standard error` (`System.err`). 

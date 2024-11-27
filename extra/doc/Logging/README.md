@@ -28,7 +28,7 @@ log at, so that by enabling the warning level, the first message would not be pr
 (since the default level for the notice event is informational), while the second message would be 
 printed.
 
-## Log keys
+# Log keys
 
 In addition to switching from log levels to log events, event logger strongly formalizes the 
 structure of log messages.  
@@ -46,12 +46,12 @@ Furthermore, not all keys are added by default by the various events.
 For the details, refer to the documentation of the various events.  
 An example of a log message: `[#event:caught][#uuid:9c3ccda1-1196-4269-89da-ab1b1519a85a][#what:caught exception][#ex-msg:an exception][#ex-type:java.lang.Exception][#ex-cause-msg:null][#ex-cause-type:java.lang.NullPointerException][#arg:iid=123 ][#arg:tid:xyz]`
 
-### Event key
+## Event key
 
 The event key is the name of the event and is defined by the event itself and therefore cannot be 
 changed in the log statement.
 
-### What key
+## What key
 
 The what key is composed of a pattern and a list of parameters.  
 The pattern is a string that can contain placeholders (in the form `{}`) that are replaced 
@@ -63,7 +63,7 @@ Example:
 
 Pattern and params must be defined in the log statement.
 
-### Arg key
+## Arg key
 
 An arg is a pair (name, value) that characterizes the log message.
 For example, in a loop a log statement could always use the same pattern (`looking for entity`)
@@ -77,7 +77,7 @@ Log message-specific args must be defined in the log statement
 The arg key can be repeated multiple times, and for non-context args,
 it must be defined in the log statement.
 
-## Log context
+# Log context
 
 The `EventLogger#context` method returns a `LogContext` instance that allows you to manage context args.
 Context args are args that have a life cycle that extends across multiple log events.  
@@ -90,7 +90,7 @@ not using a `try-with-resources` statement allows you to explicitly invoke the #
 but not using either method means (due to the way context args are implemented[*])
 leaving those context args available to log events that shouldn't know about them.  
 
-### Usage in a try-with-resources statement
+## Usage in a try-with-resources statement
 
 If it is needed that context args are printed in a catch block then the following code does not work:
 
@@ -125,7 +125,7 @@ void callExampleAndCatch (...) {
 [*] Context args are handled via SLF4J's Mapped Diagnostic Context
 (https://www.slf4j.org/manual.html#mdc)
 
-## Log events
+# Log events
 
 Before going into the details of event logger and therefore its architecture and design,
 it is useful to define the different events.
@@ -156,7 +156,7 @@ The following is the sequence diagram of the flow depicted above:
 ![WZV Sequence diagram](./W9N%20Logging%20-%20WZV%20Sequence%20diagram.png)
 *WZV Sequence diagram*
 
-## Configuration parameters
+# Configuration parameters
 
 - **always-print-uuid**: configured by `com.github.emw7.platform.log.always-print-uuid` system
   property or by related environment variable; default: `false`; if set to `true` then `uuid` log
@@ -171,8 +171,20 @@ The following is the sequence diagram of the flow depicted above:
   property or by related environment variable; default: `60`; seconds the system wait for logging
   task to complete before forcing shutdown and waiting again `shutdown-timeout` seconds; used only
   if `log-on-thread` is `true`.
+- **trace-id-label**: configured by `com.github.emw7.platform.log.trace-id-label` system property 
+  or by related environment variable; default: `traceId`; read TODO:tracing for more information.
+- **span-id-label**: configured by `com.github.emw7.platform.log.span-id-label` system property
+  or by related environment variable; default: `spanId`; read TODO:tracing for more information.
+- **trace-data-not-available-label**: configured by 
+  `com.github.emw7.platform.log.trace-data-not-available-label` system property or by related 
+  environment variable; default: `NONE`; read TODO:tracing for more information.
+- **trace-enabled**: configured by `com.github.emw7.platform.log.trace-enabled` system property
+  or by related environment variable; default: `NONE`; read TODO:tracing for more information.
+- **benchmark**: configured by `com.github.emw7.platform.log.benchmark` system property or by
+  related environment variable; default: `false`; if set to `true` then EMW7 logging framework
+  prints some benchmark information.
 
-### log-on-thread
+## log-on-thread
 
 **ATTENTION**: even if this feature has been designed to improve the performance, it has not been
 benchmarked so there is not proof that enabling it actually improves the performance.
@@ -224,38 +236,38 @@ status="WARN" monitorInterval="30" shutdownTimeout="<milliseconds>" ...>`. Howev
 not been successfully implemented (it seems that the attribute is completely ignored) and is based
 on a heuristic, so the first solution is preferred.
 
-## Setups for different logging subsystems
+# Setups for different logging subsystems
 
 Here is briefly described how to bind some SLF4J providers.  
 More information is available at [Linking with a logging framework at deployment time
 ](https://www.slf4j.org/manual.html#swapping).
 
-### reload4j
+## reload4j
 
 Description of [reload4j](https://reload4j.qos.ch/).
 
 Example available in [extra/examples/reload4j](../../../platform-log/extra/examples/reload4j).
 
-### log4j2
+## log4j2
 
 Example available in [extra/examples/log4j2](../../../platform-log/extra/examples/log4j2).
 
-### logback
+## logback
 
 Description of [logback](https://logback.qos.ch/).
 
 Example available in [extra/examples/logback](../../../platform-log/extra/examples/logback).
 
-### log4j
+## log4j
 
 No configuration and no example are provided as SL4J redirects to [reload4j](#reload4j) ([excerpt from SLF4J documentation, slf4j-log4j12-2.0.16.jar section](https://www.slf4j.org/manual.html#swapping)):
 > Binding/provider for log4j version 1.2, a widely used logging framework. Given that log4j 1.x has been declared EOL in 2015 and again in 2022, as of SLF4J 1.7.35, the slf4j-log4j module automatically redirects to the slf4j-reload4j module at build time. Assuming you wish to continue to use the log4j 1.x framework, we strongly encourage you to use slf4j-reload4j instead.
 
-## Architecture and design
+# Architecture and design
 
-The architecture and design of event logger is very simple.  
+The architecture and design of event logger is basic.  
 In practice, it is a wrapper for classic log systems.  
-In fact each event is created starting from a SLF4J logger and then delegates to it the printing 
+In fact, each event is created starting from a SLF4J logger and then delegates to it the printing 
 of the log.  
 Example:
 > in `notice(log, ...)` statement the `log` argument must be something like this:  
@@ -264,9 +276,42 @@ Example:
 > `log.atLevel(level).addMarker(marker).....log()`
 
 So with reference to the message shown above a possible complete log message (using log4j2 and the 
-following log4j2 log pattern defined, for example, in `log4j2.xml` configuration file: `%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1} - %m%n`) would be:  
+following log4j2 log pattern defined, for example, in `log4j2.xml` configuration file: 
+`%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1} - %m%n`) would be:  
 `2024-10-04 14:11:32 ERROR Example - [#event:caught][#uuid:9c3ccda1-1196-4269-89da-ab1b1519a85a][#what:caught exception][#ex-msg:an exception][#ex-type:java.lang.Exception][#ex-cause-msg:null][#ex-cause-type:java.lang.NullPointerException][#arg:iid=123][#arg:tid:xyz]`
 
 The following diagram depicts the hierarchies and competence:
 ![WY8 Hierarchy and competence diagram](./W9N%20Logging%20-%20WY8%20Hierarchy%20and%20competence%20diagram.png)
 *WY8 Hierarchy and competence diagram*
+
+# Tracing
+
+EMW7 platform logging framework has basic support for tracing. Such a support consist in 
+printing `traceId` and `spanId` keys with values the values of the homonymous entries retrieved 
+from the MDC. The behaviour can be customized via some 
+[configuration parameters](#configuration-parameters):
+- The tracing support is enabled by default; it can be disabled via **trace-enabled** parameter; if 
+  it is disabled then:
+  - Following parameters are ignored.
+  - Tracing information (`traceId` and `spanId`) are not printed at all.
+- The names of the printed tracing keys (and consequently the name of the entries searched in the 
+  MDC) can be overridden via: **trace-id-label** and **span-id-label** parameters.
+- The value to be printed in case tracing information is not available can be overridden via 
+  **trace-data-not-available-label**.
+
+For example (supposing trace is enabled) by specifying:
+- **trace-id-label** = `id-trace`, 
+- **span-id-label** = `id-span`, 
+- **trace-data-not-available-label** = `n/a`, 
+
+then a log row when tracing information are available could be: 
+`...[#id-trace:ef198c000a3d31681a900d189184f3b5][#id-span:1634ddeb1b571c32]...`, while in case no 
+tracing information is available a row could be: `...[#id-trace:n/a][#id-span:n/a]...`.
+
+Internally EMW7 platform logging framework removes the key specified by **trace-id-label** and 
+**span-id-label** from the ones printed with context arguments and treat them specially by 
+printing them with specific keys.
+
+The reason for which EMW7 platform logging framework supports tracing by relying on the MDC stays 
+on the fact that [Spring Boot Tracing](https://docs.spring.io/spring-boot/reference/actuator/tracing.html) 
+relies on the MDC itself. More details on log tracing are availabe in the [specific document](./Tracing/README.md).

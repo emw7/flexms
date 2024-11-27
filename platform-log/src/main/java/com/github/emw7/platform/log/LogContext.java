@@ -7,6 +7,9 @@ import org.slf4j.MDC;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
+/**
+ * Arg names in {°traceId°, "spanId"} are reserved.
+ */
 public final class LogContext implements AutoCloseable {
 
   //region Private final properties
@@ -15,14 +18,13 @@ public final class LogContext implements AutoCloseable {
 
   //region Constructors
   LogContext(@NonNull final Arg<?>... args) {
-    // 3 is an arbitrary number: 3 has been individuated as the average number of argument for a
-    //  a log context.
+    // 3 is an arbitrary number: 3 has been individuated as the average number of arguments for a
+    //  log context.
     this.args = new HashSet<>(args.length == 0 ? 3 : args.length);
-    Stream.of(args).forEach(
-        arg -> {
-          MDC.put(arg.name(), arg.asString());
-          this.args.add(arg);
-        });
+    Stream.of(args).filter(arg -> !isReservedArgName(arg.name())).forEach(arg -> {
+      MDC.put(arg.name(), arg.asString());
+      this.args.add(arg);
+    });
   }
   //endregion Constructors
 
@@ -54,6 +56,11 @@ public final class LogContext implements AutoCloseable {
    * @return {@code this}
    */
   public <T> LogContext addArg(@NonNull final Arg<T> arg) {
+    if (isReservedArgName(arg.name())) {
+      return this;
+    }
+    // else...
+
     MDC.put(arg.name(), arg.asString());
     args.add(arg);
     return this;
@@ -67,6 +74,11 @@ public final class LogContext implements AutoCloseable {
    * @return {@code this}
    */
   public <T> LogContext remArg(@NonNull final String name) {
+    if (isReservedArgName(name)) {
+      return this;
+    }
+    // else...
+
     MDC.remove(name);
     args.remove(Arg.of(name, null));
     return this;
@@ -80,5 +92,11 @@ public final class LogContext implements AutoCloseable {
     args.stream().map(Arg::name).forEach(MDC::remove);
   }
   //endregion API
+
+  //region Private methods
+  static boolean isReservedArgName(@Nullable final String name) {
+    return "traceId".equalsIgnoreCase(name) || "spanId".equalsIgnoreCase(name);
+  }
+  //endregion Private methods
 
 }

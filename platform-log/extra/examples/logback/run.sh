@@ -11,5 +11,5 @@ java \
   -Dlogback.configurationFile=../logback.xml \
   -Dcom.github.emw7.platform.log.log-on-thread=false \
   -classpath ./libs \
-  -jar platform-log-examples-logback-0.0.1-SNAPSHOT.jar \
+  -jar logback-0.0.1-SNAPSHOT.jar \
   2000000

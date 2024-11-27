@@ -1,6 +1,6 @@
 package com.github.emw7.platform.service.core.request.context;
 
-import com.github.emw7.platform.telemetry.tracing.Tracing;
+import com.github.emw7.platform.observability.tracing.Tracing;
 import java.util.Locale;
 import org.springframework.lang.NonNull;
 

@@ -3,7 +3,6 @@ package com.github.emw7.platform.log;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.LoggerConfig;
@@ -26,7 +25,10 @@ public class LogEventTest {
 
   @BeforeAll
   public static void setUp() {
-    LoggerContext loggerContext = (LoggerContext) LogManager.getContext(false);
+
+    System.setProperty("com.github.emw7.platform.log.trace-enabled","false");
+
+    LoggerContext loggerContext = LoggerContext.getContext(false);
 
     Configuration configuration = loggerContext.getConfiguration();
     rootLoggerConfig = configuration.getLoggerConfig("");

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>platform-log-internal-tracing</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>platform-examples-observability-log-foo</name>
+  <description>Platform examples observability-log-foo</description>
+
+  <parent>
+    <groupId>com.github.emw7.platform.extra.examples</groupId>
+    <artifactId>examples</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+
+  <dependencies>
+
+    <!-- logback -->
+    <!-- <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>1.4.12</version>
+      <scope>runtime</scope>
+    </dependency> -->
+    <!-- log4j2... see log4j2-exclusions -->
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-slf4j2-impl</artifactId>
+      <version>2.24.1</version>
+    </dependency>
+
+    <!--region EMW7 -->
+    <dependency>
+      <groupId>com.github.emw7</groupId>
+      <artifactId>platform-log</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+    <!--endregion EMW7 -->
+
+    <!--region TEST -->
+    <!--endregion TEST -->
+
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>

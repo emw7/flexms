@@ -5,7 +5,7 @@ import com.github.emw7.platform.service.core.request.context.CallerRetriever;
 import com.github.emw7.platform.service.core.request.context.DefaultRequestContextRetriever;
 import com.github.emw7.platform.service.core.request.context.OriginatorRetriever;
 import com.github.emw7.platform.service.core.request.context.TracingTraceRetriever;
-import com.github.emw7.platform.telemetry.tracing.Trace;
+import com.github.emw7.platform.observability.tracing.Trace;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 

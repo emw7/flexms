@@ -11,5 +11,5 @@ java \
   -Dlog4j2.configurationFile=../log4j2.xml \
   -Dcom.github.emw7.platform.log.log-on-thread=false \
   -classpath ./libs \
-  -jar platform-log-examples-log4j2-0.0.1-SNAPSHOT.jar \
+  -jar log4j2-0.0.1-SNAPSHOT.jar \
   2000000

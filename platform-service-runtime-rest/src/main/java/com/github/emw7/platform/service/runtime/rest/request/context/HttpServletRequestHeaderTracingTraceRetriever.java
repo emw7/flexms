@@ -1,6 +1,6 @@
 package com.github.emw7.platform.service.runtime.rest.request.context;
 
-import com.github.emw7.platform.telemetry.tracing.Trace;
+import com.github.emw7.platform.observability.tracing.Trace;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;

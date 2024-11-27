@@ -15,6 +15,7 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.MDC;
 import org.slf4j.Marker;
@@ -26,6 +27,17 @@ import org.springframework.core.env.StandardEnvironment;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
+// *
+//     * @param log     the {@link Logger} through which log
+// * @param marker  the marker with which mark the log
+// * @param pattern the {@code what} message to log
+// * @param params  the actual values for pattern placeholders
+// * @param level   level at which log
+// * @param event   name of the logged event
+// * @param args    arguments to be logged together with the message
+// * @param uuid    uuid for the log event
+// * @param uuidOn  whether add the uuid to the log message or not; is overridden by
+// *                {@link #alwaysPrintUuid}
 /**
  * The plain log event.
  * <p>
@@ -58,41 +70,26 @@ import org.springframework.lang.Nullable;
  * {@code params}.
  * Placeholders are positional placeholders, that is first {@code {}} is replaced
  * by first param, second {@code {}} is replaced by second param, and so on.
- *
- * @param log     the {@link Logger} through which log
- * @param marker  the marker with which mark the log
- * @param pattern the {@code what} message to log
- * @param params  the actual values for pattern placeholders
- * @param level   level at which log
- * @param event   name of the logged event
- * @param args    arguments to be logged together with the message
- * @param uuid    uuid for the log event
- * @param uuidOn  whether add the uuid to the log message or not; is overridden by
- *                {@link #alwaysPrintUuid}
  */
 public class LogEvent {
 
+  //region Private static methods
+  private static String now () {
+    if ( formatter == null ) {
+      return "";
+    }
+    else {
+      return formatter.format(LocalDateTime.now());
+    }
+  }
+  //endregtion Private static methods
   //region Package-private static final properties
   static final boolean UUID_ON = true;
   //endregion Package-private static final properties
 
   //region Private static final properties
 
-  /**
-   * The format for the log message; each {@code {}} is a placeholder for a key:
-   * <ol>
-   * <li>event</li>
-   * <li>uuid</li>
-   * <li>what</li>
-   * <li>custom-keys</li>
-   * <li>ctx-args</li>
-   * <li>args</li>
-   * </ol>
-   *
-   * @see #log()
-   */
-  private static final String LOG_FORMAT = "{}{}{}{}{}{}";
-
+  //region Configuration
   /**
    * If {@code true} then uuid is always printed regardless of {@code uuidOn} value.
    * <p>
@@ -125,18 +122,64 @@ public class LogEvent {
    */
   private static final boolean logOnThread;
 
-  private static final ExecutorService logThreadExecutor;
+  /**
+   * The label that is used by tracing framework (TODO ref. to observability/tracing doc) to
+   * register the trace-id. Default: `traceId`.
+   */
+  private static final String traceIdLabel;
+  /**
+   * The label that is used by tracing framework (TODO ref. to observability/tracing doc) to
+   * register the span-id. Default: `spanId`.
+   */
+  private static final String spanIdLabel;
 
-  //private static final ThreadFactory tf;
+  /**
+   * The label that is present in case either trace-id or span-id is not available.
+   * Default: `NONE`.
+   */
+  private static final String traceDataNotAvailableLabel;
+
+  /**
+   * If {@code true} then prints trace-id and span-id.
+   * <p>
+   * Can be set to {@code false} if the logging framework prints them already. For example if the
+   * logback pattern contains `tid:%X{traceId:-NONE} sid:%X{spanId:-NONE}.`
+   */
+  private static final boolean traceEnabled;
+
+  /**
+   * TODO documentation
+   */
+  private static final boolean benchmark;
+  //endregion Configuration
+
+  /**
+   * The format for the log message; each {@code {}} is a placeholder for a key:
+   * <ol>
+   * <li>event</li>
+   * <li>uuid</li>
+   * <li>what</li>
+   * <li>custom-keys</li>
+   * <li>ctx-args</li>
+   * <li>args</li>
+   * </ol>
+   *
+   * @see #log()
+   */
+  private static final String LOG_FORMAT = "{}{}{}{}{}{}{}";
 
   public static final CountDownLatch terminated;
 
   private static final DateTimeFormatter formatter;
 
-  private static final boolean benchmark;
+  private static final ExecutorService logThreadExecutor;
+  //endregion Private static final properties
+
+  //region Private static properties
+  // next 2 support benchmark.
   private static long benchmark_time;
   private static long benchmark_entries;
-  //endregion Private static final properties
+  //endregion Provate static properties
 
   //region Static initialization
   static {
@@ -150,6 +193,16 @@ public class LogEvent {
     final String envLogOnThread = environment.getProperty(
         "com.github.emw7.platform.log.log-on-thread", "false");
     logOnThread = BooleanMapper.fromString(envLogOnThread);
+
+    traceIdLabel = environment.getProperty(
+        "com.github.emw7.platform.log.trace-id-label", "traceId");
+    spanIdLabel = environment.getProperty(
+        "com.github.emw7.platform.log.span-id-label", "spanId");
+    traceDataNotAvailableLabel = environment.getProperty(
+        "com.github.emw7.platform.log.trace-data-not-available-label", "NONE");
+    final String envTraceEnabled = environment.getProperty(
+        "com.github.emw7.platform.log.trace-enabled", "true");
+    traceEnabled = BooleanMapper.fromString(envTraceEnabled);
 
     final String envBenchmark = environment.getProperty(
         "com.github.emw7.platform.log.benchmark", "false");
@@ -171,10 +224,19 @@ public class LogEvent {
 
           // why this?
           //  because from https://logback.qos.ch/manual/mdc.html:
-          //  Please note that MDC as implemented by logback-classic assumes that values are placed into the MDC with moderate frequency. Also note that a child thread does not automatically inherit a copy of the mapped diagnostic context of its parent.
+          //  Please note that MDC as implemented by logback-classic assumes that values are
+          //  placed into the MDC with moderate frequency. Also note that a child thread does not
+          //  automatically inherit a copy of the mapped diagnostic context of its parent;
           //  and from https://logback.qos.ch/manual/mdc.html#managedThreads:
-          //  A copy of the mapped diagnostic context can not always be inherited by worker threads from the initiating thread. This is the case when java.util.concurrent.Executors is used for thread management. For instance, newCachedThreadPool method creates a ThreadPoolExecutor and like other thread pooling code, it has intricate thread creation logic.
-          //  In such cases, it is recommended that MDC.getCopyOfContextMap() is invoked on the original (master) thread before submitting a task to the executor. When the task runs, as its first action, it should invoke MDC.setContextMap() to associate the stored copy of the original MDC values with the new Executor managed thread.
+          //   a copy of the mapped diagnostic context can not always be inherited by worker
+          //   threads from the initiating thread. This is the case when
+          //   java.util.concurrent.Executors is used for thread management. For instance,
+          //   newCachedThreadPool method creates a ThreadPoolExecutor and like other thread
+          //   pooling code, it has intricate thread creation logic.
+          //   In such cases, it is recommended that MDC.getCopyOfContextMap() is invoked on the
+          //   original (master) thread before submitting a task to the executor. When the task
+          //   runs, as its first action, it should invoke MDC.setContextMap() to associate the
+          //   stored copy of the original MDC values with the new Executor managed thread.
           final Map<String, String> parentContextMap = MDC.getCopyOfContextMap();
           Runnable wrapingRunnable = () -> {
             MDC.setContextMap(parentContextMap);
@@ -185,7 +247,7 @@ public class LogEvent {
       });
 
       Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-        System.err.printf("[%s] shutting down platform-log%n", formatter.format(LocalDateTime.now()));
+        System.err.printf("[%s] shutting down platform-log%n", LogEvent.now());
         logThreadExecutor.shutdown();
         try {
           // Wait a while for existing tasks to terminate
@@ -197,7 +259,7 @@ public class LogEvent {
             logThreadExecutor.awaitTermination(60, TimeUnit.SECONDS);
             System.err.printf("[%s] platform-log did not terminate properly%n",formatter.format(LocalDateTime.now()));
           } else {
-            System.err.printf("[%s] platform-log terminated properly%n", formatter.format(LocalDateTime.now()));
+            System.err.printf("[%s] platform-log terminated properly%n", LogEvent.now());
           }
         } catch (InterruptedException ex) {
           // (Re-)Cancel if current thread also interrupted
@@ -265,7 +327,7 @@ public class LogEvent {
    * @param uuidOn  whether add the uuid to the log message or not; is overridden by
    *                {@link #alwaysPrintUuid}
    */
-  LogEvent(@NonNull final Logger log, @NonNull final Marker marker, @NonNull final String pattern,
+  protected LogEvent(@NonNull final Logger log, @NonNull final Marker marker, @NonNull final String pattern,
       @NonNull final Object[] params, @NonNull final Level level, @NonNull final String event,
       @NonNull final Set<Arg<?>> args, @NonNull final String uuid, final boolean uuidOn) {
     this.log = log;
@@ -307,7 +369,7 @@ public class LogEvent {
       } catch (RejectedExecutionException e) {
         // formatter cannot be null when logOnThread is true.
         //noinspection DataFlowIssue
-        System.err.printf("[%s] rejected log %s%n", formatter.format(LocalDateTime.now()), this);
+        System.err.printf("[%s] rejected log %s%n", LogEvent.now(), this);
       }
     } else {
       _log();
@@ -397,7 +459,47 @@ public class LogEvent {
   }
 
   private @NonNull String keyUuid() {
-    return alwaysPrintUuid | uuidOn ? key("uuid", uuid) : "";
+    return alwaysPrintUuid || uuidOn ? key("uuid", uuid) : "";
+  }
+
+  private @NonNull String buildTraceString() {
+    if (!traceEnabled) {
+      return "";
+    }
+    // else... trace enabled.
+    return keyTraceId() + keySpanId();
+  }
+
+  private @NonNull String keyTraceId() {
+//    if (!traceEnabled) {
+//      return "";
+//    }
+//    // else... trace enabled.
+//
+//    final String value = MDC.get(traceIdLabel);
+//    return key(traceIdLabel, StringUtils.isEmpty(value) ? traceDataNotAvailableLabel : value);
+    return traceKey(traceIdLabel);
+  }
+
+  private @NonNull String keySpanId() {
+//    if (!traceEnabled) {
+//      return "";
+//    }
+//    // else... trace enabled.
+//
+//    final String value = MDC.get(spanIdLabel);
+//    return key(spanIdLabel, StringUtils.isEmpty(value) ? traceDataNotAvailableLabel : value);
+    return traceKey(spanIdLabel);
+  }
+
+  private @NonNull String traceKey (@NonNull final String key) {
+    if (!traceEnabled) {
+      return "";
+    }
+    // else... trace enabled.
+
+    final String value = MDC.get(key);
+    return key(key, StringUtils.isEmpty(value) ? traceDataNotAvailableLabel : value);
   }
 
   // creates the string for the args (obtained by joining all the keys for the args)
@@ -407,9 +509,10 @@ public class LogEvent {
   }
 
   // creates the string for the context args (obtained by joining all the keys for the context args)
+  // skips
   private @NonNull String buildCtxArgsString() {
     return Optional.ofNullable(MDC.getCopyOfContextMap()).orElseGet(HashMap::new).entrySet()
-        .stream().map(arg -> keyArg("arg", arg.getKey(), arg.getValue()))
+        .stream().filter(arg -> !LogContext.isReservedArgName(arg.getKey())).map(arg -> keyArg("arg", arg.getKey(), arg.getValue()))
         .collect(Collectors.joining());
   }
 
@@ -423,9 +526,11 @@ public class LogEvent {
   public @NonNull String toString ()
   {
     final String what = MessageFormatter.arrayFormat(pattern, params).getMessage();
-    return String.format("%s%s%s%s%s%s",
+    // number of %s must be kept aligned with number of {} in LOG_FORMAT.
+    return String.format("%s%s%s%s%s%s%s",
         key("event", event),
         keyUuid(),
+        buildTraceString(),
         key("what", what),
         buildCustomKeysString(customKeys()),
         buildCtxArgsString(),
@@ -444,6 +549,7 @@ public class LogEvent {
     loggingEventBuilder.log(LOG_FORMAT,
         key("event", event),
         keyUuid(),
+        buildTraceString(),
         key("what", what),
         buildCustomKeysString(customKeys()),
         buildCtxArgsString(),

@@ -31,10 +31,8 @@ public final class TranslatorContainer {
   //region Private static methods
   private static void logIgnoring (@Nullable final Translator translator)
   {
-    EventLogger.notice(log)
+    EventLogger.notice(log, "ignoring instance {} as translator already set with instance {}", ( translator == null ) ? "null" : translator, getTranslator())
         .warn()
-        .pattern("ignoring instance {} as translator already set with instance {}")
-        .params(( translator == null ) ? "null" : translator, getTranslator())
         .log();
   }
   //endregion Public static methods
@@ -53,9 +51,7 @@ public final class TranslatorContainer {
    */
   public static @NonNull Translator getTranslator() {
     if (translator == null) {
-      EventLogger.notice(log).warn().pattern(
-              "{}#getTranslator() called but translator is null, so returning an instance of {}")
-          .params(TranslatorContainer.class.getName(), FooTranslator.class.getName()).log();
+      EventLogger.notice(log, "{}#getTranslator() called but translator is null, so returning an instance of {}", TranslatorContainer.class.getName(), FooTranslator.class.getName()).warn().log();
       return new FooTranslator();
     } else {
       return translator;

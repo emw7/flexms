@@ -15,7 +15,7 @@ import com.github.emw7.platform.service.runtime.rest.request.context.HttpServlet
 import com.github.emw7.platform.service.runtime.rest.request.context.RestCallerRetriever;
 import com.github.emw7.platform.service.runtime.rest.request.context.RestOriginatorRetriever;
 import com.github.emw7.platform.service.runtime.rest.request.context.RestTracingTraceRetriever;
-import com.github.emw7.platform.telemetry.tracing.TracingFactory;
+import com.github.emw7.platform.observability.tracing.TracingFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
