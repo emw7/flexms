@@ -19,13 +19,9 @@ import org.springframework.lang.NonNull;
 public class PlatformLogTraceOffAutoConfig {
 
   /**
-   * Returns the default fallback MDCWrapper that does nothing, disabling tracing actually.
-   * <p>
-   * Application can either use Spring Observability / Tracing (see TODO:examples) or define its
-   * own (see TODO:examples) that does something more useful to enable basic tracing.
-   * information.
+   * Returns the default fallback MDCWrapper that does nothing, disabling tracing, actually.
    *
-   * @return the default fallback MDCWrapper
+   * @return the default fallback MDCWrapper that does nothing
    */
   @Bean
   public LogTracingMDCFacade logTracingMDCFacade ()

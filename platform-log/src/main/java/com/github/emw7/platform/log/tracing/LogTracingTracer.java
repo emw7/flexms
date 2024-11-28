@@ -46,7 +46,7 @@ public class LogTracingTracer implements Tracer {
    */
   @Override
   public @NonNull Span nextSpan() {
-    if (! mdcWrapper.containsTraceId()) {
+    if ( !mdcWrapper.containsTraceId()) {
       mdcWrapper.traceId(LogTracingUtil.generateTraceId());
     }
     if ( !mdcWrapper.containsSpanId() ) {
@@ -230,8 +230,8 @@ public class LogTracingTracer implements Tracer {
    * @see Tracer#NOOP
    */
   @Override
-  public @NonNull BaggageInScope createBaggageInScope(final TraceContext traceContext,
-      final String name, final String value) {
+  public @NonNull BaggageInScope createBaggageInScope(@NonNull final TraceContext traceContext,
+      @NonNull final String name, @NonNull final String value) {
     return NOOP.createBaggageInScope(traceContext, name, value);
   }
   //endregion Plain delegation

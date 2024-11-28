@@ -1,2 +1,3 @@
 com.github.emw7.platform.log.autoconfig.PlatformLogTraceOffAutoConfig
 com.github.emw7.platform.log.autoconfig.PlatformLogTraceOnAutoConfig
+com.github.emw7.platform.log.autoconfig.PlatformLogTraceAutoConfig

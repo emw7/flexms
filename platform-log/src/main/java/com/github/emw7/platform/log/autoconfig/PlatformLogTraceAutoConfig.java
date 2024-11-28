@@ -1,7 +1,7 @@
 package com.github.emw7.platform.log.autoconfig;
 
-import com.github.emw7.platform.log.tracing.LogTracingTracer;
 import com.github.emw7.platform.log.tracing.LogTracingMDCFacade;
+import com.github.emw7.platform.log.tracing.LogTracingTracer;
 import com.github.emw7.platform.log.tracing.TracerContainer;
 import io.micrometer.tracing.Tracer;
 import org.apache.commons.lang3.StringUtils;
@@ -16,37 +16,19 @@ import org.springframework.lang.NonNull;
 
 @AutoConfiguration
 @AutoConfigureOrder(1) // value 1 found with trial and error.
-@ConditionalOnProperty(name = "com.github.emw7.platform.log.trace-enabled", havingValue = "true", matchIfMissing = true)
-public class PlatformLogTraceOnAutoConfig {
+public class PlatformLogTraceAutoConfig {
 
-  /**
-   * TODO
-   * @return
-   */
+  @ConditionalOnMissingBean(Tracer.class)
   @Bean
-  public LogTracingMDCFacade logTracingMDCFacade ()
-  {
-    return new LogTracingMDCFacade() {
-      @Override
-      public void traceId(@NonNull final String s) {
-        MDC.put("traceId", s);
-      }
+  public LogTracingTracer logTracingTracer (@NonNull final LogTracingMDCFacade mdcWrapper) {
+    return new LogTracingTracer(mdcWrapper);
+  }
 
-      @Override
-      public void spanId(@NonNull final String s) {
-        MDC.put("spanId", s);
-      }
-
-      @Override
-      public boolean containsTraceId() {
-        return !StringUtils.isEmpty(MDC.get("traceId"));
-      }
-
-      @Override
-      public boolean containsSpanId() {
-        return !StringUtils.isEmpty(MDC.get("spanId"));
-      }
-    };
+  @ConditionalOnBean(Tracer.class)
+  @Bean
+  public TracerContainer tracingContainer (@NonNull final Tracer tracer) {
+    //noinspection InstantiationOfUtilityClass
+    return new TracerContainer(tracer);
   }
 
 }

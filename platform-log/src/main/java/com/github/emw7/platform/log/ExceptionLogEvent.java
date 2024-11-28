@@ -41,6 +41,12 @@ public class ExceptionLogEvent extends LogEvent {
   }
   //endregion Constructors
 
+  //region API
+  public @NonNull Throwable throwable () {
+    return throwable;
+  }
+  //endregion API
+
   //region Template method: log
 
   /**

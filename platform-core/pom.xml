@@ -19,6 +19,8 @@
     <org.junit.jupiter.version>5.10.2</org.junit.jupiter.version>
     <!-- version matches spring-boot-starter-test-3.3.0 -->
     <org.assertj.version>3.25.3</org.assertj.version>
+    <maven.compiler.source>${java.version}</maven.compiler.source>
+    <maven.compiler.target>${java.version}</maven.compiler.target>
   </properties>
   <dependencies>
 

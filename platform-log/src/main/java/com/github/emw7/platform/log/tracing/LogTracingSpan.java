@@ -67,7 +67,7 @@ public final class LogTracingSpan implements Span {
    * @return the result of delegation to {@link Span#NOOP}
    */
   @Override
-  public @NonNull Span name(final String s) {
+  public @NonNull Span name(@NonNull final String s) {
     return NOOP.name(s);
   }
 
@@ -75,7 +75,7 @@ public final class LogTracingSpan implements Span {
    * @return the result of delegation to {@link Span#NOOP}
    */
   @Override
-  public @NonNull Span event(final String s) {
+  public @NonNull Span event(@NonNull final String s) {
     return NOOP.event(s);
   }
 
@@ -83,7 +83,7 @@ public final class LogTracingSpan implements Span {
    * @return the result of delegation to {@link Span#NOOP}
    */
   @Override
-  public @NonNull Span event(final String s, final long l, final TimeUnit timeUnit) {
+  public @NonNull Span event(@NonNull final String s, final long l, @NonNull final TimeUnit timeUnit) {
     return NOOP.event(s, l, timeUnit);
   }
 
@@ -91,39 +91,39 @@ public final class LogTracingSpan implements Span {
    * @return the result of delegation to {@link Span#NOOP}
    */
   @Override
-  public @NonNull Span tag(final String s, final String s1) {
+  public @NonNull Span tag(@NonNull final String s, @NonNull final String s1) {
     return NOOP.tag(s, s1);
   }
 
-  /**
-   * @return the result of delegation to {@link Span#NOOP}
-   */
-  @Override
-  public @NonNull Span tag(final String key, final long value) {
-    return NOOP.tag(key, value);
-  }
+//  /**
+//   * @return the result of delegation to {@link Span#NOOP}
+//   */
+//  @Override
+//  public @NonNull Span tag(@NonNull final String key, final long value) {
+//    return NOOP.tag(key, value);
+//  }
+//
+//  /**
+//   * @return the result of delegation to {@link Span#NOOP}
+//   */
+//  @Override
+//  public @NonNull Span tag(@NonNull final String key, final double value) {
+//    return NOOP.tag(key, value);
+//  }
+//
+//  /**
+//   * @return the result of delegation to {@link Span#NOOP}
+//   */
+//  @Override
+//  public @NonNull Span tag(@NonNull final String key, final boolean value) {
+//    return NOOP.tag(key, value);
+//  }
 
   /**
    * @return the result of delegation to {@link Span#NOOP}
    */
   @Override
-  public @NonNull Span tag(final String key, final double value) {
-    return NOOP.tag(key, value);
-  }
-
-  /**
-   * @return the result of delegation to {@link Span#NOOP}
-   */
-  @Override
-  public @NonNull Span tag(final String key, final boolean value) {
-    return NOOP.tag(key, value);
-  }
-
-  /**
-   * @return the result of delegation to {@link Span#NOOP}
-   */
-  @Override
-  public @NonNull Span error(final Throwable throwable) {
+  public @NonNull Span error(@NonNull final Throwable throwable) {
     return NOOP.error(throwable);
   }
 
@@ -139,7 +139,7 @@ public final class LogTracingSpan implements Span {
    * @return the result of delegation to {@link Span#NOOP}
    */
   @Override
-  public @NonNull void end(final long l, final TimeUnit timeUnit) {
+  public @NonNull void end(final long l, @NonNull final TimeUnit timeUnit) {
     NOOP.end(l, timeUnit);
   }
 
@@ -155,7 +155,7 @@ public final class LogTracingSpan implements Span {
    * @return the result of delegation to {@link Span#NOOP}
    */
   @Override
-  public @NonNull Span remoteServiceName(final String s) {
+  public @NonNull Span remoteServiceName(@NonNull final String s) {
     return NOOP.remoteServiceName(s);
   }
 
@@ -163,7 +163,7 @@ public final class LogTracingSpan implements Span {
    * @return the result of delegation to {@link Span#NOOP}
    */
   @Override
-  public @NonNull Span remoteIpAndPort(final String s, final int i) {
+  public @NonNull Span remoteIpAndPort(@NonNull final String s, final int i) {
     return NOOP.remoteIpAndPort(s, i);
   }
   //endregion Plain delegation
