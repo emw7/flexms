@@ -18,8 +18,9 @@
   <packaging>pom</packaging>
 
   <modules>
-    <module>platform-log-spring-tracing</module>
-    <module>platform-log-internal-tracing</module>
+    <module>ex-platform-log-spring-tracing</module>
+    <module>ex-platform-log-internal-tracing</module>
+    <module>ex-platform-service-runtime</module>
   </modules>
 
   <properties>

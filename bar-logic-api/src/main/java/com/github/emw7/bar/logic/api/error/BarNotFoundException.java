@@ -2,7 +2,7 @@ package com.github.emw7.bar.logic.api.error;
 
 import com.github.emw7.bar.model.Bar;
 import com.github.emw7.platform.error.Id;
-import com.github.emw7.platform.error.NotFoundClientException;
+import com.github.emw7.platform.service.core.common.request.error.NotFoundClientException;
 import java.util.Map;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;

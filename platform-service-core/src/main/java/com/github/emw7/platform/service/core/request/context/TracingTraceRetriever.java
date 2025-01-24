@@ -1,11 +1,11 @@
 package com.github.emw7.platform.service.core.request.context;
 
-import com.github.emw7.platform.observability.tracing.Trace;
-import org.springframework.lang.Nullable;
+import io.micrometer.tracing.Span;
+import org.springframework.lang.NonNull;
 
 public interface TracingTraceRetriever {
 
-  @Nullable
-  Trace retrieve();
+  @NonNull
+  Span retrieve();
 
 }

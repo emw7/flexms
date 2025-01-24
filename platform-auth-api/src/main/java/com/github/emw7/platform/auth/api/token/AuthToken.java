@@ -14,8 +14,8 @@ public interface AuthToken {
    * must be equal for two objects that represent the same token; refer to the following examples:
    * <pre>
    *   token is Abc#123
-   *   object-1 toString could be [instance-1] token: 'Abc#123'
-   *   object-2 toString could be [instance-2] token: 'Abc#123'
+   *   object-1 toString could be [instance-1] token: 'Abc#123@1'
+   *   object-2 toString could be [instance-2] token: 'Abc#123@2'
    *   stringRepresentation of both object-1 and object-2 is Abc#123
    * </pre>
    *

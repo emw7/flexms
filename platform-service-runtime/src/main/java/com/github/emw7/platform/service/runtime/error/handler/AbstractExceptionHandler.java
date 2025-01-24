@@ -3,22 +3,18 @@ package com.github.emw7.platform.service.runtime.error.handler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
-import com.github.emw7.platform.service.core.error.model.RequestErrorResponse;
-import com.github.emw7.platform.service.core.request.context.RequestContextHolder;
 import com.github.emw7.platform.error.Constants;
-import com.github.emw7.platform.error.RequestError;
-import com.github.emw7.platform.error.RequestErrorException;
-import com.github.emw7.platform.error.category.AlreadyExists;
-import com.github.emw7.platform.error.category.BadRequest;
-import com.github.emw7.platform.error.category.NotFound;
 import com.github.emw7.platform.i18n.Translator;
-import com.github.emw7.platform.observability.tracing.Tracing;
-import com.github.emw7.platform.observability.tracing.TracingContainer;
+import com.github.emw7.platform.log.tracing.LogTracingUtil;
+import com.github.emw7.platform.log.tracing.TracerContainer;
+import com.github.emw7.platform.service.core.common.request.error.RequestError;
+import com.github.emw7.platform.service.core.common.request.error.RequestErrorException;
+import com.github.emw7.platform.service.core.common.request.error.model.RequestErrorResponse;
+import com.github.emw7.platform.service.core.request.context.RequestContextHolder;
+import io.micrometer.tracing.Tracer;
 import java.lang.annotation.Annotation;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
@@ -37,14 +33,14 @@ public abstract sealed class AbstractExceptionHandler permits AbstractClientExce
   //region Private static properties
   private static final Logger logger = LoggerFactory.getLogger(AbstractExceptionHandler.class);
 
-  /**
-   * The list of client error types.
-   * <p>
-   * These are annotations that categorize the error.<br/> Each new annotation that adds an error
-   * category must be added here.
-   */
-  private static final List<Class<? extends Annotation>> REQUEST_ERROR_TYPES = List.of(
-      BadRequest.class, NotFound.class, AlreadyExists.class);
+//  /**
+//   * The list of client error types.
+//   * <p>
+//   * These are annotations that categorize the error.<br/> Each new annotation that adds an error
+//   * category must be added here.
+//   */
+//  private static final List<Class<? extends Annotation>> REQUEST_ERROR_TYPES = List.of(
+//      BadRequest.class, NotFound.class, AlreadyExists.class);
   //endregion Constants
 
   //region Private properties
@@ -74,14 +70,18 @@ public abstract sealed class AbstractExceptionHandler permits AbstractClientExce
   // requestError == null => programming error, but try to manage the case.
   private final @NonNull Map<String, Object> annotationProperties(
       @NonNull final RequestErrorException e) {
-    for (Class<? extends Annotation> annotationType : REQUEST_ERROR_TYPES) {
-      final Annotation requestErrorAnnotation = findAnnotation(e.getClass(), annotationType);
-      if (requestErrorAnnotation != null) {
-        return AnnotationUtils.getAnnotationAttributes(requestErrorAnnotation);
-      }
-    }
-    // no request error annotation found.
-    return new HashMap<>();
+
+//    for (Class<? extends Annotation> annotationType : Categories.REQUEST_ERROR_TYPES) {
+//      final Annotation requestErrorAnnotation = findAnnotation(e.getClass(), annotationType);
+//      if (requestErrorAnnotation != null) {
+//        return AnnotationUtils.getAnnotationAttributes(requestErrorAnnotation);
+//      }
+//    }
+//    // no request error annotation found.
+//    return new HashMap<>();
+    final Annotation requestErrorAnnotation = findAnnotation(e.getClass(), RequestError.class);
+    return (requestErrorAnnotation != null) ? AnnotationUtils.getAnnotationAttributes(
+        requestErrorAnnotation) : Map.of();
   }
 
   protected int retrieveStatus(@Nullable final RequestError requestError) {
@@ -113,8 +113,9 @@ public abstract sealed class AbstractExceptionHandler permits AbstractClientExce
       return objectReader.readValue(params);
     } catch (JsonProcessingException e) {
       // TODO made it formal with EventLogger.
-      logger.warn("[JSON-PROCESSING] cannot deserialize json '{}' to map '{}'; returning empty map as fallback", params,
-          e.getMessage());
+      logger.warn(
+          "[JSON-PROCESSING] cannot deserialize json '{}' to map '{}'; returning empty map as fallback",
+          params, e.getMessage());
       return Map.of();
     }
   }
@@ -136,8 +137,7 @@ public abstract sealed class AbstractExceptionHandler permits AbstractClientExce
     boolean isService = isService();
     final RequestErrorResponse requestErrorResponse = new RequestErrorResponse(
         ZonedDateTime.now(ZoneOffset.UTC), e.getType(), status, e.getRef(), traceId(), spanId(),
-        translate(label, params), label, params, isService ? e.getClass().getName() : null,
-        e.getErrors());
+        translate(label, params), label, e.getErrors());
     return requestErrorResponse;
   }
   //endregion API
@@ -152,16 +152,16 @@ public abstract sealed class AbstractExceptionHandler permits AbstractClientExce
   }
 
   private @Nullable String traceId() {
-    return id(Tracing::traceId);
+    return id(LogTracingUtil::traceId);
   }
 
   private @Nullable String spanId() {
-    return id(Tracing::spanId);
+    return id(LogTracingUtil::spanId);
   }
 
-  private @Nullable String id(@NonNull final Function<Tracing, String> id) {
-    final Tracing tracing = TracingContainer.get();
-    return (tracing == null) ? null : id.apply(tracing);
+  private @Nullable String id(@NonNull final Function<Tracer, String> id) {
+    final Tracer tracing = TracerContainer.getTracer();
+    return id.apply(tracing);
   }
 
   private Annotation findAnnotation(@Nullable final Class<?> clazz,

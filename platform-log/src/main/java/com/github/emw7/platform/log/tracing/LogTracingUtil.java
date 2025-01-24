@@ -5,6 +5,7 @@ import io.micrometer.tracing.TraceContext;
 import io.micrometer.tracing.Tracer;
 import java.util.Objects;
 import java.util.UUID;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 
 public final class LogTracingUtil {
@@ -27,8 +28,8 @@ public final class LogTracingUtil {
    */
   public static String generateTraceId() {
     final UUID traceIdUuid = UUID.randomUUID();
-    return Long.toHexString(traceIdUuid.getMostSignificantBits()) +
-           Long.toHexString(traceIdUuid.getLeastSignificantBits());
+    return  StringUtils.leftPad(Long.toHexString(traceIdUuid.getMostSignificantBits()),16,"0") +
+        StringUtils.leftPad(Long.toHexString(traceIdUuid.getLeastSignificantBits()),16,"0");
   }
 
   /**

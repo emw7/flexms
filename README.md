@@ -16,7 +16,7 @@ Each project has its own section with these information:
 - Autoconfigure: spring autoconfiguration information.
 - TODO: a link to the TODOs of the project.
 
-## platform-core
+## V platform-core
 
 A set of core functions not related to any technology.
 
@@ -36,20 +36,22 @@ Content:
 
 [**TODO**](./platform-core/TODO)
 
-## platform-log
+
+
+## V platform-log
 
 A wrapper over slf4j that standardizes logging to a consistent format and uses an event-driven
 approach.
 
 Content: see [Logging](./extra/doc/Logging/README.md)
 
-**STATUS**: TODO: tests; OK: integration with telemetry, code, doc  
+**STATUS**: GA  
 **Dependencies**: platform-core  
-**Autoconfigure**: /
+**Autoconfigure**: see [Logging](./extra/doc/Logging/README.md#emw7-platform-logging-framework-micrometer-tracing-implementation)
 
 [**TODO**](./platform-log/TODO)
 
-## platform-i18n
+## V platform-i18n
 
 A set of functions related to internationalization.
 
@@ -60,18 +62,6 @@ Content: see [Internationalization](./extra/doc/Internationalization/README.md)
 **Autoconfigure**: see [Internationalisation](./extra/doc/Internationalization/README.md#enable-internationalisation-in-an-application)
 
 [**TODO**](./platform-i18n/TODO)
-
-## platform-observability
-
-Enables Observability and Tracing (tracing, actually) in the EMW7 platform.
-
-Content: see [Observability and Tracing](./extra/doc/Observability-and-Tracing/README.md)
-
-**STATUS**: TODO: doc  
-**Dependencies**: /  
-**Autoconfigure**: see [Observability](Observability-and-Tracing#TODO)  
-
-[**TODO**](./platform-observability/TODO)
 
 ## platform-error
 
@@ -98,8 +88,9 @@ the interface supported by the platform for authentication and authorization.
 being this an api, in order to run in an integrated system, the application needs an actual
 implementation of such a interface.  
 implementations for third party server registry solutions will be facades.  
-**STATUS**: misses tests
+**STATUS**: GA  
 **Dependencies**: /  
+
 [**TODO**](./platform-auth-api/TODO)
 
 ## platform-service-core

@@ -15,4 +15,5 @@ public class PlatformErrorAutoConfig {
     messageSource.setDefaultEncoding("UTF-8");
     return messageSource;
   }
+
 }

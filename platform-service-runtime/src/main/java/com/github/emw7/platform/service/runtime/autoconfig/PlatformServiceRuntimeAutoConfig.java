@@ -1,6 +1,6 @@
 package com.github.emw7.platform.service.runtime.autoconfig;
 
-import com.github.emw7.platform.service.core.config.AppConfigProperties;
+import com.github.emw7.platform.service.core.runtime.config.AppConfigProperties;
 import com.github.emw7.platform.service.runtime.event.AppReadyEventListener;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

@@ -23,25 +23,28 @@ help ()
     cat <<-EOD
         ci.sh mode arguments
             mode:
-                 help
-                 build
+              help
+              build
+
+            arguments:
+              must be placed after --
+              example: ci.sh build -- -am
 EOD
 }
 
-project_version ()
-{
-    mvn help:evaluate -Dexpression=project.version -q -DforceStdout
-}
+#project_version ()
+#{
+#    mvn help:evaluate -Dexpression=project.version -q -DforceStdout
+#}
 
-project_name ()
-{
-    mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout
-}
+#project_name ()
+#{
+#    mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout
+#}
 
 build_platform ()
 {
-    rm -f target/*.jar
-    mvn --settings ../mvn_settings.xml $EMW7_CI_CLEAN install
+  mvn --settings mvn_settings.xml $EMW7_CI_CLEAN package $EMW7_CI_INSTALL "$@"
 }
 
 build ()
@@ -49,16 +52,13 @@ build ()
     build_platform "$@"
 }
 
-echo $(project_version)
-echo $(project_name)
-
-touch -a configuration.conf pom.xml
-sed -i \
-    -e 's/^VERSION=.*$/VERSION='"$(project_version)"'/1'\
-    -e 's/^NAME=.*$/NAME='"$(project_name)"'/1' \
-    configuration.conf
-
-. configuration.conf
+#touch -a configuration.conf pom.xml
+#sed -i \
+#    -e 's/^VERSION=.*$/VERSION='"$(project_version)"'/1'\
+#    -e 's/^NAME=.*$/NAME='"$(project_name)"'/1' \
+#    configuration.conf
+#
+#. configuration.conf
 
 MODE=help
 
@@ -68,11 +68,16 @@ if [ $# -ge 1 ] ; then
 fi
 
 EMW7_CI_CLEAN=
+EMW7_CI_INSTALL=
 
 while [ -n "${1-}" ] ; do
     case $1 in
         --clean)
             EMW7_CI_CLEAN=clean
+        ;;
+
+        --install)
+            EMW7_CI_INSTALL=install
         ;;
 
         --)

@@ -13,7 +13,7 @@ The goals to be reached with and that lead to the EMW7 internationalisation impl
 
 ## Enable internationalisation in an application
 
-To enable internationalisation, the following two things must be done:
+To enable internationalization, the following two things must be done:
 
 1. Add to the application a dependency on [platform-i18n platform project](#platform-i18n).
 2. In the application create a bean of type `CompositeMessageSource` and name it `messageSource` as described below.
@@ -141,7 +141,7 @@ For example, the message
 contains four placeholders (`{serviceName}`, `{serviceVersion}`, {caller} and {cause}) that will 
 be replaced with actual values when translated.
 
-## Internationalised exception
+## Internationalized exception
 
 The `platform-i18n` platform project exposes `I18nEnabledException` exception that acts as base for checked exception that needs/wants the message got from {@link Translator}.  
 Refer to `I18nEnabledException` javadoc for more information.

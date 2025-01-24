@@ -9,11 +9,11 @@ public final class Constants {
 
   // TODO doc
   @I18nLabel(params = {})
-  public static final String DEFAULT_ERROR_LABEL = "com.github.emw7.platform.error.generic-error";
+  public static final String DEFAULT_ERROR_LABEL = "com.github.emw7.platform.i18n.error.request.generic-error";
 
   /**
    * TODO doc
-   * https://en.wikipedia.org/wiki/Hyper_Text_Coffee_Pot_Control_Protocol
+   * <a href="https://en.wikipedia.org/wiki/Hyper_Text_Coffee_Pot_Control_Protocol">...</a>
    */
   public static final int DEFAULT_CLIENT_ERROR_CODE = 418;
 
@@ -23,6 +23,6 @@ public final class Constants {
   public static final int SERVER_ERROR_CODE = 500;
 
   @I18nLabel(params= {})
-  public static final String SERVER_ERROR_LABEL = "com.github.emw7.platform.error.internal-server-error";
+  public static final String SERVER_ERROR_LABEL = "com.github.emw7.platform.i18n.error.request.server.internal-server-error";
 
 }

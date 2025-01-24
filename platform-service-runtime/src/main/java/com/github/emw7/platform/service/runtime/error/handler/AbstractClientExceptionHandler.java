@@ -14,7 +14,7 @@ public abstract non-sealed class AbstractClientExceptionHandler extends Abstract
   }
 
   @Override
-  protected int defaultStatus() {
+  protected final int defaultStatus() {
     return Constants.DEFAULT_CLIENT_ERROR_CODE;
   }
 

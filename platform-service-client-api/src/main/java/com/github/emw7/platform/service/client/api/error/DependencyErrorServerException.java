@@ -2,9 +2,9 @@ package com.github.emw7.platform.service.client.api.error;
 
 import com.github.emw7.platform.error.Code;
 import com.github.emw7.platform.error.Id;
-import com.github.emw7.platform.error.ServerRequestErrorException;
 import com.github.emw7.platform.protocol.api.error.DependencyErrorException;
-import com.github.emw7.platform.service.core.error.model.RequestErrorResponse;
+import com.github.emw7.platform.service.core.common.request.error.ServerRequestErrorException;
+import com.github.emw7.platform.service.core.common.request.error.model.RequestErrorResponse;
 import java.util.Map;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;

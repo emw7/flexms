@@ -2,31 +2,18 @@ package com.github.emw7.bar.logic.api;
 
 import com.github.emw7.bar.logic.api.error.BarNotFoundException;
 import com.github.emw7.bar.model.Bar;
-import com.github.emw7.bar.model.Bar.Severity;
 import com.github.emw7.platform.core.map.MapUtil;
 import com.github.emw7.platform.error.Id;
 import com.github.emw7.platform.error.RequestErrorException;
 import com.github.emw7.platform.error.ResourceIdClientException;
 import com.github.emw7.platform.error.category.NotFound;
-import com.github.emw7.platform.service.core.error.model.RequestErrorResponse;
+import com.github.emw7.platform.service.core.common.request.error.model.RequestErrorResponse;
 import java.lang.annotation.Annotation;
-import java.net.http.HttpHeaders;
-import java.time.ZonedDateTime;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Function;
-import javax.management.Query;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.domain.Sort.Order;
-import org.springframework.data.web.PagedModel;
-import org.springframework.data.web.SortDefault;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
 
 // TODO da rivedere che requestBodyClazz, pathParameters e queryParameters mi sembrano tanto cose
 //  da REST e *NON* generiche.

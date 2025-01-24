@@ -2,7 +2,7 @@ package com.github.emw7.platform.service.runtime.event;
 
 import static com.github.emw7.platform.log.EventLogger.notice;
 
-import com.github.emw7.platform.service.core.config.AppConfigProperties;
+import com.github.emw7.platform.service.core.runtime.config.AppConfigProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -12,7 +12,7 @@ import org.springframework.lang.NonNull;
 
 public final class AppReadyEventListener {
 
-  private static final Logger logger = LoggerFactory.getLogger(AppReadyEventListener.class);
+  private static final Logger log = LoggerFactory.getLogger(AppReadyEventListener.class);
 
   private final AppConfigProperties appConfigProperties;
 
@@ -22,8 +22,7 @@ public final class AppReadyEventListener {
 
   @EventListener
   public void onApplicationReadyEvent(@NonNull final ApplicationReadyEvent event) {
-    // FIXME either notice or info.
-    notice(logger).pattern("{} application {} started with id {}","[EMW7]",appConfigProperties.name(),
-        appConfigProperties.instanceId());
+    notice(log, "{} application {} started with id {}","[EMW7]",appConfigProperties.name(),
+        appConfigProperties.instanceId()).log();
   }
 }

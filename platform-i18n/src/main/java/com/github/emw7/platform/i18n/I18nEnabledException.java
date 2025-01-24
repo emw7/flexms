@@ -10,8 +10,8 @@ import org.springframework.lang.Nullable;
 /**
  * Base for checked exception that needs/wants the exception message got from {@link Translator}.
  * <p>
- * This class exposes all the constructors from {@link Exception} that has the message as argument
- * replacing it with {@code label} and {@code params}.<br/>
+ * This class exposes all the constructors from {@link Exception} that have the message argument
+ * replaced by {@code label} and {@code params}.<br/>
  * The message is set as the string obtained by translating the provided label with the provided
  * parameter to which the {@code cause} message has been added with the key {@code errorReason}.
  * <p>

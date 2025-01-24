@@ -4,6 +4,10 @@ import com.github.emw7.platform.discovery.api.error.ServerNotFoundException;
 import com.github.emw7.platform.discovery.api.model.Server;
 import org.springframework.lang.NonNull;
 
+/**
+ * Interface to be implemented by who wants acting as service discovery by searching for requested
+ * servers.
+ */
 public interface ServerRegistryDiscover {
 
   /**

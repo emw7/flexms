@@ -4,7 +4,6 @@ import java.util.Locale;
 import java.util.Random;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.lang.NonNull;
 
 public class BooleanMapperTests {
 
@@ -75,10 +74,10 @@ public class BooleanMapperTests {
   }
 
   //region Private methods
-  private boolean isTrue (@NonNull final String b) {
+  private boolean isTrue (final String b) {
     return switch (b.toLowerCase(Locale.ROOT)) {
       case "true", "t", "1", "on", "yes", "y" -> true;
-      default -> false;
+      case null, default -> false;
     };
   }
   //endregion Private methods

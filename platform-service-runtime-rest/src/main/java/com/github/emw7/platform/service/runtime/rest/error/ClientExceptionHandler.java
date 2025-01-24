@@ -1,8 +1,8 @@
 package com.github.emw7.platform.service.runtime.rest.error;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.emw7.platform.service.core.error.model.RequestErrorResponse;
-import com.github.emw7.platform.error.ClientRequestErrorException;
+import com.github.emw7.platform.service.core.common.request.error.ClientRequestErrorException;
+import com.github.emw7.platform.service.core.common.request.error.model.RequestErrorResponse;
 import com.github.emw7.platform.i18n.Translator;
 import com.github.emw7.platform.service.runtime.error.handler.AbstractClientExceptionHandler;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +10,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+// TODO vorrei metterlo final, ma forse per cose di spring NON è possibile.
 /**
  * Prepare answer for a {@link ClientRequestErrorException}.
  * <p>

@@ -1,7 +1,7 @@
 package com.github.emw7.platform.service.runtime.rest.error;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.emw7.platform.service.core.error.model.RequestErrorResponse;
+import com.github.emw7.platform.service.core.common.request.error.model.RequestErrorResponse;
 import com.github.emw7.platform.error.ServerRequestErrorException;
 import com.github.emw7.platform.i18n.Translator;
 import com.github.emw7.platform.service.runtime.error.handler.AbstractServerExceptionHandler;

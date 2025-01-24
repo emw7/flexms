@@ -1,15 +1,18 @@
 package com.github.emw7.platform.error;
 
-import com.github.emw7.platform.error.RequestErrorException.Error;
-import java.util.List;
-import java.util.Map;
-import org.apache.commons.lang3.StringUtils;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.springframework.lang.NonNull;
+//import com.github.emw7.platform.error.RequestErrorException.Error;
+//import java.util.List;
+//import java.util.Map;
+//import org.apache.commons.lang3.StringUtils;
+//import org.assertj.core.api.Assertions;
+//import org.junit.jupiter.api.Test;
+//import org.springframework.lang.NonNull;
 
+
+import org.junit.jupiter.api.Disabled;
 
 // TODO perché ho commentato tutto? Riabilitare...
+@Disabled
 public class RequestErrorExceptionTests {
 
 //  //region API

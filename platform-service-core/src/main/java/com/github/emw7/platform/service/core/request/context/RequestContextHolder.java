@@ -24,10 +24,6 @@ public final class RequestContextHolder {
    * @param requestContext the {@link RequestContext} to be wrapped
    */
   public static void set(@NonNull final RequestContext requestContext) {
-    // TODO integrate with eventing service.
-    if ( requestContext == null ) {
-      notice(log).warn().pattern("[ILLEGAL-ARGUMENT] provided request context is not valid: must be not null");
-    }
     holder.set(requestContext);
   }
 

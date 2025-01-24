@@ -1,6 +1,6 @@
 package com.github.emw7.platform.service.core.request.context;
 
-import com.github.emw7.platform.observability.tracing.Trace;
+import io.micrometer.tracing.Span;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
@@ -8,12 +8,12 @@ public class DefaultRequestContextRetriever implements RequestContextRetriever {
 
   //region API
   @Override
-  public final @NonNull Trace retrieveTrace(@NonNull final Object context) {
-    final Trace trace = _retrieveTrace(context);
+  public final @NonNull Span retrieveTrace(@NonNull final Object context) {
+    final Span trace = _retrieveTrace(context);
     if (trace != null) {
       return trace;
     } else {
-      return new Trace();
+      return Span.NOOP;
     }
   }
 
@@ -39,7 +39,7 @@ public class DefaultRequestContextRetriever implements RequestContextRetriever {
   //endregion API
 
   //region Template methods
-  protected @Nullable Trace _retrieveTrace(@NonNull final Object context) {
+  protected @Nullable Span _retrieveTrace(@NonNull final Object context) {
     return null;
   }
 

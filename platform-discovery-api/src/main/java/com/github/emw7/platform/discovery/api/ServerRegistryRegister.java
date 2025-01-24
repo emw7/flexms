@@ -4,6 +4,9 @@ import com.github.emw7.platform.discovery.api.error.CannotRegisterServerExceptio
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
+/**
+ *  Interface to be implemented by who wants acting as server registry by registering servers.
+ */
 public interface ServerRegistryRegister {
 
   /**

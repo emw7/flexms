@@ -24,9 +24,12 @@ public final class ServerNotFoundException extends ServerRegistryServerException
   //region Private static methods
   //endregion Private static methods
 
+  //region Private properties
   private final String serverName;
   private final String serverVersion;
+  //endregion Private properties
 
+  //region Constructors
   public ServerNotFoundException(@NonNull final Id id, @NonNull final String serverName,
       @NonNull final String serverVersion) {
     this(null, id, serverName, serverVersion);
@@ -38,6 +41,7 @@ public final class ServerNotFoundException extends ServerRegistryServerException
     this.serverName = serverName;
     this.serverVersion = serverVersion;
   }
+  //endregion Constructors
 
   //region Getters & Setters
   public @NonNull String getServerName() {

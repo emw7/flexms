@@ -13,16 +13,15 @@ import com.github.emw7.platform.error.RequestErrorException;
 import com.github.emw7.platform.error.ServerRequestErrorException;
 import com.github.emw7.platform.error.ServiceNotFoundServerException;
 import com.github.emw7.platform.error.category.NotFound;
+import com.github.emw7.platform.log.DoingLogEvent;
 import com.github.emw7.platform.log.EventLogger;
-import com.github.emw7.platform.log.LogEvent;
-import com.github.emw7.platform.log.StackableLogEvent;
 import com.github.emw7.platform.protocol.api.ProtocolRequest;
 import com.github.emw7.platform.protocol.api.ProtocolTemplate;
 import com.github.emw7.platform.protocol.api.error.DependencyErrorException;
 import com.github.emw7.platform.service.client.api.error.DownstreamStackDependencyErrorServerException;
 import com.github.emw7.platform.service.client.api.error.UnknownDependencyErrorServerException;
 import com.github.emw7.platform.service.client.api.error.UnmappedDependencyErrorServerException;
-import com.github.emw7.platform.service.core.error.model.RequestErrorResponse;
+import com.github.emw7.platform.service.core.common.request.error.model.RequestErrorResponse;
 import java.lang.annotation.Annotation;
 import java.util.Map;
 import java.util.Optional;
@@ -30,7 +29,6 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.event.Level;
 import org.springframework.core.NestedRuntimeException;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.lang.NonNull;
@@ -394,10 +392,9 @@ public abstract class AbstractClient {
 
     try  {
       // TODO fix for new log.
-      final LogEvent logEvent = EventLogger.doing(log).debug()
+      final DoingLogEvent logEvent = EventLogger.doing(log, "call endpoint {} of service {}@{} ", endpoint, serviceName, serviceVersion).debug()
           /*.ctxArg("service-name", serviceName).ctxArg("service-version", serviceVersion)
           .ctxArg("caller", callerId).ctxArg("endpoint", endpoint)*/
-          .pattern("call endpoint {} of service {}@{} ", endpoint, serviceName, serviceVersion)
           .log();
 
       final AuthToken token = authz.authorize();
@@ -409,7 +406,7 @@ public abstract class AbstractClient {
 
       // can throw ExchangerNestedRuntimeException
       T response = exchanger.apply(server, token);
-      EventLogger.done(logEvent);
+      EventLogger.done(logEvent).log();
       return response;
 
     } catch (ServerNotFoundException e) {

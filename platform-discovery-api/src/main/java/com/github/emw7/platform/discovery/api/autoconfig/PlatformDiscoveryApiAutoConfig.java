@@ -1,9 +1,11 @@
 package com.github.emw7.platform.discovery.api.autoconfig;
 
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.support.ResourceBundleMessageSource;
 
+@AutoConfiguration
 public class PlatformDiscoveryApiAutoConfig {
 
   /**

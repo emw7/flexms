@@ -7,7 +7,7 @@ import com.github.emw7.platform.protocol.api.error.DependencyErrorException;
 import com.github.emw7.platform.protocol.rest.error.ClientRestDependencyErrorException;
 import com.github.emw7.platform.protocol.rest.error.ServerRestDependencyErrorException;
 import com.github.emw7.platform.service.client.api.AbstractClient;
-import com.github.emw7.platform.service.core.error.model.RequestErrorResponse;
+import com.github.emw7.platform.service.core.common.request.error.model.RequestErrorResponse;
 import java.util.function.Function;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;

@@ -5,10 +5,16 @@ import java.util.Map;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
+/**
+ * Base exception for discovery framework,
+ */
 public abstract class ServerRegistryServerException extends I18nEnabledException {
 
+  //region Private properties
   private final String i18nLabel;
+  //endregion Private properties
 
+  //region Constructors
   public ServerRegistryServerException(@NonNull final String i18nLabel,
       @Nullable final Map<String, Object> params) {
     super(i18nLabel, params);
@@ -21,5 +27,6 @@ public abstract class ServerRegistryServerException extends I18nEnabledException
     super(i18nLabel, params, cause);
     this.i18nLabel= i18nLabel;
   }
+  //endregion Constructors
 
 }

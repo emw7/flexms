@@ -27,7 +27,7 @@ import com.github.emw7.platform.protocol.rest.request.GetRestProtocolRequest;
 import com.github.emw7.platform.service.client.api.error.DownstreamStackDependencyErrorServerException;
 import com.github.emw7.platform.service.client.api.error.UnknownDependencyErrorServerException;
 import com.github.emw7.platform.service.client.api.error.UnmappedDependencyErrorServerException;
-import com.github.emw7.platform.service.core.error.model.RequestErrorResponse;
+import com.github.emw7.platform.service.core.common.request.error.model.RequestErrorResponse;
 import java.util.Map;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;

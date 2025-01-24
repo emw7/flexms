@@ -9,7 +9,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 /**
- * Server cannot be registered
+ * Server cannot be registered.
  */
 public final class CannotRegisterServerException extends ServerRegistryServerException {
 
@@ -24,9 +24,12 @@ public final class CannotRegisterServerException extends ServerRegistryServerExc
   //region Private static methods
   //endregion Private static methods
 
+  //region Private properties
   private final String serverName;
   private final String serverVersion;
+  //endregion Private properties
 
+  //region Constructors
   public CannotRegisterServerException(@NonNull final Id id, @NonNull final String serverName,
       @NonNull final String serverVersion) {
     this(null, id, serverName, serverVersion);
@@ -38,5 +41,6 @@ public final class CannotRegisterServerException extends ServerRegistryServerExc
     this.serverName = serverName;
     this.serverVersion = serverVersion;
   }
+  //endregion Constructors
 
 }

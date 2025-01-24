@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
 
-mvn clean package --settings ../../mvn_settings.xml
+EMW7_PLATFORM_DIR=${EMW7_PLATFORM_DIR-../..}
 
+mvn --settings ${EMW7_PLATFORM_DIR}/mvn_settings.xml clean package "$@"
