@@ -1,7 +1,7 @@
 package com.github.emw7.platform.service.runtime.error.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.emw7.platform.error.Constants;
+import com.github.emw7.platform.service.core.common.request.error.Constants;
 import com.github.emw7.platform.i18n.Translator;
 import com.github.emw7.platform.service.core.common.request.error.RequestError;
 import java.util.Map;

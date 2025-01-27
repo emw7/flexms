@@ -1,5 +1,6 @@
 package com.github.emw7.platform.service.core.common.request.error.category;
 
+import com.github.emw7.platform.i18n.I18nLabel;
 import com.github.emw7.platform.service.core.common.request.error.RequestError;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
@@ -8,6 +9,7 @@ import org.springframework.core.annotation.AliasFor;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
+@I18nLabel(params={})
 @RequestError(errorCode = 404, label = "com.github.emw7.platform.i18n.error.request.client.not-found")
 public @interface NotFound {
 

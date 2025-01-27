@@ -51,7 +51,7 @@
     <!--region EMW7 -->
     <dependency>
       <groupId>com.github.emw7</groupId>
-      <artifactId>platform-error</artifactId>
+      <artifactId>platform-i18n</artifactId>
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
     <!--endregion EMW7 -->

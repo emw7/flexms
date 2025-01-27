@@ -1,25 +1,21 @@
-package com.github.emw7.platform.error;
+package com.github.emw7.platform.service.core.common.request.error;
 
-//import com.github.emw7.platform.error.RequestErrorException.Error;
-//import java.util.List;
-//import java.util.Map;
-//import org.apache.commons.lang3.StringUtils;
-//import org.assertj.core.api.Assertions;
-//import org.junit.jupiter.api.Test;
-//import org.springframework.lang.NonNull;
+import com.github.emw7.platform.service.core.common.request.error.RequestErrorException.Error;
+import java.util.List;
+import java.util.Map;
+import org.apache.commons.lang3.StringUtils;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-
-import org.junit.jupiter.api.Disabled;
-
-// TODO perché ho commentato tutto? Riabilitare...
-@Disabled
+// This is disabled as RequestErrorException is a sealed class and it does not make sense testing it,
+//  while permitted classes should be tested.
 public class RequestErrorExceptionTests {
 
 //  //region API
 //  //region Single error
 //  @Test
 //  public void givenNullMessageAndEmptyParams_whenGetMessage_thenMessageFromLabel() {
-//    final List<Error> errors = List.of(new Error(null, "test.error-a", Map.of()));
+//    final List<Error> errors = List.of(new Error( "test.error-a", Map.of()));
 //
 //    final RequestErrorException e = new RequestErrorException("0", "TEST", "01234", errors) {
 //    };

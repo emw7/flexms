@@ -32,12 +32,13 @@
 			<artifactId>spring-core</artifactId>
 		</dependency>
 
-		<!--region EMW7 -->
 		<dependency>
-			<groupId>com.github.emw7</groupId>
-			<artifactId>platform-i18n</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>${commons-lang3.version}</version>
 		</dependency>
+
+		<!--region EMW7 -->
 		<!--endregion EMW7 -->
 
 		<!--region Test -->

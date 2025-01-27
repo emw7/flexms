@@ -6,7 +6,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 /**
- * Base exception for discovery framework,
+ * Base exception for the EMW7 discovery framework,
  */
 public abstract class ServerRegistryServerException extends I18nEnabledException {
 

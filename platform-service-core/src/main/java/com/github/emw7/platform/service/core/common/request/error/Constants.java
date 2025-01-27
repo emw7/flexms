@@ -1,7 +1,6 @@
-package com.github.emw7.platform.error;
+package com.github.emw7.platform.service.core.common.request.error;
 
 import com.github.emw7.platform.i18n.I18nLabel;
-import com.github.emw7.platform.i18n.I18nLabelPrefixes;
 
 public final class Constants {
 

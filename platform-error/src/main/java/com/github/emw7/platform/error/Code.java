@@ -13,11 +13,11 @@ public final class Code {
 
   /**
    * @param code to be generated with
-   *             https://www.random.org/strings/?num=1&len=5&digits=on&upperalpha=on&unique=on&format=html&rnd=new.
+   *             <a href="https://www.random.org/strings/?num=1&len=5&digits=on&upperalpha=on&unique=on&format=html&rnd=new">...</a>.
    */
   public Code(@NonNull final String code) {
     // id == null it is a guard for bad developers.
-    this.code = StringUtils.leftPad(code == null ? "" : code, LENGTH, '0');
+    this.code = StringUtils.leftPad(code, LENGTH, '0');
   }
 
   @Override

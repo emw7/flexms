@@ -23,12 +23,9 @@ A set of core functions not related to any technology.
 Content:
 
 - Array util: common and frequent operations on arrays.
-- I18n utils: minimal i18n stuff that could be used and needed by who does not need all the i18n  
-  framework implemented in the platform-i18n.
+- Lang: common and frequent operation concerning Java language.
 - Map utils: common and frequent operations on maps.
-- Mappers: transformations from a type to another type:
-    - Boolean: mapping from and to boolean.
-    - Map: mapping from and to map.
+- Mappers: transformations from a type to another type.
 
 **STATUS**: GA  
 **Dependencies**: /  
@@ -40,8 +37,7 @@ Content:
 
 ## V platform-log
 
-A wrapper over slf4j that standardizes logging to a consistent format and uses an event-driven
-approach.
+A wrapper over slf4j that standardizes logging to a consistent format and uses an event-driven approach.
 
 Content: see [Logging](./extra/doc/Logging/README.md)
 
@@ -63,35 +59,39 @@ Content: see [Internationalization](./extra/doc/Internationalization/README.md)
 
 [**TODO**](./platform-i18n/TODO)
 
-## platform-error
+## V platform-discovery-api
 
-TODO: produce documentation only after the refactoring
-**STATUS**: to be refactored  
-**Dependencies**: platform-i18n, platform-telemetry  
-[**TODO**](./platform-error/TODO)
+The API supported by EMW7 platform for the server registry.
 
-## platform-discovery-api
+**Note**: there are not tests as there is nothing interesting to be tested.
 
-the interface supported by the platform for the service registry, that is supporting the hooks that
-allow a service to register its location in a service registry and the hooks allowing other services
-to query for the location of services on which depends on  
-being this an api, in order to run in an integrated system, the application needs an actual
-implementation of such a interface.  
-implementations for third party server registry solutions will be facades.  
-**STATUS**: misses tests
-**Dependencies**: platform-error   
+**STATUS**: GA  
+**Dependencies**: platform-i18n  
+**Autoconfigure**: @Bean MessageSource platformDiscoveryApiMessageSource
+
 [**TODO**](./platform-discovery-api/TODO)
 
-## platform-auth-api
+## V platform-auth-api
 
-the interface supported by the platform for authentication and authorization.  
-being this an api, in order to run in an integrated system, the application needs an actual
-implementation of such a interface.  
-implementations for third party server registry solutions will be facades.  
+The API supported by EMW7 platform for authentication and autorization.
+
 **STATUS**: GA  
 **Dependencies**: /  
+**Autoconfigure**: @Bean @ConditionalOnMissingBean AuthTokenFactory simpleAuthTokenFactory
 
 [**TODO**](./platform-auth-api/TODO)
+
+## V platform-error
+
+The project that contains the core for EMW7 error management.
+
+**STATUS**: GA  
+**Dependencies**: /  
+**Autoconfigure**: /
+
+[**TODO**](./platform-error/TODO)
+
+
 
 ## platform-service-core
 

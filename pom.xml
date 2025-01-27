@@ -19,11 +19,11 @@
 
   <modules>
     <module>platform-core</module>
+    <module>platform-error</module>
     <module>platform-i18n</module>
     <module>platform-log</module>
     <module>platform-auth-api</module>
     <module>platform-discovery-api</module>
-    <module>platform-error</module>
     <module>platform-service-core</module>
     <module>platform-service-runtime</module>
   </modules>
@@ -36,6 +36,11 @@
     <spring-boot.version>3.3.6</spring-boot.version>
 
     <maven.compiler.release>${java.version}</maven.compiler.release>
+
+    <maven.compiler.source>${java.version}</maven.compiler.source>
+    <maven.compiler.target>${java.version}</maven.compiler.target>
+
+    <commons-lang3.version>3.16.0</commons-lang3.version>
   </properties>
 
 </project>

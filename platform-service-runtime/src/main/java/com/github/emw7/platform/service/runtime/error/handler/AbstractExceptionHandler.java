@@ -3,7 +3,7 @@ package com.github.emw7.platform.service.runtime.error.handler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
-import com.github.emw7.platform.error.Constants;
+import com.github.emw7.platform.service.core.common.request.error.Constants;
 import com.github.emw7.platform.i18n.Translator;
 import com.github.emw7.platform.log.tracing.LogTracingUtil;
 import com.github.emw7.platform.log.tracing.TracerContainer;

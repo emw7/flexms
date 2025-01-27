@@ -47,7 +47,7 @@ import java.lang.annotation.Target;
  * </pre>
  */
 @Retention(RetentionPolicy.CLASS) // NOT used at runtime.
-@Target({ElementType.FIELD})
+@Target({ElementType.FIELD, ElementType.ANNOTATION_TYPE})
 @Documented
 public @interface I18nLabel {
 

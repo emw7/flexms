@@ -6,7 +6,7 @@ import com.github.emw7.platform.discovery.api.ServerRegistryDiscover;
 import com.github.emw7.platform.discovery.api.error.ServerNotFoundException;
 import com.github.emw7.platform.discovery.api.model.Server;
 import com.github.emw7.platform.error.Code;
-import com.github.emw7.platform.error.Constants;
+import com.github.emw7.platform.service.core.common.request.error.Constants;
 import com.github.emw7.platform.error.Id;
 import com.github.emw7.platform.error.NotFoundClientException;
 import com.github.emw7.platform.error.RequestErrorException;
@@ -410,7 +410,7 @@ public abstract class AbstractClient {
       return response;
 
     } catch (ServerNotFoundException e) {
-      throw new ServiceNotFoundServerException(e, new Id("SQBRA"), callerId, e.getServerName(),
+      throw new ServiceNotFoundServerException(e, callerId, e.getServerName(),
           e.getServerVersion(), null);
     } catch (ExchangerNestedRuntimeException e) {
       DependencyErrorException dee = (DependencyErrorException) e.getCause();

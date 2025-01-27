@@ -13,25 +13,17 @@ import org.junit.jupiter.api.Test;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
-// tests the performance of converting a map to string via toString or via collecting its
-// elements through a stream.
+
+// Foo is the name of the tests that does not concern the project itself but are related to
+//  something to try and investigate.
 @Disabled
 public class Foo {
 
   private static @NonNull String mapToString(@Nullable final Map<String, Object> params) {
 
-//    class EntryMapper {
-//
-//      public void map(StringBuilder sb, @Nullable final String key) {
-//        sb.append((key == null) ? "null" : key).append('=')
-//            .append(Optional.ofNullable(params.get(key)).map(Object::toString).orElse("null"))
-//            .append(',').append(' ');
-//      }
-//    }
+    class EntryMapper {
 
-    class EntryMapper2 {
-
-      public void map2(StringBuilder sb, @NonNull final Entry<String, Object> e) {
+      public void map(StringBuilder sb, @NonNull final Entry<String, Object> e) {
         String key = e.getKey();
         Object value = e.getValue();
         sb.append((key == null) ? "null" : key).append('=')
@@ -52,13 +44,15 @@ public class Foo {
     boolean t = false;
 
     return ((t) ? params.entrySet().stream().sorted(Entry.comparingByKey())
-        : params.entrySet().stream().unordered()).collect(() -> s, new EntryMapper2()::map2,
-        (a, b) -> a.append(b.toString())).replace(s.length() - 2, s.length(), "}").toString();
+                : params.entrySet().stream())
+        .collect(() -> s, new EntryMapper()::map,
+                 (a, b) -> a.append(b.toString())).replace(s.length() - 2, s.length(), "}").toString();
+}
 
-//    return params.keySet().stream()/*.sorted()*/
-//        .collect(() -> s, new EntryMapper()::map, (a,b) -> a.append(b.toString())).replace(s.length()-2,s.length(),"}").toString();
-  }
-
+  /**
+   * Tests the performance of converting a map to string via toString or via collecting its
+   * elements through a stream.
+   */
   @Test
   public void testFoo() {
     Map<String, Object> map = new HashMap<>();

@@ -1,14 +1,9 @@
 package com.github.emw7.platform.error;
 
-import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;
 
 public final class Id {
-
-  private static final Logger logger = LoggerFactory.getLogger(Id.class);
 
   private static final byte LENGTH = 5;
 
@@ -26,11 +21,11 @@ public final class Id {
    *   length(id) > 5 (example abcdefghij) => kept as it is (abcdefghij)
    * </pre>
    *
-   * @param id the id; to be generated with
-   *           https://www.random.org/strings/?num=1&len=5&digits=on&upperalpha=on&unique=on&format=html&rnd=new
+   * @param id the id; to be generated with <a
+   *           href="https://www.random.org/strings/?num=1&len=5&digits=on&upperalpha=on&unique=on&format=html&rnd=new">...</a>
    */
   public Id(@NonNull final String id) {
-    this.id = StringUtils.leftPad(id == null ? "" : id, LENGTH, '0');
+    this.id = StringUtils.leftPad(id, LENGTH, '0');
   }
 
   @Override

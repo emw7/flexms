@@ -1,9 +1,6 @@
 package com.github.emw7.platform.discovery.api.error;
 
-import com.github.emw7.platform.error.Code;
-import com.github.emw7.platform.error.Id;
 import com.github.emw7.platform.i18n.I18nLabel;
-import com.github.emw7.platform.i18n.I18nLabelPrefixes;
 import java.util.Map;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
@@ -12,10 +9,6 @@ import org.springframework.lang.Nullable;
  * Requested server has not found in the server registry.
  */
 public final class ServerNotFoundException extends ServerRegistryServerException {
-
-  //region Private static properties
-  // generated with https://www.random.org/strings/?num=1&len=5&digits=on&upperalpha=on&unique=on&format=html&rnd=new..
-  private static final Code CODE = new Code("4EF1I");
 
   @I18nLabel(params = {"serverName", "serverVersion", "errorReason"})
   private static final String I18N_LABEL = "com.github.emw7.platform.discovery.api.server-not-found";
@@ -30,12 +23,12 @@ public final class ServerNotFoundException extends ServerRegistryServerException
   //endregion Private properties
 
   //region Constructors
-  public ServerNotFoundException(@NonNull final Id id, @NonNull final String serverName,
+  public ServerNotFoundException(@NonNull final String serverName,
       @NonNull final String serverVersion) {
-    this(null, id, serverName, serverVersion);
+    this(null, serverName, serverVersion);
   }
 
-  public ServerNotFoundException(@Nullable final Throwable cause, @NonNull final Id id,
+  public ServerNotFoundException(@Nullable final Throwable cause,
       @NonNull final String serverName, @NonNull final String serverVersion) {
     super(I18N_LABEL, Map.of("serverName", serverName, "serverVersion", serverVersion), cause);
     this.serverName = serverName;
