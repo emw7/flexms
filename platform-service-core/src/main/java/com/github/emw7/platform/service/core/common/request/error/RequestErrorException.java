@@ -77,7 +77,9 @@ public abstract sealed class RequestErrorException extends Exception permits
           yield T.VALUE;
         }
         case VALUE -> {
-          enrichedParams.put(key, o);
+          if ( key != null ) {
+            enrichedParams.put(key, o);
+          }
           yield T.KEY;
         }
       };

@@ -5,6 +5,9 @@ import com.github.emw7.platform.error.Id;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
+/**
+ * Base exception for server errors.
+ */
 public abstract non-sealed class ServerRequestErrorException extends RequestErrorException {
 
   private static final String TYPE = "SERVER";

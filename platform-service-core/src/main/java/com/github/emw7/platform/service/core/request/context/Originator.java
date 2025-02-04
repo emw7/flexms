@@ -1,14 +1,17 @@
 package com.github.emw7.platform.service.core.request.context;
 
-import com.github.emw7.platform.service.core.PlatformServiceCoreConstants;
+import com.github.emw7.platform.service.core.ServiceCoreConstants;
 import java.util.Locale;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 /**
- * The {@link Requestor} that does the request.
+ * REV:V In a request chain who called the first ring.
+ *
+ * @see Requester
  */
-public final class Originator implements Requestor {
+public final class Originator implements Requester {
 
   public static class Builder {
 
@@ -18,10 +21,17 @@ public final class Originator implements Requestor {
     private boolean isService;
 
     public Builder() {
-      this.tenant = PlatformServiceCoreConstants.SYSTEM_TENANT;
-      this.id = PlatformServiceCoreConstants.SYSTEM_ID;
-      this.locale = PlatformServiceCoreConstants.SYSTEM_LOCALE;
-      this.isService = PlatformServiceCoreConstants.SYSTEM_IS_SERVICE;
+      this.tenant = ServiceCoreConstants.SYSTEM_TENANT;
+      this.id = ServiceCoreConstants.SYSTEM_ID;
+      this.locale = ServiceCoreConstants.SYSTEM_LOCALE;
+      this.isService = ServiceCoreConstants.SYSTEM_IS_SERVICE;
+    }
+
+    public Builder(@NonNull final Caller caller) {
+      this.tenant = caller.tenant();
+      this.id = caller.id();
+      this.locale = caller.locale();
+      this.isService = caller.isService();
     }
 
     public Builder tenant(@Nullable final String v) {
@@ -55,21 +65,31 @@ public final class Originator implements Requestor {
     }
   }
 
-  public static final Originator DEFAULT = new Originator(PlatformServiceCoreConstants.SYSTEM_TENANT, PlatformServiceCoreConstants.SYSTEM_ID, PlatformServiceCoreConstants.SYSTEM_LOCALE,
-      PlatformServiceCoreConstants.SYSTEM_IS_SERVICE);
+  /**
+   * Default, likely useless, {@link Originator} that gets:
+   * <ul>
+   * <li>{@code tenant} from {@link ServiceCoreConstants#SYSTEM_TENANT}</li>
+   * <li>{@code id} from {@link ServiceCoreConstants#SYSTEM_ID}</li>
+   * <li>{@code locale} from {@link ServiceCoreConstants#SYSTEM_LOCALE}</li>
+   * <li>{@code isService} from {@link ServiceCoreConstants#SYSTEM_IS_SERVICE}</li>
+   * </ul>
+   */
+  public static final Originator DEFAULT = new Originator(ServiceCoreConstants.SYSTEM_TENANT, ServiceCoreConstants.SYSTEM_ID, ServiceCoreConstants.SYSTEM_LOCALE,
+      ServiceCoreConstants.SYSTEM_IS_SERVICE);
 
   private final String tenant;
   private final String id;
   private final Locale locale;
   private final boolean isService;
 
-  public Originator(@NonNull final String tenant, @NonNull final String id,
+  private Originator(@NonNull final String tenant, @NonNull final String id,
       @NonNull final Locale locale, final boolean isService) {
     this.tenant = tenant;
     this.id = id;
     this.locale = locale;
     this.isService = isService;
   }
+
 
 
   @Override
@@ -92,6 +112,11 @@ public final class Originator implements Requestor {
   @Override
   public boolean isService() {
     return isService;
+  }
+
+  @NonNull
+  public String toString() {
+    return (new ToStringBuilder(this)).append("tenant", this.tenant()).append("id", this.id()).append("locale", this.locale()).append("isService", this.isService()).toString();
   }
 
 }

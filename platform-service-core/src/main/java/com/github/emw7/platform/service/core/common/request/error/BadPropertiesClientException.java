@@ -1,39 +1,52 @@
 package com.github.emw7.platform.service.core.common.request.error;
 
+
 import com.github.emw7.platform.error.Code;
 import com.github.emw7.platform.error.Id;
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
+/**
+ * The client error exception tied to
+ * {@link com.github.emw7.platform.service.core.common.request.error.category.BadRequest} category
+ * specific for properties that does not satisfy constraints.
+ */
 public final class BadPropertiesClientException extends BadRequestClientException {
 
-  //region Public static methods
+  //region Public static types
+  public static class BadPropertyError {
 
-  /**
-   * Returns an {@link com.github.emw7.platform.error.RequestErrorException.Error} for property
-   * violating minimum constraint.
-   *
-   * @param property the property name
-   * @param val      the property value
-   * @param min      the admitted minimum
-   * @param params   other parameters
-   * @return an {@link com.github.emw7.platform.error.RequestErrorException.Error} for property
-   * violating minimum constraint
-   */
-  public static Error min(String property, Number val, Number min, Object... params) {
-    return new Error(clientRequestErrorBaseLabel("property-violates-min"),
-        enrichParams(null, "property", property, "val", val, "min", min, params));
+    private final String label;
+    private final Map<String, Object> params;
+
+    private BadPropertyError(@NonNull final String label, @NonNull final Map<String, Object> params) {
+      this.label= label;
+      this.params= params;
+    }
+
+    public Error map() {
+      return new Error(this.label, this.params);
+    }
   }
 
-  public static Error mustBeNotNull(String property) {
-    return new Error(clientRequestErrorBaseLabel("property-violates-must-be-not-null"),
+  //endregion Public static types
+
+  //region Public static methods
+  public static BadPropertyError min(String property, Number val, Number min) {
+    return new BadPropertiesClientException.BadPropertyError(clientRequestErrorBaseLabel("bad-request" + '.' + "property-violates-min"),
+        Map.of("property", property, "val", val, "min", min));
+  }
+
+  public static BadPropertyError mustBeNotNull(String property) {
+    return new BadPropertyError(clientRequestErrorBaseLabel("bad-request" + '.' + "property-violates-must-be-not-null"),
         Map.of("property", property));
   }
 
-  public static Error mustBeNull(String property) {
-    return new Error(clientRequestErrorBaseLabel("property-violates-must-be-null-null"),
+  public static BadPropertyError mustBeNull(String property) {
+    return new BadPropertyError(clientRequestErrorBaseLabel("bad-request" + '.' + "property-violates-must-be-null-null"),
         Map.of("property", property));
   }
   //endregion Public static methods
@@ -46,8 +59,12 @@ public final class BadPropertiesClientException extends BadRequestClientExceptio
 
   //region Constructors
   public BadPropertiesClientException(@Nullable final Throwable cause, @NonNull final Id id,
-      @NonNull final List<Error> errors) {
-    super(cause, CODE, id, errors);
+      @NonNull final BadPropertyError error, BadPropertyError... errors) {
+    super(cause, CODE, id,
+        Arrays.stream(errors)
+            .map(BadPropertyError::map)
+            .collect(() -> { final ArrayList<Error> r= new ArrayList<>(errors.length+1); r.add(error.map()); return r; },ArrayList::add,
+                     ArrayList::addAll));
   }
   //endregion Constructors
 

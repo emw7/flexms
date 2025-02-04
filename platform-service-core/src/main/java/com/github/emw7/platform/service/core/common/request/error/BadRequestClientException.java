@@ -7,6 +7,10 @@ import java.util.List;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
+/**
+ * The client error exception tied to
+ * {@link com.github.emw7.platform.service.core.common.request.error.category.BadRequest} category.
+ */
 @BadRequest
 public abstract class BadRequestClientException extends ClientRequestErrorException {
 

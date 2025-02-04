@@ -1,6 +1,6 @@
 package com.github.emw7.platform.log;
 
-import com.github.emw7.platform.core.Constants;
+import com.github.emw7.platform.core.CoreConstants;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
@@ -53,15 +53,15 @@ public final class Arg<T> {
 
   /**
    * Returns the string representation of the value this arg, returning
-   * {@value Constants#NULL_STRING_REPRESENTATION} if the value is {@code null}.
+   * {@value CoreConstants#NULL_STRING_REPRESENTATION} if the value is {@code null}.
    * <p>
    * The string representation is got as (if value is not {@code null} `value.toString()`.
    *
    * @return the string representation of the value this arg, returning
-   *         {@value Constants#NULL_STRING_REPRESENTATION} if the value is {@code null}
+   *         {@value CoreConstants#NULL_STRING_REPRESENTATION} if the value is {@code null}
    */
   public @NonNull String asString() {
-    return (value == null) ? Constants.NULL_STRING_REPRESENTATION : value.toString();
+    return (value == null) ? CoreConstants.NULL_STRING_REPRESENTATION : value.toString();
   }
   //endregion API
 

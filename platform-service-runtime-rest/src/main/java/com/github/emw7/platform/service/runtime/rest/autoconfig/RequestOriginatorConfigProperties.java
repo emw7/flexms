@@ -5,7 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.lang.Nullable;
 
-@ConfigurationProperties(prefix = "com.github.emw7.platform.app.rest.request.originator.header")
+@ConfigurationProperties(prefix = "com.github.emw7.platform.conf.rest.request.originator.header")
 public record RequestOriginatorConfigProperties(@Nullable String tenant, @Nullable String id,
                                                 @Nullable String lang, @Nullable String isService) {
 

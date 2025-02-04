@@ -1,15 +1,33 @@
 package com.github.emw7.platform.service.runtime.rest.request.context;
 
-import com.github.emw7.platform.service.core.PlatformServiceCoreConstants;
-import com.github.emw7.platform.service.core.request.context.Caller;
-import com.github.emw7.platform.i18n.util.I18nUtil;
+import com.github.emw7.platform.service.core.ServiceCoreConstants;
+import com.github.emw7.platform.service.core.request.context.AbstractRequestContextRetriever;
 import com.github.emw7.platform.core.mapper.BooleanMapper;
+import com.github.emw7.platform.service.core.request.context.Originator;
+import com.github.emw7.platform.service.runtime.rest.autoconfig.PlatformServiceRuntimeRestAutoConfig;
+import com.github.emw7.platform.service.runtime.rest.autoconfig.RequestCallerConfigProperties;
 import com.github.emw7.platform.service.runtime.rest.autoconfig.RequestOriginatorConfigProperties;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Locale;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
+/**
+ * The default (autoconfigured, see
+ * {@link com.github.emw7.platform.service.runtime.rest.autoconfig.PlatformServiceRuntimeRestAutoConfig})
+ * request originator.
+ * <p>
+ * Information is retrieved from http headers defined in {@link RequestOriginatorConfigProperties},
+ * except for {@code locale} that is retrieved by calling
+ * {@code LocaleContextHolder.getLocale()} that in turn uses the {@code localeResolver} bean
+ * configured in
+ * {@link PlatformServiceRuntimeRestAutoConfig#localeResolver(RequestCallerConfigProperties)}.
+ *
+ * @see com.github.emw7.platform.service.runtime.rest.autoconfig.PlatformServiceRuntimeRestAutoConfig
+ * @see DefaultHttpServletHeadersRequestContextRetriever
+ * @see AbstractRequestContextRetriever
+ */
 public class HttpServletRequestHeaderOriginatorRetriever implements RestOriginatorRetriever {
 
   //region Private properties
@@ -32,45 +50,38 @@ public class HttpServletRequestHeaderOriginatorRetriever implements RestOriginat
    * <p>
    * Other information is optional anda, if not supplied, it gets default values:
    * <ul>
-   * <li>locale: {@link PlatformServiceCoreConstants#SYSTEM_LOCALE}</li>
-   * <li>isService: {@link PlatformServiceCoreConstants#SYSTEM_IS_SERVICE}</li>
+   * <li>locale: {@link ServiceCoreConstants#SYSTEM_LOCALE}</li>
+   * <li>isService: {@link ServiceCoreConstants#SYSTEM_IS_SERVICE}</li>
    * </ul>
    *
    * @param context the context from which can be retrieved the needed information.
    * @return the retrieved originator or {@code null} if originator was not supplied.
    */
   @Override
-  public @Nullable Caller retrieve(@NonNull final Object context) {
+  public @Nullable Originator retrieve(@NonNull final Object context) {
 
-    final HttpServletRequest httpServletRequest = (HttpServletRequest) context;
+    final HttpServletRequest httpServletRequest = (HttpServletRequest)context;
 
-    final Caller.Builder originatorBuilder = new Caller.Builder();
+    final Originator.Builder originatorBuilder= new Originator.Builder();
     // tenant
-    final String tenant = httpServletRequest.getHeader(
+    final String tenant= httpServletRequest.getHeader(
         getRequestOriginatorConfigProperties().tenant());
-    if (tenant == null) {
-      return null;
-    }
     originatorBuilder.tenant(tenant);
     // ==========
 
     // id
-    final String id = httpServletRequest.getHeader(getRequestOriginatorConfigProperties().id());
-    if (id == null) {
-      return null;
-    }
+    final String id= httpServletRequest.getHeader(getRequestOriginatorConfigProperties().id());
     originatorBuilder.id(id);
     // ==========
 
     // locale
-    final String lang = httpServletRequest.getHeader(getRequestOriginatorConfigProperties().lang());
-    final Locale locale = I18nUtil.locale(lang);
+    // TODO NON VA BENE perché NON usa l'header LANG di ORIGINATOR!!!
+    final Locale locale= LocaleContextHolder.getLocale();
     originatorBuilder.locale(locale);
     // ==========
 
     // isService
-    final boolean isService = BooleanMapper.fromString(
-        httpServletRequest.getHeader(getRequestOriginatorConfigProperties().isService()));
+    final boolean isService= BooleanMapper.fromString(httpServletRequest.getHeader(getRequestOriginatorConfigProperties().isService()));
     originatorBuilder.isService(isService);
     // ==========
 

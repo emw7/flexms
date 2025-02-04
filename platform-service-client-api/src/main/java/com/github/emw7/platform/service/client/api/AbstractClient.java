@@ -6,7 +6,7 @@ import com.github.emw7.platform.discovery.api.ServerRegistryDiscover;
 import com.github.emw7.platform.discovery.api.error.ServerNotFoundException;
 import com.github.emw7.platform.discovery.api.model.Server;
 import com.github.emw7.platform.error.Code;
-import com.github.emw7.platform.service.core.common.request.error.Constants;
+import com.github.emw7.platform.service.core.common.request.error.ServiceCoreCommonRequestErrorConstants;
 import com.github.emw7.platform.error.Id;
 import com.github.emw7.platform.error.NotFoundClientException;
 import com.github.emw7.platform.error.RequestErrorException;
@@ -199,7 +199,7 @@ public abstract class AbstractClient {
   private @Nullable ServerRequestErrorException mapToStandardServerException(
       @NonNull final RequestErrorResponse requestErrorResponse,
       @NonNull final DependencyErrorException dependencyErrorException) throws UnknownDependencyErrorException{
-    if (requestErrorResponse.status() != Constants.SERVER_ERROR_CODE) {
+    if (requestErrorResponse.status() != ServiceCoreCommonRequestErrorConstants.SERVER_ERROR_CODE) {
       return null;
     }
     // else...

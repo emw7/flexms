@@ -24,8 +24,12 @@
     <module>platform-log</module>
     <module>platform-auth-api</module>
     <module>platform-discovery-api</module>
+
     <module>platform-service-core</module>
     <module>platform-service-runtime</module>
+
+    <module>platform-rest-core</module>
+    <module>platform-service-runtime-rest</module>
   </modules>
 
   <properties>

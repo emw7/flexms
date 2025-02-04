@@ -1,15 +1,15 @@
 package com.github.emw7.platform.service.core.request.context;
 
-import com.github.emw7.platform.service.core.PlatformServiceCoreConstants;
+import com.github.emw7.platform.service.core.ServiceCoreConstants;
 import java.util.Locale;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 /**
- * The {@link Requestor} that originates the request, that is who spontaneously starts the flow.
+ * REV:V In a request chain who called the current ring.
  */
-public final class Caller implements Requestor {
+public final class Caller implements Requester {
 
   public static class Builder {
 
@@ -19,10 +19,10 @@ public final class Caller implements Requestor {
     private boolean isService;
 
     public Builder() {
-      this.tenant = PlatformServiceCoreConstants.SYSTEM_TENANT;
-      this.id = PlatformServiceCoreConstants.SYSTEM_ID;
-      this.locale = PlatformServiceCoreConstants.SYSTEM_LOCALE;
-      this.isService = PlatformServiceCoreConstants.SYSTEM_IS_SERVICE;
+      this.tenant = ServiceCoreConstants.SYSTEM_TENANT;
+      this.id = ServiceCoreConstants.SYSTEM_ID;
+      this.locale = ServiceCoreConstants.SYSTEM_LOCALE;
+      this.isService = ServiceCoreConstants.SYSTEM_IS_SERVICE;
     }
 
     public Caller.Builder tenant(@Nullable final String v) {
@@ -56,15 +56,24 @@ public final class Caller implements Requestor {
     }
   }
 
-  public static final Caller DEFAULT= new Caller(PlatformServiceCoreConstants.SYSTEM_TENANT,
-      PlatformServiceCoreConstants.SYSTEM_ID, PlatformServiceCoreConstants.SYSTEM_LOCALE, PlatformServiceCoreConstants.SYSTEM_IS_SERVICE);
+  /**
+   * Default, likely useless, {@link Caller} that gets:
+   * <ul>
+   * <li>{@code tenant} from {@link ServiceCoreConstants#SYSTEM_TENANT}</li>
+   * <li>{@code id} from {@link ServiceCoreConstants#SYSTEM_ID}</li>
+   * <li>{@code locale} from {@link ServiceCoreConstants#SYSTEM_LOCALE}</li>
+   * <li>{@code isService} from {@link ServiceCoreConstants#SYSTEM_IS_SERVICE}</li>
+   * </ul>
+   */
+  public static final Caller DEFAULT= new Caller(ServiceCoreConstants.SYSTEM_TENANT,
+      ServiceCoreConstants.SYSTEM_ID, ServiceCoreConstants.SYSTEM_LOCALE, ServiceCoreConstants.SYSTEM_IS_SERVICE);
 
   private final String tenant;
   private final String id;
   private final Locale locale;
   private final boolean isService;
 
-  public Caller(@NonNull final String tenant, @NonNull final String id,
+  private Caller(@NonNull final String tenant, @NonNull final String id,
       @NonNull final Locale locale, final boolean isService) {
     this.tenant = tenant;
     this.id = id;

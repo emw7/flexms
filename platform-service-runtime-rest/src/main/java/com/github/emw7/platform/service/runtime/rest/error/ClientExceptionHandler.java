@@ -5,19 +5,19 @@ import com.github.emw7.platform.service.core.common.request.error.ClientRequestE
 import com.github.emw7.platform.service.core.common.request.error.model.RequestErrorResponse;
 import com.github.emw7.platform.i18n.Translator;
 import com.github.emw7.platform.service.runtime.error.handler.AbstractClientExceptionHandler;
+import com.github.emw7.platform.service.runtime.error.handler.BasicClientExceptionHandler;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-// TODO vorrei metterlo final, ma forse per cose di spring NON è possibile.
 /**
  * Prepare answer for a {@link ClientRequestErrorException}.
  * <p>
  * Answer is {@link RequestErrorResponse}.
  */
 @ControllerAdvice
-public class ClientExceptionHandler extends AbstractClientExceptionHandler {
+public final class ClientExceptionHandler extends BasicClientExceptionHandler {
 
   //region Constructors
 
@@ -38,7 +38,7 @@ public class ClientExceptionHandler extends AbstractClientExceptionHandler {
   @ExceptionHandler(ClientRequestErrorException.class)
   public ResponseEntity<RequestErrorResponse> clientRequestException(
       @NonNull final ClientRequestErrorException e) {
-    final RequestErrorResponse requestErrorResponse = buildRequestErrorResponse(e);
+    final RequestErrorResponse requestErrorResponse = handle(e);
     return ResponseEntity.status(requestErrorResponse.status()).body(requestErrorResponse);
   }
   //endregion API

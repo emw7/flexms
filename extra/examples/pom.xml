@@ -21,6 +21,7 @@
     <module>ex-platform-log-spring-tracing</module>
     <module>ex-platform-log-internal-tracing</module>
     <module>ex-platform-service-runtime</module>
+    <module>up-down-stream</module>
   </modules>
 
   <properties>

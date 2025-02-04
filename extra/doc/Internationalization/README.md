@@ -1,4 +1,4 @@
-# Internationalisation
+# Internationalization
 
 The `platform-i18n` platform project provides a set of functions related to internationalisation as:
 - An easy an a standard way for getting messages in the specified language for a code (example: code => com.github.emw7.i18n.this-is-a-test, language => es, translate(code, language) => esto es una prueba).

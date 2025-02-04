@@ -12,25 +12,25 @@ import org.springframework.lang.NonNull;
  * @param timestamp date time when error occurred (was managed actually)
  * @param type      error type (CLIENT, SERVER, ...)
  * @param status    numerical error code
- * @param ref       REFeference, a unique identifier of the error
+ * @param ref       reference, a unique identifier of the error
  * @param traceId   trace id observability tracing information
  * @param spanId    span id observability tracing information
  * @param message   the error message ({@code translate(language, label, params)})
  * @param label     the error label for translation
  * @param errors    the list of detailed error occurred.
  */
-public record RequestErrorResponse(ZonedDateTime timestamp,
+public record RequestErrorResponse(@NonNull ZonedDateTime timestamp,
 
-                                   String type,
-                                   int status,
+                                   @NonNull String type,
+                                   @NonNull int status,
                                    @NonNull String ref,
 
-                                   String traceId,
-                                   String spanId,
+                                   @NonNull String traceId,
+                                   @NonNull String spanId,
 
-                                   String message,
-                                   String label,
+                                   @NonNull String message,
+                                   @NonNull String label,
 
-                                   List<Error> errors) {
+                                   @NonNull List<Error> errors) {
 
 }

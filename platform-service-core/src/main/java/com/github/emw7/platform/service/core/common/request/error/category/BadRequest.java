@@ -7,12 +7,17 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import org.springframework.core.annotation.AliasFor;
 
+/**
+ * The bad-request client error category, to be used when the request cannot be completed because
+ * if is incorrect in some way.
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @I18nLabel(params={})
 @RequestError(errorCode = 400, label = "com.github.emw7.platform.i18n.error.request.client.bad-request")
 public @interface BadRequest {
 
+// TODO remove commented out code.
 //  //  /**
 ////   * ATTENTION: do *NOT* rename as they are retrieved via name using reflection in
 ////   * {@link ClientExceptionHandler}.

@@ -93,26 +93,34 @@ The project that contains the core for EMW7 error management.
 
 
 
-## platform-service-core
+## ... platform-service-core
 
 the core shared by all the [modules of a service](#service-concept-modules)  
 **STATUS**: misses tests  
 **Dependencies**: platform-error  
 [**TODO**](./platform-service-core/TODO)
 
-## platform-service-runtime
+## ... platform-service-runtime
 
 the core for the [runtime modules of a service](#service-concept-modules)  
 **STATUS**: misses tests  
 **Dependencies**: platform-service-core  
 [**TODO**](./platform-service-runtime/TODO)
 
-## platform-service-runtime-rest
+## ... platform-service-runtime-rest
 
 the core for the runtime of a rest service  
 **STATUS**: misses tests  
 **Dependencies**: platform-service-runtime  
 [**TODO**](./platform-service-runtime-rest/TODO)
+
+## ... platform-rest-core
+
+the core shared by all the rest artifacts  
+**Note**: Contains only the constants for Originator and Caller
+**STATUS**: ready  
+**Dependencies**: platform-protocol-api, platform-rest-core  
+[**TODO**](./platform-rest-core/TODO)
 
 ## platform-service-client-api
 
@@ -146,14 +154,6 @@ the rest implementation of the platform-protocol-api
 **STATUS**: misses tests  
 **Dependencies**: platform-protocol-api, platform-rest-core  
 [**TODO**](./platform-protocol-rest/TODO)
-
-## platform-rest-core
-
-the core shared by all the rest artifacts  
-**Note**: Contains only the constants for Originator and Caller
-**STATUS**: ready  
-**Dependencies**: platform-protocol-api, platform-rest-core  
-[**TODO**](./platform-rest-core/TODO)
 
 # Service concept
 

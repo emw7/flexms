@@ -3,7 +3,8 @@ package com.github.emw7.platform.service.runtime.error.handler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
-import com.github.emw7.platform.service.core.common.request.error.Constants;
+import com.github.emw7.platform.log.EventLogger;
+import com.github.emw7.platform.service.core.common.request.error.ServiceCoreCommonRequestErrorConstants;
 import com.github.emw7.platform.i18n.Translator;
 import com.github.emw7.platform.log.tracing.LogTracingUtil;
 import com.github.emw7.platform.log.tracing.TracerContainer;
@@ -26,21 +27,15 @@ import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
-// WARNING TEST: it is not easy to test because uses static/singleton TracingContainer.
+// WARNING TEST: it is not easy to test because uses static/singleton TracerContainer.
+/**
+ * Base for both client and server exception handler.
+ */
 public abstract sealed class AbstractExceptionHandler permits AbstractClientExceptionHandler,
     AbstractServerExceptionHandler {
 
   //region Private static properties
-  private static final Logger logger = LoggerFactory.getLogger(AbstractExceptionHandler.class);
-
-//  /**
-//   * The list of client error types.
-//   * <p>
-//   * These are annotations that categorize the error.<br/> Each new annotation that adds an error
-//   * category must be added here.
-//   */
-//  private static final List<Class<? extends Annotation>> REQUEST_ERROR_TYPES = List.of(
-//      BadRequest.class, NotFound.class, AlreadyExists.class);
+  private static final Logger log = LoggerFactory.getLogger(AbstractExceptionHandler.class);
   //endregion Constants
 
   //region Private properties
@@ -71,14 +66,6 @@ public abstract sealed class AbstractExceptionHandler permits AbstractClientExce
   private final @NonNull Map<String, Object> annotationProperties(
       @NonNull final RequestErrorException e) {
 
-//    for (Class<? extends Annotation> annotationType : Categories.REQUEST_ERROR_TYPES) {
-//      final Annotation requestErrorAnnotation = findAnnotation(e.getClass(), annotationType);
-//      if (requestErrorAnnotation != null) {
-//        return AnnotationUtils.getAnnotationAttributes(requestErrorAnnotation);
-//      }
-//    }
-//    // no request error annotation found.
-//    return new HashMap<>();
     final Annotation requestErrorAnnotation = findAnnotation(e.getClass(), RequestError.class);
     return (requestErrorAnnotation != null) ? AnnotationUtils.getAnnotationAttributes(
         requestErrorAnnotation) : Map.of();
@@ -101,7 +88,7 @@ public abstract sealed class AbstractExceptionHandler permits AbstractClientExce
     } else if (requestError != null) {
       return requestError.label();
     } else {
-      return Constants.DEFAULT_ERROR_LABEL;
+      return ServiceCoreCommonRequestErrorConstants.DEFAULT_ERROR_LABEL;
     }
   }
 
@@ -112,10 +99,8 @@ public abstract sealed class AbstractExceptionHandler permits AbstractClientExce
     try {
       return objectReader.readValue(params);
     } catch (JsonProcessingException e) {
-      // TODO made it formal with EventLogger.
-      logger.warn(
-          "[JSON-PROCESSING] cannot deserialize json '{}' to map '{}'; returning empty map as fallback",
-          params, e.getMessage());
+      EventLogger.notice(log,"[JSON-PROCESSING] cannot deserialize json '{}' to map '{}'; returning empty map as fallback",
+          params, e.getMessage()).warn().log();
       return Map.of();
     }
   }
@@ -160,8 +145,8 @@ public abstract sealed class AbstractExceptionHandler permits AbstractClientExce
   }
 
   private @Nullable String id(@NonNull final Function<Tracer, String> id) {
-    final Tracer tracing = TracerContainer.getTracer();
-    return id.apply(tracing);
+    final Tracer tracer = TracerContainer.getTracer();
+    return id.apply(tracer);
   }
 
   private Annotation findAnnotation(@Nullable final Class<?> clazz,
@@ -177,8 +162,7 @@ public abstract sealed class AbstractExceptionHandler permits AbstractClientExce
 
   private @NonNull String translate(@NonNull final String label,
       @NonNull Map<String, Object> params) {
-    // FIXME locale deve essere null o devo prendere da quello dello user?
-    return translator.translate((Locale) null, label, params);
+    return translator.translate(RequestContextHolder.get().locale(), label, params);
   }
   //endregion Private methods
 

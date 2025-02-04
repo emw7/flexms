@@ -4,7 +4,7 @@ Tracing is not a concept of EMW7 platform logging framework but it is a general 
 Usually associated with observability.
 
 In this document is not described what tracing is, but it is focused on how to enable 
-log tracing that is get `traceId` and `spanId` into the MDC so that EMW7 platform logging framework can 
+log tracing, that is, get `traceId` and `spanId` into the MDC so that EMW7 platform logging framework can 
 print them.
 
 # Micrometer
@@ -27,8 +27,8 @@ Summing up, `Micrometer Tracing` is an API for tracing from which an application
 # Design
 
 How described in the [documentation](../README.md), the EMW7 platform logging framework tracing is designed after relying on retrieving 
-tracing information in the MDC. Specifically such a information is expected to be foung in the `traceId` and `spanId` keys.
-It is not very clear who put such a keys in the MDC but it is sure that, using Spring Boot, it is possible to configure the project in 
+tracing information in the MDC. Specifically such a information is expected to be found in the `traceId` and `spanId` keys.
+It is not very clear who puts such a keys in the MDC but it is sure that, using Spring Boot, it is possible to configure the project in 
 a mean that such information automagically drops into the MDC: [Tracing :: Logging Correlation IDs](https://docs.spring.io/spring-boot/reference/actuator/tracing.html#actuator.micrometer-tracing.logging).  
 But what if it is not wanted to use Spring Boot stack? The EMW7 platform logging framework provides some facilities to get basic tracing compatible with `Micrometer Tracing`. That is:
 - EMW7 platform logging framework provides a basic implementation of `Micrometer Tracing`.

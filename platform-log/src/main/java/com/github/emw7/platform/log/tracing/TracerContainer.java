@@ -32,7 +32,7 @@ public final class TracerContainer {
    */
   public static @NonNull Tracer getTracer() {
     if (tracer == null) {
-      System.err.printf("%s#getTracer() called but tracer is null, so returning a fallback instance of %s%n", TracerContainer.class.getName(), Tracer.NOOP.getClass().getName());
+      System.err.printf("[WARN] %s#getTracer() called but tracer is null, so returning a fallback instance of %s%n", TracerContainer.class.getName(), Tracer.NOOP.getClass().getName());
       return Tracer.NOOP;
     } else {
       return tracer;
@@ -44,7 +44,7 @@ public final class TracerContainer {
 
   /**
    * <b>Note</b>: <b>MUST NOT</b> be used by an application, as it
-   * is constructed by {@link PlatformLogAutoConfig}.<br/>
+   * is constructed by {@link com.github.emw7.platform.log.autoconfig.PlatformLogTraceAutoConfig}.<br/>
    * This is {@code public} only to be used in tests.
    * <p>
    * Sets {@link #tracer} with the supplied tracer if it is not {@code null}.

@@ -1,10 +1,11 @@
 package com.github.emw7.platform.service.runtime.rest.error;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.emw7.platform.service.core.common.request.error.ServerRequestErrorException;
 import com.github.emw7.platform.service.core.common.request.error.model.RequestErrorResponse;
-import com.github.emw7.platform.error.ServerRequestErrorException;
 import com.github.emw7.platform.i18n.Translator;
 import com.github.emw7.platform.service.runtime.error.handler.AbstractServerExceptionHandler;
+import com.github.emw7.platform.service.runtime.error.handler.BasicServerExceptionHandler;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -15,9 +16,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
  * <p>
  * Answer is {@link RequestErrorResponse}.
  */
-// TODO can be final?
 @ControllerAdvice
-public class ServerExceptionHandler extends AbstractServerExceptionHandler {
+public final class ServerExceptionHandler extends BasicServerExceptionHandler {
 
   //region Constructors
 
@@ -37,7 +37,7 @@ public class ServerExceptionHandler extends AbstractServerExceptionHandler {
   @ExceptionHandler(ServerRequestErrorException.class)
   public ResponseEntity<RequestErrorResponse> serverRequestException(
       @NonNull final ServerRequestErrorException e) {
-    final RequestErrorResponse requestErrorResponse = buildRequestErrorResponse(e);
+    final RequestErrorResponse requestErrorResponse = handle(e);
     return ResponseEntity.status(requestErrorResponse.status()).body(requestErrorResponse);
   }
   //endregion API

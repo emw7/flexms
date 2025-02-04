@@ -6,6 +6,9 @@ import java.util.List;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
+/**
+ * Base exception for client errors.
+ */
 public abstract non-sealed class ClientRequestErrorException extends RequestErrorException {
 
   private static final String TYPE = "CLIENT";

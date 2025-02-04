@@ -1,11 +1,15 @@
 package com.github.emw7.platform.service.runtime.error.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.emw7.platform.service.core.common.request.error.Constants;
+import com.github.emw7.platform.service.core.common.request.error.ServiceCoreCommonRequestErrorConstants;
 import com.github.emw7.platform.i18n.Translator;
 import org.springframework.lang.NonNull;
 
-public abstract non-sealed class AbstractClientExceptionHandler extends AbstractExceptionHandler {
+/**
+ * Base for client exception handler.
+ */
+public abstract sealed class AbstractClientExceptionHandler extends AbstractExceptionHandler
+permits BasicClientExceptionHandler {
 
   protected AbstractClientExceptionHandler(
       @NonNull final ObjectMapper objectMapper,
@@ -15,7 +19,7 @@ public abstract non-sealed class AbstractClientExceptionHandler extends Abstract
 
   @Override
   protected final int defaultStatus() {
-    return Constants.DEFAULT_CLIENT_ERROR_CODE;
+    return ServiceCoreCommonRequestErrorConstants.DEFAULT_CLIENT_ERROR_CODE;
   }
 
 }

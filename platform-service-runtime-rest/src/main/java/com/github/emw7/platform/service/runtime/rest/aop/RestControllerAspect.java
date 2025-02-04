@@ -1,12 +1,10 @@
 package com.github.emw7.platform.service.runtime.rest.aop;
 
 import com.github.emw7.platform.service.core.request.context.Caller;
+import com.github.emw7.platform.service.core.request.context.Originator;
 import com.github.emw7.platform.service.core.request.context.RequestContext;
 import com.github.emw7.platform.service.core.request.context.DefaultRequestContext;
 import com.github.emw7.platform.service.runtime.rest.request.context.RestRequestContextRetriever;
-import com.github.emw7.platform.observability.tracing.Trace;
-import com.github.emw7.platform.observability.tracing.TracingContainer;
-import com.github.emw7.platform.observability.tracing.TracingFactory;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Locale;
 import org.aspectj.lang.JoinPoint;
@@ -18,32 +16,34 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 @Aspect
-public class RestControllerAspect {
+public final class RestControllerAspect {
 
-  private final TracingFactory tracingFactory;
   private final RestRequestContextRetriever requestContextRetriever;
 
-  public RestControllerAspect(@NonNull final TracingFactory tracingFactory,
-      @NonNull final RestRequestContextRetriever requestContextRetriever) {
-    this.tracingFactory = tracingFactory;
+  public RestControllerAspect(@NonNull final RestRequestContextRetriever requestContextRetriever) {
     this.requestContextRetriever = requestContextRetriever;
   }
 
+  /**
+   * Retrieves the {@link RequestContext} information and put it into the
+   * {@link com.github.emw7.platform.service.core.request.context.RequestContextHolder}.
+   * <p>
+   * Application can get {@link RequestContext} information in any place by invoking
+   * {@link com.github.emw7.platform.service.core.request.context.RequestContextHolder#get()}.
+   *
+   * @param joinPoint
+   */
   @Before(value = "@within(org.springframework.web.bind.annotation.RestController)", argNames = "joinPoint")
-  public void tracing(@NonNull final JoinPoint joinPoint) {
+  public void requestContext(@NonNull final JoinPoint joinPoint) {
 
     final HttpServletRequest httpServletRequest= retrieveHttpServletRequest();
 
-    final Trace trace= requestContextRetriever.retrieveTrace(httpServletRequest);
-    TracingContainer.set(tracingFactory.of(trace.getId()));
-
-    final Caller originator= requestContextRetriever.retrieveOriginator(httpServletRequest);
+    final Originator originator= requestContextRetriever.retrieveOriginator(httpServletRequest);
     final Caller caller = requestContextRetriever.retrieveCaller(httpServletRequest);
     final RequestContext requestContext= new DefaultRequestContext(Locale.getDefault(),
-        // true that TracingContainer.get() can be null that it has been set it only some rows above...
-        TracingContainer.get(), originator, caller);
+        originator, caller);
     com.github.emw7.platform.service.core.request.context.RequestContextHolder.set(requestContext);
-    // TODO lanciare eccezione IllegalState o cosa? quando caller e vuoto? Se si come forzare in ogni protocollo?
+    // TODO lanciare eccezione IllegalState o cosa? Quando caller è vuoto? Se sì come forzare in ogni protocollo?
   }
 
   private @NonNull HttpServletRequest retrieveHttpServletRequest () {

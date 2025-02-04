@@ -7,7 +7,9 @@ import java.util.Map;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
-@NotFound
+/**
+ * The client error exception tied to {@link NotFound} category.
+ */
 public abstract class NotFoundClientException extends ResourceIdClientException {
 
   // generated with

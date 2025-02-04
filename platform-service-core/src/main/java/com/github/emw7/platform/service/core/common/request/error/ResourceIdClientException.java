@@ -9,6 +9,10 @@ import java.util.Map;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
+/**
+ * The client error exception tied to
+ * {@link NotFound} category specific for the retrieval by id.
+ */
 @NotFound
 public abstract class ResourceIdClientException extends ClientRequestErrorException {
 
