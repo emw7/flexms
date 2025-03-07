@@ -14,14 +14,14 @@ class NotFoundClientExceptionTest extends RequestErrorExceptionTestSupport {
   @Test
   public void testNotFoundClientException() {
     final NotFoundClientException e = new NotFoundClientException(new Id("FV3KB"),
-        "testNotFoundClientException", 0, Map.of("p", false)) {
+        "testNotFoundClientException", 0) {
     };
 
     assertRef(e, "RY19P-FV3KB");
     assertType(e, "CLIENT");
     assertError(e,
         "com.github.emw7.platform.i18n.error.request.client.not-found.testNotFoundClientException",
-        Map.of("p", false, "resourceName", "testNotFoundClientException", "resourceId", 0));
+        Map.of( "resourceName", "testNotFoundClientException", "resourceId", 0));
 
     assertAnnotation(e, NotFound.class,
         "com.github.emw7.platform.i18n.error.request.client.not-found", 404);

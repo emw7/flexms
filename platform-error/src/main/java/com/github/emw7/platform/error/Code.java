@@ -1,5 +1,6 @@
 package com.github.emw7.platform.error;
 
+import java.util.Objects;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 
@@ -25,4 +26,20 @@ public final class Code {
     return code;
   }
 
+  @Override
+  public boolean equals(final Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    final Code code1 = (Code) o;
+    return Objects.equals(code, code1.code);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(code);
+  }
 }

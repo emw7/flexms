@@ -55,6 +55,11 @@
     </dependency>
 
     <!--region EMW7 -->
+    <dependency>
+      <groupId>com.github.emw7</groupId>
+      <artifactId>platform-service-core</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
     <!--endregion EMW7 -->
 
     <!--region Test -->

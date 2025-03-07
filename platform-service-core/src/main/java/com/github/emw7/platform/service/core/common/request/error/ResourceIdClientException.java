@@ -13,7 +13,6 @@ import org.springframework.lang.Nullable;
  * The client error exception tied to
  * {@link NotFound} category specific for the retrieval by id.
  */
-@NotFound
 public abstract class ResourceIdClientException extends ClientRequestErrorException {
 
   public static final String RESOURCE_NAME_KEY = "resourceName";

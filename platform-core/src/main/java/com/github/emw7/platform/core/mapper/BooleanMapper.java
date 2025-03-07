@@ -29,6 +29,10 @@ public final class BooleanMapper {
     };
   }
 
+  public static String toString (final boolean b) {
+    return ( b ) ? "true" : "false";
+  }
+
   //endregion API
 
   //region Constructors

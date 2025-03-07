@@ -6,13 +6,9 @@ import org.springframework.lang.Nullable;
 @UnknownDependencyError
 public abstract non-sealed class UnknownDependencyErrorException extends DependencyErrorException {
 
-  public UnknownDependencyErrorException(@NonNull final Object errorResponse,
-      @NonNull final String caller, @NonNull final String serviceName,
-      @NonNull final String serviceVersion, @NonNull final String message,
+  protected UnknownDependencyErrorException(@NonNull final String caller,
+      @NonNull final String serviceName, @NonNull final String serviceVersion,
       @Nullable final Throwable cause) {
-    super(errorResponse, caller, serviceName, serviceVersion, message, cause);
+    super(caller, serviceName, serviceVersion, cause);
   }
-
-
-
 }

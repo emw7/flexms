@@ -1,5 +1,6 @@
 package com.github.emw7.platform.service.runtime.rest.request.context;
 
+import com.github.emw7.platform.i18n.util.I18nUtil;
 import com.github.emw7.platform.service.core.ServiceCoreConstants;
 import com.github.emw7.platform.service.core.request.context.AbstractRequestContextRetriever;
 import com.github.emw7.platform.core.mapper.BooleanMapper;
@@ -9,6 +10,7 @@ import com.github.emw7.platform.service.runtime.rest.autoconfig.RequestCallerCon
 import com.github.emw7.platform.service.runtime.rest.autoconfig.RequestOriginatorConfigProperties;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Locale;
+import java.util.Optional;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
@@ -66,6 +68,9 @@ public class HttpServletRequestHeaderOriginatorRetriever implements RestOriginat
     // tenant
     final String tenant= httpServletRequest.getHeader(
         getRequestOriginatorConfigProperties().tenant());
+    if ( tenant == null ) {
+      return null;
+    }
     originatorBuilder.tenant(tenant);
     // ==========
 
@@ -75,8 +80,8 @@ public class HttpServletRequestHeaderOriginatorRetriever implements RestOriginat
     // ==========
 
     // locale
-    // TODO NON VA BENE perché NON usa l'header LANG di ORIGINATOR!!!
-    final Locale locale= LocaleContextHolder.getLocale();
+    final Locale locale= Optional.ofNullable(I18nUtil.locale(httpServletRequest.getHeader(getRequestOriginatorConfigProperties().lang()))).orElse(
+        ServiceCoreConstants.SYSTEM_LOCALE);
     originatorBuilder.locale(locale);
     // ==========
 

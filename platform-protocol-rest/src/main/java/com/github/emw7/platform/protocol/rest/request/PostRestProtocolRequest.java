@@ -1,9 +1,9 @@
 package com.github.emw7.platform.protocol.rest.request;
 
-import com.github.emw7.platform.protocol.rest.request.PostRestProtocolRequest.Builder;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
@@ -11,44 +11,52 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.util.MultiValueMap;
 
-public abstract non-sealed class PostRestProtocolRequest<B> extends AbstractRestProtocolRequest<B> {
+public final class PostRestProtocolRequest<B> extends AbstractRestProtocolRequest<B> {
 
   //region Private static final properties
   private static final HttpMethod HTTP_METHOD = HttpMethod.POST;
   //endregion Private static final properties
 
   //region Builder
-  public static class Builder<B> {
+  public static class Builder<B> extends
+      AbstractRestProtocolRequest.Builder<B, PostRestProtocolRequest<B>> {
 
-    private HttpHeaders httpHeaders;
+    private final HttpHeaders httpHeaders;
 
-    private List<MediaType> acceptableMediaTypes= List.of(MediaType.APPLICATION_JSON);
+    private final List<MediaType> acceptableMediaTypes;
+
     private MediaType contentType;
-
-    private Map<String, Object> pathParams;
-    // PUT has not query parameters.
-    private final MultiValueMap<String, String> queryParams = null;
-    // PUT cannot be pageable.
-    private final Pageable pageable = null;
     private B body;
 
-    public PostRestProtocolRequest.Builder<B> httpHeaders(HttpHeaders httpHeaders) {
-      this.httpHeaders = httpHeaders;
+    private Builder() {
+      this(null, null);
+    }
+
+    private Builder(@Nullable final Map<String, Parameter<?>> expectedPathParameters,
+        @Nullable final Map<String, Parameter<?>> expectedQueryParameters) {
+      super(expectedPathParameters, expectedQueryParameters);
+
+      this.httpHeaders = new HttpHeaders();
+      this.acceptableMediaTypes = new ArrayList<>();
+
+      this.contentType = null;
+      this.body = null;
+    }
+
+    public PostRestProtocolRequest.Builder<B> httpHeader(@NonNull final String name,
+        @NonNull final String... values) {
+      this.httpHeaders.addAll(name, Arrays.stream(values).toList());
       return this;
     }
 
-    public PostRestProtocolRequest.Builder<B> acceptableMediaType (@NonNull final MediaType... mediaTypes) {
-      this.acceptableMediaTypes= List.of(mediaTypes);
+    public PostRestProtocolRequest.Builder<B> acceptableMediaTypes(
+        @NonNull final MediaType... mediaType) {
+      this.acceptableMediaTypes.addAll(Arrays.stream(mediaType).toList());
       return this;
     }
 
-    public PostRestProtocolRequest.Builder<B> contentType (@NonNull final MediaType contentType) {
-      this.contentType= contentType;
-      return this;
-    }
-
-    public PostRestProtocolRequest.Builder<B> pathParams(Map<String, Object> pathParams) {
-      this.pathParams = pathParams;
+    public PostRestProtocolRequest.Builder<B> contentType(@NonNull final MediaType contentType) {
+      this.contentType = contentType;
       return this;
     }
 
@@ -57,23 +65,41 @@ public abstract non-sealed class PostRestProtocolRequest<B> extends AbstractRest
       return this;
     }
 
-    public PostRestProtocolRequest<B> build() {
-      //noinspection ConstantConditions
-      return new PostRestProtocolRequest<>(httpHeaders, acceptableMediaTypes, contentType, pathParams, body) {};
+    @Override
+    protected PostRestProtocolRequest<B> _build() {
+      return new PostRestProtocolRequest<>(httpHeaders, acceptableMediaTypes, pathParams,
+          queryParams, contentType, body);
     }
+
+    @Override
+    protected void _check() throws RuntimeException {
+      if (body != null && contentType == null) {
+        // TODO I18nRuntimeException???
+        throw new RuntimeException("Content type must be set when body is set");
+      }
+    }
+
   }
 
   public static <B> PostRestProtocolRequest.Builder<B> builder() {
-    return new PostRestProtocolRequest.Builder<B>();
+    return builder(null, null);
+  }
+
+  public static <B> PostRestProtocolRequest.Builder<B> builder(
+      @Nullable final Map<String, Parameter<?>> expectedPathParameters,
+      @Nullable final Map<String, Parameter<?>> expectedQueryParameters) {
+    return new PostRestProtocolRequest.Builder<>(expectedPathParameters, expectedQueryParameters);
   }
   //endregion Builder
 
   //region Constructors
-  private PostRestProtocolRequest(final HttpHeaders httpHeaders, @NonNull final List<MediaType> acceptableMediaTypes,
-      @Nullable final MediaType contentType,
-      final Map<String, Object> pathParams,
-      final B body) {
-    super(HTTP_METHOD, httpHeaders, acceptableMediaTypes, contentType, pathParams, null, null, body);
+  private PostRestProtocolRequest(@NonNull final HttpHeaders httpHeaders,
+      @NonNull final List<MediaType> acceptableMediaTypes,
+      @NonNull final Map<String, Object> pathParams,
+      @NonNull final MultiValueMap<String, String> queryParams,
+      @Nullable final MediaType contentType, @Nullable final B body) {
+    super(HTTP_METHOD, httpHeaders, acceptableMediaTypes, contentType, pathParams, queryParams,
+        null, body);
   }
   //endregion Constructors
 

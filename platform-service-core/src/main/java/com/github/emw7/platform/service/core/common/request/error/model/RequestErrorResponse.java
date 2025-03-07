@@ -1,9 +1,11 @@
 package com.github.emw7.platform.service.core.common.request.error.model;
 
+import com.github.emw7.platform.service.core.common.request.error.RequestErrorException;
 import com.github.emw7.platform.service.core.common.request.error.RequestErrorException.Error;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import org.springframework.lang.NonNull;
 
 /**
@@ -33,4 +35,8 @@ public record RequestErrorResponse(@NonNull ZonedDateTime timestamp,
 
                                    @NonNull List<Error> errors) {
 
+  public RequestErrorResponse {
+    //noinspection ConstantValue
+    errors= ( errors == null ) ? List.of() : errors;
+  }
 }

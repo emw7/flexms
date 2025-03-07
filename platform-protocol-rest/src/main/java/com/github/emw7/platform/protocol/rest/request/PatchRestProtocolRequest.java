@@ -1,5 +1,7 @@
 package com.github.emw7.platform.protocol.rest.request;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import org.springframework.data.domain.Pageable;
@@ -10,69 +12,94 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.util.MultiValueMap;
 
-public abstract non-sealed class PatchRestProtocolRequest<B> extends AbstractRestProtocolRequest<B> {
+public final class PatchRestProtocolRequest<B> extends AbstractRestProtocolRequest<B> {
 
   //region Private static final properties
   private static final HttpMethod HTTP_METHOD = HttpMethod.PATCH;
   //endregion Private static final properties
 
   //region Builder
-  public static class Builder<B> {
+  public static class Builder<B> extends AbstractRestProtocolRequest.Builder<B, PatchRestProtocolRequest<B>> {
 
-    private HttpHeaders httpHeaders;
-    
-    private List<MediaType> acceptableMediaTypes= List.of(MediaType.APPLICATION_JSON);
+    private final HttpHeaders httpHeaders;
+
+    private final List<MediaType> acceptableMediaTypes;
+
     private MediaType contentType;
-    
-    private Map<String, Object> pathParams;
-    // PUT has not query parameters.
-    private final MultiValueMap<String, String> queryParams = null;
-    // PUT cannot be pageable.
-    private final Pageable pageable = null;
     private B body;
 
-    public Builder<B> httpHeaders(HttpHeaders httpHeaders) {
-      this.httpHeaders = httpHeaders;
+    private Builder() {
+      this(null, null);
+    }
+
+    private Builder(@Nullable final Map<String, Parameter<?>> expectedPathParameters,
+        @Nullable final Map<String, Parameter<?>> expectedQueryParameters) {
+      super(expectedPathParameters, expectedQueryParameters);
+
+      this.httpHeaders = new HttpHeaders();
+      this.acceptableMediaTypes = new ArrayList<>();
+
+      this.contentType= null;
+      this.body= null;
+    }
+
+    public PatchRestProtocolRequest.Builder<B> httpHeader(@NonNull final String name,
+        @NonNull final String... values) {
+      this.httpHeaders.addAll(name, Arrays.stream(values).toList());
       return this;
     }
-    
-    public Builder<B> acceptableMediaType (@NonNull final MediaType... mediaTypes) {
-      this.acceptableMediaTypes= List.of(mediaTypes);
+
+    public PatchRestProtocolRequest.Builder<B> acceptableMediaTypes(
+        @NonNull final MediaType... mediaType) {
+      this.acceptableMediaTypes.addAll(Arrays.stream(mediaType).toList());
       return this;
     }
-    
-    public Builder<B> contentType (@NonNull final MediaType contentType) {
+
+    public PatchRestProtocolRequest.Builder<B> contentType (@NonNull final MediaType contentType) {
       this.contentType= contentType;
       return this;
     }
 
-    public Builder<B> pathParams(Map<String, Object> pathParams) {
-      this.pathParams = pathParams;
-      return this;
-    }
-
-    public Builder<B> body(B body) {
+    public PatchRestProtocolRequest.Builder<B> body(B body) {
       this.body = body;
       return this;
     }
 
-    public PatchRestProtocolRequest<B> build() {
-      //noinspection ConstantConditions
-      return new PatchRestProtocolRequest<>(httpHeaders, acceptableMediaTypes, contentType, pathParams, body) {};
+    @Override
+    protected PatchRestProtocolRequest<B> _build() {
+      return new PatchRestProtocolRequest<>(httpHeaders, acceptableMediaTypes, pathParams,
+          queryParams, contentType, body);
     }
+
+    @Override
+    protected void _check() throws RuntimeException {
+      if ( body != null && contentType == null ) {
+        // TODO I18nRuntimeException???
+        throw new RuntimeException("Content type must be set when body is set");
+      }
+    }
+
   }
 
-  public static <B> Builder<B> builder() {
-    return new Builder<B>();
+  public static <B> PatchRestProtocolRequest.Builder<B> builder() {
+    return builder(null, null);
+  }
+
+  public static <B> PatchRestProtocolRequest.Builder<B> builder(
+      @Nullable final Map<String, Parameter<?>> expectedPathParameters,
+      @Nullable final Map<String, Parameter<?>> expectedQueryParameters) {
+    return new PatchRestProtocolRequest.Builder<>(expectedPathParameters, expectedQueryParameters);
   }
   //endregion Builder
 
   //region Constructors
-  private PatchRestProtocolRequest(final HttpHeaders httpHeaders, @NonNull final List<MediaType> acceptableMediaTypes,
+  private PatchRestProtocolRequest(@NonNull final HttpHeaders httpHeaders,
+      @NonNull final List<MediaType> acceptableMediaTypes,
+      @NonNull final Map<String, Object> pathParams,
+      @NonNull final MultiValueMap<String, String> queryParams,
       @Nullable final MediaType contentType,
-      final Map<String, Object> pathParams,
-      final B body) {
-    super(HTTP_METHOD, httpHeaders, acceptableMediaTypes, contentType, pathParams, null, null, body);
+      @Nullable final B body) {
+    super(HTTP_METHOD, httpHeaders, acceptableMediaTypes, contentType, pathParams, queryParams, null, body);
   }
   //endregion Constructors
 

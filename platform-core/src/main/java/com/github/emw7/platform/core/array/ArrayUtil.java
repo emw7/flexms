@@ -1,5 +1,8 @@
 package com.github.emw7.platform.core.array;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import org.springframework.lang.Nullable;
 
 public final class ArrayUtil {
@@ -32,6 +35,31 @@ public final class ArrayUtil {
       System.arraycopy(a, 0, ret, 0, a.length);
       System.arraycopy(b, 0, ret, a.length, b.length);
       return ret;
+    }
+  }
+
+  /**
+   * See {@link java.util.Arrays#copyOfRange(Object[], int, int)}:
+   * <ul>
+   * <li>returns {@code null} in case of {@link NullPointerException}</li>
+   * <li>returns empty array in case of {@link ArrayIndexOutOfBoundsException} and {@link IllegalArgumentException}</li>
+   * </ul>
+   *
+   * @param original
+   * @param from
+   * @param to
+   * @return
+   * @param <T>
+   */
+  @SuppressWarnings("unchecked")
+  public static @Nullable <T> T[] slice (@Nullable final T[] original, int from, int to) {
+    if ( original == null ) {
+      return null;
+    }
+    try {
+      return Arrays.copyOfRange(original, from, to);
+    } catch ( ArrayIndexOutOfBoundsException | IllegalArgumentException e ) {
+      return (T[]) new Object[0];
     }
   }
   //endregion API

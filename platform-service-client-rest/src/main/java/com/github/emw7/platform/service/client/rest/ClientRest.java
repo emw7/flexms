@@ -2,19 +2,13 @@ package com.github.emw7.platform.service.client.rest;
 
 import com.github.emw7.platform.auth.api.authz.Authz;
 import com.github.emw7.platform.discovery.api.ServerRegistryDiscover;
-import com.github.emw7.platform.protocol.api.ProtocolRequest;
 import com.github.emw7.platform.protocol.api.ProtocolTemplate;
 import com.github.emw7.platform.protocol.api.error.DependencyErrorException;
 import com.github.emw7.platform.protocol.rest.error.RestClientDependencyErrorException;
 import com.github.emw7.platform.protocol.rest.error.RestServerDependencyErrorException;
-import com.github.emw7.platform.protocol.rest.request.PostRestProtocolRequest;
 import com.github.emw7.platform.service.client.api.AbstractClient;
-import com.github.emw7.platform.service.core.common.request.error.AlreadyExistsClientException;
-import com.github.emw7.platform.service.core.common.request.error.CompositeErrorResponseToExceptionMapper;
-import com.github.emw7.platform.service.core.common.request.error.RequestErrorException;
+import com.github.emw7.platform.service.client.api.AbstractClient2;
 import com.github.emw7.platform.service.core.common.request.error.model.RequestErrorResponse;
-import org.springframework.core.NestedRuntimeException;
-import org.springframework.http.MediaType;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
@@ -31,15 +25,13 @@ import org.springframework.lang.Nullable;
 // * <p>
 // * <b>IMPORTANT</b>: it depends on a RestProtocolOperation implementation in order to be tied to
 // * REST (HTTP) communication.
-
-@Deprecated
-public abstract class AbstractClientRest extends AbstractClient {
+// */
+public final class ClientRest extends AbstractClient2 {
 
   //region Constructors
-  protected AbstractClientRest(@NonNull final ProtocolTemplate protocolTemplate, Authz authz,
-      ServerRegistryDiscover serverRegistryDiscover, @NonNull final String serviceName,
-      @NonNull final String serviceVersion, @NonNull final String callerId) {
-    super(protocolTemplate, authz, serverRegistryDiscover, serviceName, serviceVersion, callerId);
+  public ClientRest(@NonNull final ProtocolTemplate protocolTemplate, Authz authz,
+      ServerRegistryDiscover serverRegistryDiscover, @NonNull final String callerId) {
+    super(protocolTemplate, authz, serverRegistryDiscover, callerId);
   }
   //endregion Constructors
 

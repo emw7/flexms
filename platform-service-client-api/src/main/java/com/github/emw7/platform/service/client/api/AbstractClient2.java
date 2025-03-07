@@ -58,10 +58,9 @@ import org.springframework.lang.Nullable;
 // * </pre>
 // * // endregion TO BE REVIEWED
 // */
-@Deprecated
-public abstract class AbstractClient {
+public abstract class AbstractClient2 {
 
-  private static final Logger log = LoggerFactory.getLogger(AbstractClient.class);
+  private static final Logger log = LoggerFactory.getLogger(AbstractClient2.class);
 
   private final ProtocolTemplate protocolTemplate;
 
@@ -69,14 +68,14 @@ public abstract class AbstractClient {
 
   private final ServerRegistryDiscover serverRegistry;
 
-  /**
-   * The server <b>name</b> the client is for.
-   */
-  private final String serviceName;
-  /**
-   * The server <b>version</b> the client is for.
-   */
-  private final String serviceVersion;
+//  /**
+//   * The server <b>name</b> the client is for.
+//   */
+//  private final String serviceName;
+//  /**
+//   * The server <b>version</b> the client is for.
+//   */
+//  private final String serviceVersion;
 
   /**
    * The name of the server that is doing the call.
@@ -85,19 +84,14 @@ public abstract class AbstractClient {
 
   /**
    * @param protocolTemplate the implementation that contacts the remote
-   * @param serviceName      TODO
-   * @param serviceVersion   TODO
    * @param callerId         TODO
    */
-  public AbstractClient(@NonNull final ProtocolTemplate protocolTemplate,
+  public AbstractClient2(@NonNull final ProtocolTemplate protocolTemplate,
       @NonNull final Authz authz, @NonNull final ServerRegistryDiscover serverRegistry,
-      @NonNull final String serviceName, @NonNull final String serviceVersion,
       @NonNull final String callerId) {
     this.protocolTemplate = protocolTemplate;
     this.authz = authz;
     this.serverRegistry = serverRegistry;
-    this.serviceName = serviceName;
-    this.serviceVersion = serviceVersion;
     this.callerId = callerId;
   }
 
@@ -125,99 +119,31 @@ public abstract class AbstractClient {
 //   * @throws RequestErrorException in case of RequestErrorResponse from service
 //   * @throws ServerNotFoundException in case service cannot be found in service registry
 //   */
-  protected final <T, B> T call(@NonNull final String endpoint, ProtocolRequest<B> protocolRequest,
+  public final <T, B> T call(@NonNull final String serviceName, @NonNull final String serviceVersion,
+      @NonNull final String endpoint, ProtocolRequest<B> protocolRequest,
       Class<T> responseType,
       @Nullable final ErrorResponseToExceptionMapper<?> responseToExceptionMapper)
       throws RequestErrorException {
 
-    return call(endpoint, responseToExceptionMapper,
+    return call(serviceName, serviceVersion, endpoint, responseToExceptionMapper,
         new ClassExchanger<>(endpoint, protocolRequest, responseType));
   }
 
   @SuppressWarnings("unused")
-  protected final <T, B> T call(@NonNull final String endpoint, ProtocolRequest<B> protocolRequest,
+  public final <T, B> T call(@NonNull final String serviceName, @NonNull final String serviceVersion,
+      @NonNull final String endpoint, ProtocolRequest<B> protocolRequest,
       ParameterizedTypeReference<T> responseType,
       @Nullable final ErrorResponseToExceptionMapper<?> responseToExceptionMapper)
       throws RequestErrorException {
 
-    return call(endpoint, responseToExceptionMapper,
+    return call(serviceName, serviceVersion, endpoint, responseToExceptionMapper,
         new ParameterizedTypeReferenceExchanger<>(endpoint, protocolRequest, responseType));
 
   }
 
-  //region Template methods
-//  protected static final class UnknownDependencyErrorException extends Exception {
-//
-////    private final String causeRef;
-////
-////    public UnknownDependencyErrorException() {
-////      this.causeRef = null;
-////    }
-////
-////    public UnknownDependencyErrorException(@NonNull final String causeRef) {
-////      this.causeRef = causeRef;
-////    }
-////
-////    public @Nullable String getCauseRef() {
-////      return causeRef;
-////    }
-//
-//    private final Object errorResponse;
-//    private final String caller;
-//    private final String serviceName;
-//    private final String serviceVersion;
-//
-//    public UnknownDependencyErrorException(@NonNull final DependencyErrorException cause) {
-//      super(cause);
-//      this.errorResponse = cause.getErrorResponse();
-//      this.caller = cause.getCaller();
-//      this.serviceName = cause.getServiceName();
-//      this.serviceVersion = cause.getServiceName();
-//    }
-//  }
-
-//  private static final class UnmappedDependencyErrorException extends Exception {
-//    private final String causeRef;
-//    private UnmappedDependencyErrorException (@NonNull final String causeRef) {
-//      this.causeRef= causeRef;
-//    }
-//
-//    private @NonNull String getCauseRef() {
-//      return causeRef;
-//    }
-//  }
-
-//  /**
-//   * Must convert {@link DependencyErrorException#getErrorResponse()} to
-//   * {@link RequestErrorResponse} and that can be done only by technology implementation as the
-//   * actual type of{@link DependencyErrorException#getErrorResponse()} depends on technology. If,
-//   * for any reason, conversion cannot be done, then {@link UnknownDependencyErrorException} must be
-//   * thrown.
-//   *
-//   * @param e
-//   * @return
-//   * @throws UnknownDependencyErrorException in case the dependency error cannot be mapped to a
-//   *                                         {@link RequestErrorException}
-//   */
   protected abstract @Nullable RequestErrorResponse _mapToRequestErrorResponse(
       @NonNull final DependencyErrorException e);
 
-  //  /**
-//   * Maps the request error response to a standard server exception.
-//   * <p>
-//   * <b>Note</b>: some responses are not mapped to the related serve exception but are mapped to
-//   * {@link DownstreamStackDependencyErrorServerException}.<br/> These exceptions are:
-//   * <ul>
-//   *   <li>{@link ServiceNotFoundServerException}</li>
-//   *   <li>{@link UnknownDependencyErrorServerException}</li>
-//   *   <li>{@link UnmappedDependencyErrorServerException}</li>
-//   * </ul>
-//   * </p>
-//   *
-//   * @param requestErrorResponse     TODO
-//   * @param dependencyErrorException TODO
-//   * @return the mapping of the request error response to a standard server exception
-//   */
   private @Nullable ServerRequestErrorException mapToStandardServerException(
       @NonNull final RequestErrorResponse requestErrorResponse,
       @NonNull final DependencyErrorException dependencyErrorException) {
@@ -244,71 +170,6 @@ public abstract class AbstractClient {
       default -> null;
     };
   }
-
-//  /**
-//   * Maps the {@link DependencyErrorException} got from called service (aka remote service) to a
-//   * {@link RequestErrorException} that is the exception that will receive who used the client to
-//   * contact the remote service.
-//   * <p>
-//   * The result of the mapping is the same exception that has reached the controller of the called
-//   * service with some exception because in this case (the client calls the remote service) some
-//   * errors in the communication can occur that, of course, cannot occur when the call is local
-//   * (that is all internal to the remote service itself): - {@link ServiceNotFoundServerException}:
-//   * the service registry could not find the remote service -
-//   * {@link UnknownDependencyErrorServerException}: an unknown error occurred in the calling of the
-//   * remote service (for example, the remote service did not respond because it is down) -
-//   * {@link UnmappedDependencyErrorServerException}: received either a client or a server error
-//   * that, for some reason, cannot be mapped to known exception (that is an exception that is known
-//   * to be thrown by service layer of the remote service, that is, again, an exception that is known
-//   * that can reach the controller of the called service. - ??? Dependency internal error: in case
-//   * the dependency
-//   *
-//   * @param e                                      TODO
-//   * @param requestErrorResponseToExceptionMappers TODO
-//   * @return TODO
-//   */
-//  protected final @NonNull RequestErrorException mapToRequestErrorException(
-//      @NonNull final DependencyErrorException e,
-//      @Nullable final Map<Class<? extends Annotation>, Function<RequestErrorResponse, ? extends RequestErrorException>> requestErrorResponseToExceptionMappers) {
-//    try {
-//
-//      // Gets a request error response from the exception arrived from technology
-//      final RequestErrorResponse requestErrorResponse = Optional.ofNullable(
-//              mapDependencyErrorExceptionToRequestErrorResponse(e))
-//          .orElseThrow(() -> new UnknownDependencyErrorException(e));
-//      // from now on, requestErrorResponse is *NOT* null.
-//
-//      //region standard server exception
-//      ServerRequestErrorException standardServerRequestErrorException = mapToStandardServerException(
-//          requestErrorResponse, e);
-//      if (standardServerRequestErrorException != null) {
-//        return standardServerRequestErrorException;
-//      }
-//      //endregion standard server exception
-//
-//      final Class<? extends Annotation> category = retrieveRequestErrorResponseCategory(
-//          requestErrorResponse);
-//      // from now on, category is *NON* null.
-//
-//      Function<RequestErrorResponse, ? extends RequestErrorException> requestErrorResponseToExceptionMapper = function(
-//          e, category, requestErrorResponseToExceptionMappers);
-//      RequestErrorException ree = requestErrorResponseToExceptionMapper.apply(requestErrorResponse);
-//      if (ree != null) {
-//        return ree;
-//      } else {
-//        return new UnmappedDependencyErrorServerException(e, new Id("E5A88"), category,
-//            requestErrorResponse.ref());
-//      }
-//    } catch (UnknownDependencyErrorException udee) {
-//      // yes... udee is ignored,
-//      //  and it is not the cause of UnknownDependencyErrorServerException,
-//      //  but e is the cause.
-//      // TODO Id is useless... because... UnknownDependencyErrorException is thrown in 2 different
-//      //  places but cachted here, so Id does not identify where exception arise: remove Id.
-//      return new UnknownDependencyErrorServerException(e, new Id("1QURD"));
-//    }
-//
-//  }
 
   protected final @NonNull RequestErrorException mapToRequestErrorException(
       @NonNull final DependencyErrorException dee,
@@ -337,34 +198,6 @@ public abstract class AbstractClient {
     }
     return new DependencyErrorServerException(dee, new Id("LY22Y"), requestErrorResponse);
   }
-
-//  private @NonNull Class<? extends Annotation> retrieveRequestErrorResponseCategory(
-//      @NonNull final RequestErrorResponse requestErrorResponse)
-//      throws UnknownDependencyErrorException {
-//    return switch (requestErrorResponse.ref()) {
-//      case String ref when codeMatches(ref, NotFoundClientException.CODE) -> NotFound.class;
-//      case null -> throw new UnknownDependencyErrorException();
-//      default -> throw new UnknownDependencyErrorException(requestErrorResponse.ref());
-//      //default -> throw new UnmappedDependencyErrorException(requestErrorResponse.ref());
-//    };
-//  }
-//
-//  private @NonNull Function<RequestErrorResponse, ? extends RequestErrorException> function(
-//      @NonNull final DependencyErrorException e,
-//      @NonNull final Class<? extends Annotation> category,
-//      @Nullable final Map<Class<? extends Annotation>, Function<RequestErrorResponse, ? extends RequestErrorException>> requestErrorResponseToExceptionMappers) {
-//    if (requestErrorResponseToExceptionMappers == null) {
-//      return requestErrorResponse -> new UnmappedDependencyErrorServerException(e, new Id("E5A88"),
-//          category, requestErrorResponse.ref());
-//    } else {
-//      if (requestErrorResponseToExceptionMappers.get(category) == null) {
-//        return p -> new UnmappedDependencyErrorServerException(e, new Id("E5A88"), category,
-//            p.ref());
-//      } else {
-//        return requestErrorResponseToExceptionMappers.get(category);
-//      }
-//    }
-//  }
 
   private boolean codeMatches(@Nullable final String ref, @NonNull final Code code) {
     if (ref == null) {
@@ -450,7 +283,9 @@ public abstract class AbstractClient {
    * @throws RequestErrorException
    * @throws ServiceNotFoundServerException if the dependency service cannot be found.
    */
-  private <T, B> T call(@NonNull final String endpoint,
+  private <T, B> T call(
+      @NonNull final String serviceName, @NonNull final String serviceVersion,
+      @NonNull final String endpoint,
       @Nullable final ErrorResponseToExceptionMapper responseToExceptionMapper,
       @NonNull Exchanger<T, B> exchanger) throws RequestErrorException {
 
@@ -465,7 +300,7 @@ public abstract class AbstractClient {
       // can throw ServerNotFoundException
       final Server server = serverRegistry.discover(serviceName, serviceVersion);
       final String url = server.url();
-      // TODO fix ofr new log.
+      // TODO fix for new log.
       /*logEvent.ctxArg("service-url", url);*/
 
       // can throw ExchangerNestedRuntimeException

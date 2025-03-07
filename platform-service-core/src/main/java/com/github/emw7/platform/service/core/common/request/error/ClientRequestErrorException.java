@@ -11,7 +11,7 @@ import org.springframework.lang.Nullable;
  */
 public abstract non-sealed class ClientRequestErrorException extends RequestErrorException {
 
-  private static final String TYPE = "CLIENT";
+  public static final String TYPE = "CLIENT";
 
   public static boolean is (@Nullable final String type)
   {

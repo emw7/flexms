@@ -1,5 +1,7 @@
 package com.github.emw7.platform.service.runtime.rest.request.context;
 
+import com.github.emw7.platform.i18n.util.I18nUtil;
+import com.github.emw7.platform.service.core.ServiceCoreConstants;
 import com.github.emw7.platform.service.core.request.context.AbstractRequestContextRetriever;
 import com.github.emw7.platform.service.core.request.context.Caller;
 import com.github.emw7.platform.core.mapper.BooleanMapper;
@@ -7,6 +9,7 @@ import com.github.emw7.platform.service.runtime.rest.autoconfig.PlatformServiceR
 import com.github.emw7.platform.service.runtime.rest.autoconfig.RequestCallerConfigProperties;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Locale;
+import java.util.Optional;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
@@ -58,7 +61,8 @@ public class HttpServletRequestHeaderCallerRetriever implements RestCallerRetrie
     // ==========
 
     // locale
-    final Locale locale= LocaleContextHolder.getLocale();
+    final Locale locale= Optional.ofNullable(I18nUtil.locale(httpServletRequest.getHeader(getRequestCallerConfigProperties().lang()))).orElse(
+        ServiceCoreConstants.SYSTEM_LOCALE);
     callerBuilder.locale(locale);
     // ==========
 

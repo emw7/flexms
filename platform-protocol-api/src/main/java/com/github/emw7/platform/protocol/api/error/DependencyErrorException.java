@@ -6,23 +6,24 @@ import org.springframework.lang.Nullable;
 /**
  * Base class for exception representing dependency(1) error.
  * <p/>
- * Each protocol implementation must extend this class proving meaningful exceptions.
+ * Each protocol implementation must extend this class providing meaningful exceptions.<br/> The
+ * original error (that is the exception) that caused this exception must be specified in the
+ * {@code cause}. In such a way the upper layers can extract error details if needed.<br/> For
+ * example, in the REST stack, an exception of this type is caused by an instance of
+ * {@code RestClientException} and such instance must be specified as {@code cause} of this
+ * exception.
  * <pre>
  * NOTES:
  * [1] Dependency is a third party service
  * </pre>
  */
-// TODO implements as extending I18nEnabledExceotion?
-public abstract sealed class DependencyErrorException extends Exception
-permits ClientDependencyErrorException, ServerDependencyErrorException, UnknownDependencyErrorException {
+// TODO implements as extending I18nEnabledException?
+public abstract sealed class DependencyErrorException extends Exception permits
+    ClientDependencyErrorException, ServerDependencyErrorException,
+    UnknownDependencyErrorException {
 
   /**
-   * Raw error response of the dependency.
-   */
-  private final Object errorResponse;
-
-  /**
-   * Service who called the dependency; aka the caller.
+   * The service who called the dependency; aka the caller.
    */
   private final String caller;
 
@@ -36,22 +37,25 @@ permits ClientDependencyErrorException, ServerDependencyErrorException, UnknownD
    */
   private final String serviceVersion;
 
-  public DependencyErrorException(@NonNull final Object errorResponse,
-      @NonNull final String caller, @NonNull final String serviceName,
-      @NonNull final String serviceVersion, @NonNull final String message,
+  /**
+   * Calls {@code super(cause)}.
+   *
+   * @param caller         the service who called the dependency
+   * @param serviceName    the name of the called service
+   * @param serviceVersion the version of the called service
+   * @param cause          the cause of this error, in other words, the raw error response of the
+   *                       dependency
+   */
+  protected DependencyErrorException(@NonNull final String caller,
+      @NonNull final String serviceName, @NonNull final String serviceVersion,
       @Nullable final Throwable cause) {
-    super(message, cause);
-    this.errorResponse = errorResponse;
+    super(( cause == null ) ? null : cause.getLocalizedMessage(), cause);
     this.caller = caller;
     this.serviceName = serviceName;
     this.serviceVersion = serviceVersion;
   }
 
   //region Getters & Setters
-  public @NonNull Object getErrorResponse() {
-    return errorResponse;
-  }
-
   public final @NonNull String getCaller() {
     return caller;
   }

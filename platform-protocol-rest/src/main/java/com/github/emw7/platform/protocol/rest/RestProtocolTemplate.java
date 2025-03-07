@@ -1,20 +1,22 @@
 package com.github.emw7.platform.protocol.rest;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectReader;
 import com.github.emw7.platform.auth.api.token.AuthToken;
+import com.github.emw7.platform.core.mapper.BooleanMapper;
 import com.github.emw7.platform.discovery.api.model.Server;
 import com.github.emw7.platform.log.EventLogger;
 import com.github.emw7.platform.protocol.api.ProtocolRequest;
 import com.github.emw7.platform.protocol.api.ProtocolTemplate;
 import com.github.emw7.platform.protocol.api.error.DependencyErrorException;
-import com.github.emw7.platform.protocol.rest.error.RestServerDependencyErrorException;
 import com.github.emw7.platform.protocol.rest.error.RestClientDependencyErrorException;
+import com.github.emw7.platform.protocol.rest.error.RestServerDependencyErrorException;
 import com.github.emw7.platform.protocol.rest.error.RestUnknownDependencyErrorException;
 import com.github.emw7.platform.protocol.rest.request.RestProtocolRequest;
+import com.github.emw7.platform.protocol.rest.request.RestProtocolRequest.Pagination;
 import com.github.emw7.platform.rest.core.PlatformRestConstants;
-import java.util.Map;
+import com.github.emw7.platform.service.core.ServiceCoreConstants;
+import com.github.emw7.platform.service.core.request.context.Originator;
+import com.github.emw7.platform.service.core.request.context.RequestContextHolder;
 import java.util.function.Function;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,12 +25,10 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestClientException;
@@ -40,16 +40,16 @@ import org.springframework.web.util.UriComponentsBuilder;
  * Implementations of {@link ProtocolTemplate} that speaks REST (HTTP) language (protocol) through
  * {@link RestTemplate}.
  */
-public final class RestProtocolOperation implements ProtocolTemplate {
+public final class RestProtocolTemplate implements ProtocolTemplate {
 
   //region Private static final properties
-  private static final Logger log = LoggerFactory.getLogger(RestProtocolOperation.class);
+  private static final Logger log = LoggerFactory.getLogger(RestProtocolTemplate.class);
   //endregion Private static final properties
 
   //region Private properties
   private final RestTemplate restTemplate;
 
-  private final ObjectReader objectReader;
+  //private final ObjectReader objectReader;
   //endregion Private properties
 
   //region Constructors
@@ -60,11 +60,11 @@ public final class RestProtocolOperation implements ProtocolTemplate {
    * @param restTemplateBuilder builder for {@link #restTemplate}
    * @see #restTemplate
    */
-  public RestProtocolOperation(@NonNull final RestTemplateBuilder restTemplateBuilder,
-      @NonNull final ObjectMapper objectMapper) {
+  public RestProtocolTemplate(@NonNull final RestTemplateBuilder restTemplateBuilder/*,
+      @NonNull final ObjectMapper objectMapper*/) {
     this.restTemplate = restTemplateBuilder.build();
-    this.objectReader = objectMapper.reader()
-        .without(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+//    this.objectReader = objectMapper.reader()
+//        .without(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
   }
   //endregion Constructors
 
@@ -137,17 +137,17 @@ public final class RestProtocolOperation implements ProtocolTemplate {
 
   //endregion Exchanger
 
-  // FIXME EM phonebook: keep here or move or hardcoding? Remember that these are spring
-  //  dependant so it should be done something like SpringPageableQueryParamsExpander but
-  //  Pageable itself is a spring artifact... so it should be removed the dependency from
-  //  Pageable too... what a mess... is it worth? I think it isn't!
-  private static final class PageableQueryParameterNames {
-
-    private static final String PAGE_NUMBER = "page";
-    private static final String PAGE_SIZE = "size";
-    private static final String SORT = "sort";
-    private static final String SORT_PROPERTY_DIRETION_SEP = ",";
-  }
+//  // FIXME EM phonebook: keep here or move or hardcoding? Remember that these are spring
+//  //  dependant so it should be done something like SpringPageableQueryParamsExpander but
+//  //  Pageable itself is a spring artifact... so it should be removed the dependency from
+//  //  Pageable too... what a mess... is it worth? I think it isn't!
+//  private static final class PageableQueryParameterNames {
+//
+//    private static final String PAGE_NUMBER = "page";
+//    private static final String PAGE_SIZE = "size";
+//    private static final String SORT = "sort";
+//    private static final String SORT_PROPERTY_DIRETION_SEP = ",";
+//  }
 
   //endregion Private types
 
@@ -178,8 +178,7 @@ public final class RestProtocolOperation implements ProtocolTemplate {
       throws DependencyErrorException {
 
     return exchange(server, endpoint, callerId, protocolRequest, token,
-        new RestProtocolOperation.ClassExchanger<>(restTemplate/*, protocolRequest*/,
-            responseType));
+        new RestProtocolTemplate.ClassExchanger<>(restTemplate/*, protocolRequest*/, responseType));
   }
 
   // TODO [DOC]
@@ -207,7 +206,7 @@ public final class RestProtocolOperation implements ProtocolTemplate {
       final AuthToken token) throws DependencyErrorException {
 
     return exchange(server, endpoint, callerId, protocolRequest, token,
-        new RestProtocolOperation.ParameterizedTypeReferenceExchanger<>(
+        new RestProtocolTemplate.ParameterizedTypeReferenceExchanger<>(
             restTemplate/*, protocolRequest*/, responseType));
   }
   //endregion API
@@ -281,9 +280,8 @@ public final class RestProtocolOperation implements ProtocolTemplate {
           restProtocolRequest);
       return exchanger.apply(requestEntity);
     } catch (RestClientException e) {
-      EventLogger.notice(log, "rest request failed; method: {}, error: {}", restProtocolRequest.getHttpMethod(), e.getMessage())
-          .error()
-          .log();
+      EventLogger.notice(log, "rest request failed; method: {}, error: {}",
+          restProtocolRequest.getHttpMethod(), e.getMessage()).error().log();
       throw manageException(e, callerId, server);
     }
   }
@@ -309,18 +307,13 @@ public final class RestProtocolOperation implements ProtocolTemplate {
     //  .body(...) manages  it gracefully.
     //noinspection DataFlowIssue
     return RequestEntity.method(restProtocolRequest.getHttpMethod(), url)
-        .headers(buildHttpHeaders(restProtocolRequest)).body(restProtocolRequest.getBody());
+        .headers(buildHttpHeaders(restProtocolRequest, callerId)).body(restProtocolRequest.getBody());
   }
 
 
   //region Build url
   private final @NonNull <B> String buildUrl(@NonNull final Server server,
       @NonNull final String endpoint, @NonNull final RestProtocolRequest<B> request) {
-
-    Pageable p = request.getPageable();
-    // pageable must be added to query parameters
-    Map<String, Object> pp = request.getPathParams();
-    MultiValueMap<String, String> qp = request.getQueryParams();
 
     UriComponentsBuilder ucb = UriComponentsBuilder
         // the url.
@@ -331,51 +324,56 @@ public final class RestProtocolOperation implements ProtocolTemplate {
         .pathSegment(server.version())
         // next path components are then end point.
         .path(endpoint)
+        // TODO remove as path segments must be already in the url
         // next path components are the one of the custom ones in the request; here are put as
         //  placeholders ({<path-component-name>}) that will be replaced later (A).
-        .pathSegment(pp.keySet().stream().map(k -> '{' + k + '}').toArray(String[]::new))
+        //.pathSegment(pp.keySet().stream().map(k -> '{' + k + '}').toArray(String[]::new))
         // now it's the turn of query parameters
-        .queryParams(qp);
+        .queryParams(request.getQueryParams());
 
-    addPageAndSortQueryParameters(ucb, p);
+    // pagination must be added to query parameters
+    addPagination(ucb, request.getPagination());
 
-    UriComponents uc = ucb.buildAndExpand(pp);
+    UriComponents uc = ucb.buildAndExpand(request.getPathParams());
     return uc.encode().toUriString();
+
   }
 
-  private void addPageAndSortQueryParameters(@NonNull final UriComponentsBuilder ucb,
-      @Nullable final Pageable pageable) {
-    if (pageable == null) {
+  private void addPagination(@NonNull final UriComponentsBuilder ucb,
+      @Nullable final Pagination pagination) {
+    if (pagination == null) {
       return;
     }
     // else...
+
+    final Pageable pageable = pagination.getPageable();
     if (pageable.isPaged()) {
-      ucb.queryParam(PageableQueryParameterNames.PAGE_NUMBER,
-          String.valueOf(pageable.getPageNumber()));
-      ucb.queryParam(PageableQueryParameterNames.PAGE_SIZE, String.valueOf(pageable.getPageSize()));
+      ucb.queryParam(pagination.getPageNumberParamName(), String.valueOf(pageable.getPageNumber()));
+      ucb.queryParam(pagination.getPageSizeParamName(), String.valueOf(pageable.getPageSize()));
     }
-    if (pageable.getSort() == null || !pageable.getSort().isSorted()) {
+    if (!pageable.getSort().isSorted()) {
       return;
     }
     // else... sorted!
+
     // reusing StringBuilder: https://www.baeldung.com/java-reuse-stringbuilder-for-efficiency
     StringBuilder sb = new StringBuilder();
     //queryParameters.remove(PageableQueryParameterNames.SORT);
     for (Order order : pageable.getSort()) {
       sb.setLength(0);
-      ucb.queryParam(PageableQueryParameterNames.SORT, sb.append(order.getProperty())
-          .append(PageableQueryParameterNames.SORT_PROPERTY_DIRETION_SEP)
-          .append(order.getDirection()).toString());
+      ucb.queryParam(pagination.getSortParamName(),
+          sb.append(order.getProperty()).append(pagination.getSortPropertyDirectionSep())
+              .append(order.getDirection()).toString());
     }
   }
   //endregion Build url
 
   //region Build http headers
-  private HttpHeaders buildHttpHeaders(@NonNull final RestProtocolRequest<?> restProtocolRequest) {
+  private HttpHeaders buildHttpHeaders(@NonNull final RestProtocolRequest<?> restProtocolRequest,
+      @NonNull final String callerId) {
     final HttpHeaders httpHeaders = new HttpHeaders();
     addHeaderFromRequest(httpHeaders, restProtocolRequest);
-    addHeaderForRequestMethod(httpHeaders, restProtocolRequest);
-    addStandardHeaders(httpHeaders);
+    addStandardHeaders(httpHeaders, callerId);
     return httpHeaders;
   }
 
@@ -384,37 +382,30 @@ public final class RestProtocolOperation implements ProtocolTemplate {
     final HttpHeaders requestHttpHeaders = restProtocolRequest.getHttpHeaders();
     httpHeaders.putAll(requestHttpHeaders);
     httpHeaders.setAccept(restProtocolRequest.acceptableMediaTypes());
-  }
-
-  private void addHeaderForRequestMethod(@NonNull final HttpHeaders httpHeaders,
-      @NonNull final RestProtocolRequest<?> restProtocolRequest) {
-
-    if (restProtocolRequest.getHttpMethod() == HttpMethod.POST) {
-      addHeaderForPost(httpHeaders, restProtocolRequest);
-    }
-
-  }
-
-  // FIXME EM phonebook: content type for POST and other methods that have body? and moreover
-  //  allow to use something different from JSON; this is linked to [B].
-  private void addHeaderForPost(@NonNull final HttpHeaders httpHeaders,
-      @NonNull final RestProtocolRequest<?> restProtocolRequest) {
     httpHeaders.setContentType(restProtocolRequest.contentType());
   }
 
-  private void addStandardHeaders(@NonNull final HttpHeaders httpHeaders) {
-    // TODO fix
-//    ret.set(RestClientConstants.H_TRACEID, log.getId());
-//    ret.set(RestClientConstants.H_CALLERID, callerId);
+  private void addStandardHeaders(@NonNull final HttpHeaders httpHeaders,
+      @NonNull final String callerId) {
+
+    final Originator originator = RequestContextHolder.get().originator();
+    httpHeaders.set(PlatformRestConstants.ORIGINATOR_ID_HEADER_NAME, originator.id());
+    httpHeaders.set(PlatformRestConstants.ORIGINATOR_LANG_HEADER_NAME,
+        originator.locale().toLanguageTag());
+    httpHeaders.set(PlatformRestConstants.ORIGINATOR_TENANT_HEADER_NAME, originator.tenant());
+    httpHeaders.set(PlatformRestConstants.ORIGINATOR_IS_SERVICE_HEADER_NAME,
+        BooleanMapper.toString(originator.isService()));
+
+    // When caller is service then caller-id is name of the caller service, aka callerId :-o.
+    httpHeaders.set(PlatformRestConstants.CALLER_ID_HEADER_NAME, callerId);
+    httpHeaders.set(PlatformRestConstants.CALLER_LANG_HEADER_NAME,
+        ServiceCoreConstants.SYSTEM_LOCALE.toLanguageTag());
+    httpHeaders.set(PlatformRestConstants.CALLER_TENANT_HEADER_NAME,
+        ServiceCoreConstants.SYSTEM_TENANT);
     httpHeaders.set(PlatformRestConstants.CALLER_IS_SERVICE_HEADER_NAME, "true");
 
-//    ret.set(PlatformRestConstants.
-    //RestClientConstants.H_USERID, SecurityContextUtil.getKeyCloakUserIdFromToken());
-    // TODO FIXME EM phonebook: for sure H_TENANTNAME and H_CLIENTID are missing, but right now there
-    //  is not a way to get them here, so they will be put in a different moment.
-
   }
-//endregion Build http headers
+  //endregion Build http headers
 
   //region Manage exception
   // FIXME [DOC]
@@ -432,7 +423,9 @@ public final class RestProtocolOperation implements ProtocolTemplate {
           new RestClientDependencyErrorException(e, callerId, server.name(), server.version());
       case HttpServerErrorException e ->
           new RestServerDependencyErrorException(e, callerId, server.name(), server.version());
-      default -> new RestUnknownDependencyErrorException(restClientException, callerId, server.name(), server.version());
+      default ->
+          new RestUnknownDependencyErrorException(restClientException, callerId, server.name(),
+              server.version());
     };
   }
   //endregion Manage exception

@@ -5,6 +5,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.lang.Nullable;
 
+// TODO rimuovere perché questo va bene per il servizio che riceve la richiesta, ma per il
+//  client non va bene: il client NON ha la configurazione di runtime del service!
+//  Attenzione che a questa classe ci sono riferimenti anche nella documentazione che va quindi
+//  rivista!
 @ConfigurationProperties(prefix = "com.github.emw7.platform.conf.rest.request.caller.header")
 public record RequestCallerConfigProperties(@Nullable String tenant, @Nullable String id,
                                             @Nullable String lang, @Nullable String isService) {

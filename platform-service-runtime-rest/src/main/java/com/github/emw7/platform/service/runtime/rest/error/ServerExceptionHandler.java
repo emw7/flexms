@@ -28,12 +28,19 @@ public final class ServerExceptionHandler extends BasicServerExceptionHandler {
   //endregion Constructors
 
   //region API
-  /**
-   * Returns the error response built from the specified {@link ServerRequestErrorException}.
-   *
-   * @param e the client error to manage
-   * @return the error response
-   */
+//  /**
+//   * Returns the error response built from the specified {@link ServerRequestErrorException}.
+//   *
+//   * @param e the server error to manage
+//   * @return the error response
+//   */
+//  @ExceptionHandler(ServerRequestErrorException.class)
+//  public ResponseEntity<RequestErrorResponse> serverRequestException(
+//      @NonNull final ServerRequestErrorException e) {
+//    final RequestErrorResponse requestErrorResponse = handle(e);
+//    return ResponseEntity.status(requestErrorResponse.status()).body(requestErrorResponse);
+//  }
+
   @ExceptionHandler(ServerRequestErrorException.class)
   public ResponseEntity<RequestErrorResponse> serverRequestException(
       @NonNull final ServerRequestErrorException e) {

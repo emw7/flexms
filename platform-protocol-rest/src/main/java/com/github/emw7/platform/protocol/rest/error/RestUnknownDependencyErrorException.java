@@ -5,15 +5,21 @@ import org.springframework.lang.NonNull;
 import org.springframework.web.client.RestClientException;
 
 /**
- * A specialization of DependencyErrorException for REST unknown error (could not have http status).
+ * A specialization of UnknownDependencyErrorException for REST unknown error.
  */
 public final class RestUnknownDependencyErrorException extends UnknownDependencyErrorException {
 
-  public RestUnknownDependencyErrorException(@NonNull final RestClientException restClientException,
-      @NonNull final String caller, @NonNull final String serviceName, @NonNull final String serviceVersion) {
-    super(restClientException,
-        caller, serviceName, serviceVersion,
-        restClientException.getMessage(), restClientException);
+  /**
+   *
+   * @param errorResponse  the cause
+   * @param caller
+   * @param serviceName
+   * @param serviceVersion
+   */
+  public RestUnknownDependencyErrorException(@NonNull final RestClientException errorResponse,
+      @NonNull final String caller, @NonNull final String serviceName,
+      @NonNull final String serviceVersion) {
+    super(caller, serviceName, serviceVersion, errorResponse);
   }
 
 }

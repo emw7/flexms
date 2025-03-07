@@ -12,8 +12,6 @@ import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
-// This is disabled as RequestErrorException is a sealed class and it does not make sense testing it,
-//  while permitted classes should be tested.
 public abstract class RequestErrorExceptionTestSupport {
 
   protected void assertRef(@NonNull final RequestErrorException e,
