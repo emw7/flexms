@@ -30,6 +30,11 @@
 
     <module>platform-rest-core</module>
     <module>platform-service-runtime-rest</module>
+
+    <module>platform-protocol-api</module>
+    <module>platform-protocol-rest</module>
+    <module>platform-service-client-api</module>
+    <module>platform-service-client-rest</module>
   </modules>
 
   <properties>
