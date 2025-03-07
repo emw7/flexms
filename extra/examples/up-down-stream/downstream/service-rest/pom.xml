@@ -36,6 +36,11 @@
     </dependency>
     <dependency>
       <groupId>com.github.emw7.platform.extra.examples.up-down-stream.downstream</groupId>
+      <artifactId>ex-up-down-stream-downstream-rest-common</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>com.github.emw7.platform.extra.examples.up-down-stream.downstream</groupId>
       <artifactId>ex-up-down-stream-downstream-logic</artifactId>
       <version>0.0.1-SNAPSHOT</version>
     </dependency>

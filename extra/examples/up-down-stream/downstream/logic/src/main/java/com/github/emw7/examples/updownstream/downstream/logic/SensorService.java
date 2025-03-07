@@ -2,7 +2,7 @@ package com.github.emw7.examples.updownstream.downstream.logic;
 
 import com.github.emw7.examples.updownstream.downstream.common.error.client.SensorAlreadyExistsClientException;
 import com.github.emw7.examples.updownstream.downstream.common.error.client.SensorNotFoundClientException;
-import com.github.emw7.examples.updownstream.downstream.common.error.server.SensorUnreacheableServerException;
+import com.github.emw7.examples.updownstream.downstream.common.error.server.SensorUnreachableServerException;
 import com.github.emw7.examples.updownstream.downstream.common.error.server.SystemErrorServerException;
 import com.github.emw7.examples.updownstream.downstream.common.model.Sensor;
 import io.micrometer.observation.annotation.Observed;
@@ -55,7 +55,7 @@ public interface SensorService {
 
   @NonNull
   ReadSensorResponse read(@NonNull final ReadSensorRequest request)
-      throws SensorNotFoundClientException, SensorUnreacheableServerException;
+      throws SensorNotFoundClientException, SensorUnreachableServerException;
   //endregion Read
 
 }

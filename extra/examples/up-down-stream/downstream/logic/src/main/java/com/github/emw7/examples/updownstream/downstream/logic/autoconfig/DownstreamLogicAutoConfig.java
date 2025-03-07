@@ -11,7 +11,7 @@ public class DownstreamLogicAutoConfig {
 
   @ConditionalOnMissingBean
   @Bean
-  public SensorService sensorService () {
+  public SensorService defaultSensorService () {
     return new DefaultSensorService();
   }
 }

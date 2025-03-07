@@ -7,8 +7,8 @@ import org.springframework.lang.NonNull;
 
 public final class SensorAlreadyExistsClientException extends AlreadyExistsClientException {
 
-  public SensorAlreadyExistsClientException(@NonNull final Id id, @NonNull final String sensorCode) {
-    super(id, Sensor.RESOURCE_NAME, sensorCode, null);
+  public SensorAlreadyExistsClientException(@NonNull final String sensorCode) {
+    super(new Id("0"), Sensor.RESOURCE_NAME, sensorCode, null);
   }
 
 }

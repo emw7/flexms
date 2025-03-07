@@ -126,8 +126,7 @@ Non è possibile personalizzare il recupero del locale della richiesta, che vien
 
 #### Implementazione di default
 
-L'implementazione di default recupera le informazioni del contesto della richiesta dagli header http. Tali header sono definiti in `com.github.emw7.platform.rest.core.PlatformRestConstants`, ma possono essere ridefiniti attraverso le proprieta di sistema definita in 
-`com.github.emw7.platform.service.runtime.rest.autoconfig.RequestCallerConfigProperties` e `com.github.emw7.platform.service.runtime.rest.autoconfig.RequestOriginatorConfigProperties`.
+L'implementazione di default recupera le informazioni del contesto della richiesta dagli header http. Tali header sono definiti in `com.github.emw7.platform.rest.core.PlatformRestConstants`.
 
 ![SQ9 EMW7 platform service request context rest](SQ9%20EMW7%20platform%20service%20request%20context%20rest.png)
 

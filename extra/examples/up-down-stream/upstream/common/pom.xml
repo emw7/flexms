@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>ex-up-down-stream-upstream-common</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>ex-up-down-stream-upstream-common</name>
+  <description>Platform examples up-down-stream-upstream-common</description>
+
+  <parent>
+    <groupId>com.github.emw7.platform.extra.examples.up-down-stream.upstream</groupId>
+    <artifactId>upstream</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+
+  <dependencies>
+
+    <!--region EMW7 -->
+    <dependency>
+      <groupId>com.github.emw7</groupId>
+      <artifactId>platform-service-core</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+    <!--endregion EMW7 -->
+
+    <!--region TEST -->
+    <!--endregion TEST -->
+
+  </dependencies>
+
+</project>

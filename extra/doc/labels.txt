@@ -1,0 +1,15 @@
+com.github.emw7.platform
+
+com.github.emw7.platform.i18n.
+
+com.github.emw7.platform.i18n.error
+
+com.github.emw7.platform.conf
+
+
+???
+
+i18n.com.github.emw7.platform
+conf.com.github.emw7.platform
+
+???!

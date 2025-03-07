@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;
 import com.github.emw7.examples.updownstream.downstream.common.error.client.SensorAlreadyExistsClientException;
 import com.github.emw7.examples.updownstream.downstream.common.error.client.SensorNotFoundClientException;
-import com.github.emw7.examples.updownstream.downstream.common.error.server.SensorUnreacheableServerException;
+import com.github.emw7.examples.updownstream.downstream.common.error.server.SensorUnreachableServerException;
 import com.github.emw7.examples.updownstream.downstream.common.error.server.SystemErrorServerException;
 import com.github.emw7.examples.updownstream.downstream.common.model.Sensor;
 
@@ -32,11 +32,11 @@ public class DefaultSensorService implements SensorService {
     final Sensor requestedSensor = request.sensor();
     final String sensorCode = requestedSensor.code();
 
-    EventLogger.notice(log, "creating to create sensor with code {}", sensorCode).info().log();
+    EventLogger.notice(log, "requested to create sensor with code {}", sensorCode).info().log();
 
     switch (sensorCode) {
       case "already-exists":
-        throw new SensorAlreadyExistsClientException(new Id("2NT02"), sensorCode);
+        throw new SensorAlreadyExistsClientException(sensorCode);
       case "system-error":
         throw new SystemErrorServerException(new RuntimeException("create-system-error"),
             new Code("6GEYW"), new Id("YOCBD"),
@@ -57,10 +57,10 @@ public class DefaultSensorService implements SensorService {
 
     switch (sensorCode) {
       case "sensor-not-found":
-        throw new SensorNotFoundClientException(new Id("DC0Y7"), sensorCode);
+        throw new SensorNotFoundClientException(sensorCode);
       case "system-error":
         throw new SystemErrorServerException(new RuntimeException("delete-system-error"),
-            new Code("LWYI9"), new Id("YOCBD"),
+            new Code("LWYI9"), new Id("GHF8E"),
             new Error("app.i18n.error.delete.system-error", Map.of("code", sensorCode)));
     }
 
@@ -73,21 +73,21 @@ public class DefaultSensorService implements SensorService {
   @Observed(name = "SensorService#read")
   @Override
   public @NonNull ReadSensorResponse read(@NonNull final ReadSensorRequest request)
-      throws SensorNotFoundClientException, SensorUnreacheableServerException {
+      throws SensorNotFoundClientException, SensorUnreachableServerException {
 
     final String sensorCode = request.code();
 
     try {
       switch (sensorCode) {
         case "sensor-not-found":
-          throw new SensorNotFoundClientException(new Id("DC0Y7"), sensorCode);
+          throw new SensorNotFoundClientException(sensorCode);
         case "unreachable-sensor":
-          throw new SensorUnreacheableServerException(new RuntimeException("delete-system-error"),
-              new Id("YOCBD"),
-              new Error("app.i18n.error.delete.system-error", Map.of("code", sensorCode)));
+          throw new SensorUnreachableServerException(new RuntimeException("unreachable-sensor"),
+              new Id("ZWWHD"),
+              new Error("app.i18n.error.read.unreachable-sensor", Map.of("code", sensorCode)));
       }
       return new ReadSensorResponse(sensorCode, 1.0, 0);
-    } catch (SensorNotFoundClientException | SensorUnreacheableServerException e) {
+    } catch (SensorNotFoundClientException | SensorUnreachableServerException e) {
       if (request.respondWithError()) {
         EventLogger.notice(log, "error occurred while reading sensor {}: {}", sensorCode,
             e.getMessage()).error().log();

@@ -32,7 +32,7 @@ public class SensorServiceImpl implements SensorService {
       case "already-exists" :
         throw new SensorAlreadyExistsClientException(new Id("2NT02"), requestedSensor.code());
       case "malformed-input" :
-        throw new MalformedInputBadRequestClientException(new Id("YOCBD"), requestedSensor.code());
+        throw new MalformedInputBadRequestClientException(new Id("E55SK"), requestedSensor.code());
       case "resources-exhausted" :
         throw new ResourcesExhaustedServerRequestErrorException(new Id("MSV2S"), requestedSensor.code());
       case "dos" :
