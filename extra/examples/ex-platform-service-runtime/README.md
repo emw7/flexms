@@ -36,7 +36,7 @@ su come scrivere un'applicazione basata su EMW7 platform e/o
 estendere `platform-service-runtime` per una soluzione specifica (come può essere REST o GRPC). 
 Si deve prestare attenzione al fatto che, mentre alcune cose possono essere forzate a livello di 
 codice sorgente e quindi può essere forzato il fatto che vadano rispettate, altre non possono 
-essere forzate e per cui queste cose vengono indicate come best practise da seguire.
+essere forzate e per cui queste cose vengono indicate come best practise [BP] da seguire.
 Alcune cose possono essere forzate a codice, altre invece sono delle best practise che vanno
 rispettate.  
 Nel capitolo [How to write an application](#how-to-write-an-application) si approfondiscono i
@@ -49,6 +49,8 @@ l'unico compito degli elementi di questo livello è di passare le richieste e ri
 sottostante (`logic`) che sarà unico per tutti i tipi di API.
 
 Quindi un'applicazione scritta utilizzando EMW7 platform è suddivisa in livelli (che novità).
+
+![Frontends and layers](./Frontends-and-layers.png)
 
 Nel livello `api` risiedono i `controller` che sono gli elementi che ricevono le `request` dai client 
 e gli forniscono le `response`. Le `request` e le `response` fanno parte dell'API e il formato dipende dal tipo
@@ -73,13 +75,15 @@ eccezioni nella gerarchia `com.github.emw7.platform.service.core.common.request.
 e segnalare, di conseguenza, l'errore al `client`. Si approfondisce quindi di seguito la gestione 
 degli errori.
 
+![Successful flow](./Successful-flow.png)
+
 ## Error management
 
 La gestione errori di EMW7 platform distingue 2 tipi di errore:
 - Errore di tipo client: quando l'errore è dovuto a chi fa la richiesta, ad esempio se un ingresso non è valido.
 - Errore di tipo server: quando l'errore è dovuto al server, ad esempio se la connessione al db non è disponibile.
 
-Inoltre, la gestione errori di EMW7 platform prevede che la risposta data al client abbia sempre los tesso formato 
+Inoltre, la gestione errori di EMW7 platform prevede che la risposta data al client abbia sempre lo stesso formato 
 a prescindere dal tipo di errore. Tale formato è definito da:
 `com.github.emw7.platform.service.core.common.request.error.model.RequestErrorResponse` in cui è contenuta 
 l'informazione necessaria per identificare l'errore occorso.
@@ -129,21 +133,29 @@ alcune delle proprietà che definiscono un errore:
   trovata l'entità X.
 
 `status` non è in relazione (stretta) con la parte di `ref` e `label` perché ad esempio lo 
-`status` 500 è proprio degli errori di tipo server, ma usato per tutte le tipologie e lo stato 
-`status` 400 è usato per diverse tipologie di errori legati a errori negli ingressi specificati dal 
+`status` 500 è proprio degli errori di tipo server, ma usato per tutte le tipologie e lo `status` 
+400 è usato per diverse tipologie di errori legati a errori negli ingressi specificati dal 
 client.
 
-In EMW7 platform sono definite le tipologie di errore più comuni di tipo ma permette 
+![Client error flow](./Client-error-flow.png)
+
+![Server error flow](./Server-error-flow.png)
+
+In EMW7 platform sono definite le tipologie di errore più comuni di tipo, ma permette 
 all'applicazione di definirne di propri.
 
 ### Come definire i propri errori
 
-Prima di vedere gli errori standard definiti da EMW7 platform è utile vedere come un'applicazione può definire i propri errori. Infatti, come può definirli l'applicazione è (esattamente) come li definisce EMW7 platform. Per completezza vengono mostrati 3 modi. Sicuramente esistono infiniti modi di definire gli errori, ma quelli presentati sono quelli consigliati e dei 3 il terzo il preferibile.
-
+Prima di vedere gli errori standard definiti da EMW7 platform è utile vedere come un'applicazione 
+può definire i propri errori. Infatti, come può definirli l'applicazione è (esattamente) come li 
+definisce EMW7 platform. Per completezza vengono mostrati 3 modi. Sicuramente esistono infiniti 
+modi di definire gli errori, ma quelli presentati sono quelli consigliati e dei 3 il terzo il 
+preferibile.
 
 #### First way
 
-Il primo modo che viene presentato non permette di specificare un errore specifico, facendo così coincidere l'errore con la tipologia. Questo modo è meno flessibile, dal punto di vista della 
+Il primo modo che viene presentato non permette di specificare un errore specifico, facendo così 
+coincidere l'errore con la tipologia. Questo modo è meno flessibile, dal punto di vista della 
 personalizzazione dell'errore rispetto al secondo modo che verrà illustrato di seguito.
 
 La prima cosa da fare è definire la tipologia tramite una annotation come segue:
@@ -154,14 +166,16 @@ La prima cosa da fare è definire la tipologia tramite una annotation come segue
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 // Meta-annotated by @RequestError to define status and label 
-//  that is part of the error tipology.
+//  that is part of the error typology.
 @RequestError(errorCode = 429, label = "app.i18n.error.client.too-many-requests")
-public @interface AcmeTooManyRequestsClientError {}
+public @interface TooManyRequestsClientError {}
 ```
 
-La retention deve essere `RUNTIME` dato che l'annotazione viene usata dall'exception handler. L'exception handler recupera le informazioni definite in `@RequestError` per popolare la risposta di errore.
+La retention deve essere `RUNTIME` dato che l'annotazione viene usata dall'exception handler. 
+L'exception handler recupera le informazioni definite in `@RequestError` per popolare la risposta 
+di errore.
 
-L'annotazione appena definita viene usata per annotare la l'eccezione che rapresenta l'errore:
+L'annotazione appena definita viene usata per annotare la l'eccezione che rappresenta l'errore:
 ```java
 // Annotated in this way to "inherit" errorCode and label from 
 //  @RequestError.
@@ -170,7 +184,7 @@ L'annotazione appena definita viene usata per annotare la l'eccezione che rapres
 //  an error caused by the client.
 public final class TooManyRequestsClientException extends ClientRequestErrorException {
   
-  // This the unique code that is part of the error tipology; 
+  // This the unique code that is part of the error typology; 
   //  the other parts are in the @RequestError (TODO I know this name can create confusion with errorCode of the @RequestError annotation, to be adjusted).
   // Generated via https://www.random.org/strings/?num=1&len=5&digits=on&upperalpha=on&unique=on&format=html&rnd=new
   public static final Code CODE= new Code("KCYVD");
@@ -184,18 +198,22 @@ public final class TooManyRequestsClientException extends ClientRequestErrorExce
 }
 ```
 
-Executing the following code `throw new TooManyRequestsClientException(new Id("V26YW"));` and managing it through the default client exception manager the obtained request converted to json is the following:
+Executing the following code `throw new TooManyRequestsClientException(new Id("V26YW"));` and 
+managing it through the default client exception manager the obtained request converted to json is 
+the following:
 ```json
-{"timestamp":"2025-01-23T13:36:20.575273908Z","type":"CLIENT","status":429,"ref":"KCYVD-DBKD7","traceId":"13e1686c759927ab6f80c98b6dd60a06","spanId":"1480452d266278d8","message":"Too many requests","label":"app.i18n.error.client.too-many-requests","errors":[]}
+{"timestamp":"2025-01-23T13:36:20.575273908Z","type":"CLIENT","status":429,"ref":"KCYVD-V26YW","traceId":"13e1686c759927ab6f80c98b6dd60a06","spanId":"1480452d266278d8","message":"Too many requests","label":"app.i18n.error.client.too-many-requests","errors":[]}
 ```
-In the detail above please note:
+In the detail above, please note:
 - The first part of the `ref` property that is the `CODE` defined in the error exception.
 - The `status` property that is the value defined in the `@RequestError` with which is annotated the `@TooManyRequestsClientError` annotation.
 - The `label` property that is the value defined in the `@RequestError` with which is annotated the `@TooManyRequestsClientError` annotation.
 
 #### Second way
 
-Il secondo modo che viene presentato permette di specificare uno o più errori specifici, rendendo possibile specializzare la tipologia: una tipologia di errore può essere dovuta a più problemi. Questo modo è più flessibile, dal punto di vista della 
+Il secondo modo che viene presentato permette di specificare uno o più errori specifici, rendendo 
+possibile specializzare la tipologia: una tipologia di errore può essere dovuta a più problemi. 
+Questo modo è più flessibile, dal punto di vista della 
 personalizzazione dell'errore rispetto al primo modo visto in precedenza.
 
 Anche in questo caso la prima cosa da fare è definire la tipologia tramite una annotation, come segue:
@@ -341,7 +359,8 @@ public final class NonRenewableLockedClientException extends LockedClientExcepti
 
 #### Definizione di un error server
 
-Definire un errore di tipo server è analogo a definire un errore di tipo client con la differenza che per gli errori di tipo server:
+Definire un errore di tipo server è analogo a definire un errore di tipo client con la differenza 
+che per gli errori di tipo server:
 - Lo status è sempre `500`.
 - La label è sempre `com.github.emw7.platform.error.internal-server-error`.
 
@@ -349,8 +368,10 @@ Dai punti precedenti segue che non è necessario definire l'annotazione.
 
 Un errore di tipo server dovrà quindi definire il proprio `code` e l'errore specifico che l'ha causato:
 
-Yes, there is a difference among the client errors and the server errors. 
-It has been accepted as reasonable as while for the client error the application can only specialize the tipology for what concerns the server erros the application can defined its own. This is depicted in the diagram a the end of the _Error management_ part of this chapter.
+Yes, there is a difference between the client errors and the server errors. 
+It has been accepted as reasonable as while for the client error, the application can only 
+specialize the typology for what concerns the server errors the application can define its own. 
+This is depicted in the diagram at the end of the _Error management_ part of this chapter.
 
 ```java
 public final class StorageNotAvailabledServerRequestErrorException extends ServerRequestErrorException {
@@ -376,9 +397,9 @@ public final class StorageNotAvailabledServerRequestErrorException extends Serve
 
 ---
 
-In this diagram is depicted the errors hierarchy and are given some hints.
+In this diagram is depicted the error hierarchy and are given some hints.
 
-![Errors hierarchy](./Errors%20hierarchy.png)
+![Errors hierarchy](./Errors-hierarchy.png)
 
 
 # How to write an application
@@ -387,18 +408,24 @@ In questo capitolo si spiega in modo pratico come scrivere un'applicazione utili
 platform e rispettando alcuni concetti di buon senso.  
 Viene usato come riferimento il progetto di esempio 
 [ex-platform-service-runtime](./../ex-platform-service-runtime/).  
-Come detto in precedenza il progetto `platform-service-runtime` non è pensato per essere utilizzato direttamente da
+Come detto in precedenza il progetto `platform-service-runtime` non è pensato per essere utilizzato 
+direttamente da
 un'applicazione, ma per funzionare come base per implementazioni più specifiche, comunque questo 
 _How to_ e il progetto a cui fa riferimento è utile per apprendere i concetti base 
 per poi sfruttarli sia per capire come implementare un progetto più specifico basato su 
 `platform-service-runtime` e sia per utilizzare quelli già messi a disposizione da EMW7 platform.
 
 Come esempio verrà implementato un'API che permette di creare e rimuovere sensori.  
-L'API sarà implementata/simulata tramite command line, dove il primo argomento è l'endpoint da invocare e i seguenti sono i parametri dell'endpoint stesso:
-- ./run.sh create 100000 "Sensor A" 1
+L'API sarà implementata/simulata tramite command line, dove il primo argomento è l'endpoint da 
+invocare e i seguenti sono i parametri dell'endpoint stesso:
+
+```shell
+$ ./run.sh create 100000 "Sensor A" 1
                   ^code  ^name      ^type
-- ./run.sh delete 100000
+
+$ ./run.sh delete 100000
                   ^code
+```
 
 Inoltre, specificando dei code particolari è possibile simulare dell'eccezioni. Si veda il codice sorgente per i dettagli.
 

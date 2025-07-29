@@ -31,7 +31,7 @@ public non-sealed class BasicClientExceptionHandler extends AbstractClientExcept
     super(objectMapper, translator);
   }
 
-  public final RequestErrorResponse handle (@NonNull final ClientRequestErrorException error) {
+  public RequestErrorResponse handle (@NonNull final ClientRequestErrorException error) {
     return buildRequestErrorResponse(error);
   }
 

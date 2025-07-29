@@ -10,6 +10,7 @@ import com.github.emw7.platform.service.core.common.request.error.model.RequestE
 import com.github.emw7.platform.service.runtime.error.handler.AbstractClientExceptionHandler;
 import com.github.emw7.platform.service.runtime.error.handler.AbstractExceptionHandler;
 import com.github.emw7.platform.service.runtime.error.handler.AbstractServerExceptionHandler;
+import com.github.emw7.platform.service.runtime.error.handler.BasicServerExceptionHandler;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
@@ -20,7 +21,7 @@ import org.springframework.stereotype.Component;
  * delegates creation of (error) response to {@link AbstractServerExceptionHandler#buildRequestErrorResponse(RequestErrorException)}
  */
 @Component
-public class ServerExHandler extends AbstractServerExceptionHandler {
+public class ServerExHandler extends BasicServerExceptionHandler {
 
   private final ObjectMapper objectMapper;
 
@@ -37,8 +38,8 @@ public class ServerExHandler extends AbstractServerExceptionHandler {
    * <p>
    * {@code handle} is an arbitrary name.
    */
-  public RequestErrorResponse handle (@NonNull final ServerRequestErrorException error) {
-    final RequestErrorResponse errorResponse= buildRequestErrorResponse(error);
+  public final RequestErrorResponse handle (@NonNull final ServerRequestErrorException error) {
+    final RequestErrorResponse errorResponse= super.handle(error);
     try {
       final String json= objectMapper.writeValueAsString(errorResponse);
       System.err.printf("SERVER request error: %s%n", json);

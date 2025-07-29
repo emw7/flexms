@@ -8,7 +8,7 @@ import org.springframework.lang.NonNull;
 public final class SensorNotFoundClientException extends NotFoundClientException {
 
   public SensorNotFoundClientException(@NonNull final Id id, @NonNull final String sensorCode) {
-    super(id, Sensor.RESOURCE_NAME, sensorCode, null);
+    super(id, Sensor.RESOURCE_NAME, sensorCode);
   }
 
 }

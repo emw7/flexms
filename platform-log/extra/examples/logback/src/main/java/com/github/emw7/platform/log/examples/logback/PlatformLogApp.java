@@ -61,7 +61,7 @@ public class PlatformLogApp {
 
     final long te = System.nanoTime();
 
-    System.err.printf("[%s] duration after 5E6 e few more log rows: %d milliseconds%n", formatter.format(LocalDateTime.now()), Duration.ofNanos(te-ts).toMillis());
+    System.err.printf("[%s] duration after %.2e e few more log rows: %d milliseconds%n", formatter.format(LocalDateTime.now()), (double)log_rows, Duration.ofNanos(te-ts).toMillis());
 
     Thread.ofVirtual().factory().newThread( () -> {
     try {

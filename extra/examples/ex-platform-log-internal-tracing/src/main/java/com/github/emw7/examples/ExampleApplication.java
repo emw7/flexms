@@ -1,4 +1,4 @@
-package com.github.emw7.examples.logtracing;
+package com.github.emw7.examples;
 
 import com.github.emw7.examples.api.ExampleController;
 import org.springframework.beans.factory.annotation.Autowired;

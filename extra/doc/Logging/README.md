@@ -15,7 +15,8 @@ message is not be printed.
 
 The EMW7 platform logging system (from now on event logger) changes the message types by defining 
 the following types: `notice`, `doing`, `done`, `throwing` and `caught`.  
-These types are called log evenys.  
+These types are called log events.  
+These types are called log events.  
 Each of these types is associated with a classic type (which from now on will be called level) which,
 however, can be changed, with some constraints, when you write the logging instruction.  
 Example (we will see the details of these instructions in a bit, which are, however, partial):
@@ -187,7 +188,7 @@ The following is the sequence diagram of the flow depicted above:
 ## log-on-thread
 
 **ATTENTION**: even if this feature has been designed to improve the performance, it has not been
-benchmarked so there is not proof that enabling it actually improves the performance.
+benchmarked, so there is no proof that enabling it actually improves the performance.
 
 Log on thread is a feature that, if enabled, actual invocation of SLF4J is delegated, by log 
 event, to a thread. This feature has been designed to improve the performance as actual printing 

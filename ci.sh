@@ -21,14 +21,17 @@ set -eEu
 help ()
 {
     cat <<-EOD
-        ci.sh mode arguments
+        ci.sh mode <mode argument> -- arguments
             mode:
               help
-              build
+              build: active mvn package
+
+	    mode arguments:
+	      --clean: ctivate mvn clean
+	      --install: activate mvn install
 
             arguments:
-              must be placed after --
-              example: ci.sh build -- -am
+              example: ci.sh build --clean -- -am
 EOD
 }
 

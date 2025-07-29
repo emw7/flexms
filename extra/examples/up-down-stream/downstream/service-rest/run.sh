@@ -8,6 +8,6 @@
 # JAVA_OPTS='-Dcom.github.emw7.platform.log.trace-enabled=false'
 # (example JAVA_OPTS='-Dcom.github.emw7.platform.log.trace-enabled=false' ../run.sh)
 
-APP=ex-up-down-stream-upstream-0.0.1-SNAPSHOT.jar
+APP=ex-up-down-stream-downstream-service-rest-0.0.1-SNAPSHOT.jar
 
 java $JAVA_OPTS -jar target/$APP "$@"

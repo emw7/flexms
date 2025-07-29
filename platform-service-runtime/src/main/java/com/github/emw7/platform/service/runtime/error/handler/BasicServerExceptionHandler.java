@@ -32,7 +32,7 @@ public non-sealed class BasicServerExceptionHandler extends AbstractServerExcept
     super(objectMapper, translator);
   }
 
-  public final RequestErrorResponse handle (@NonNull final ServerRequestErrorException error) {
+  public RequestErrorResponse handle (@NonNull final ServerRequestErrorException error) {
     return buildRequestErrorResponse(error);
   }
 

@@ -49,11 +49,11 @@ There is also a list of [pre-instrumented projects](https://docs.micrometer.io/m
 
 # The project
 
-Lo scopo del progetto è quello di far vedere come stampare `trace-id` e `span-id` nelle righe di 
-log usando [EMW7 platform logging framework](../../doc/Logging/README.md).
+The purpose of this project is to demonstrate how to print trace-id and span-id in log lines using 
+the [EMW7 platform logging framework](../../doc/Logging/README.md).
 
 The project is configured to used `logback` that, in turn, is configured with a pattern that prints `traceId` 
-and `spanId` MDC fields. Such a fields are put in the MDC by micrometer as ([Observability with Spring Boot 3 :: WebMvc Server Setup](https://spring.io/blog/2022/10/12/observability-with-spring-boot-3#webmvc-server-setup)):
+and `spanId` MDC fields. Micrometer puts such a fields in the MDC as ([Observability with Spring Boot 3 :: WebMvc Server Setup](https://spring.io/blog/2022/10/12/observability-with-spring-boot-3#webmvc-server-setup)):
 > Since we have Micrometer Tracing on the classpath, the logs are automatically correlated (that is, they contain a unique trace identifier).
 
 The following are the minimal dependencies set that has been identified to enable tracing:
@@ -72,7 +72,7 @@ The following are the minimal dependencies set that has been identified to enabl
 </dependency>
 ```
 
-Following is the output of an execution of the example with this configuration:
+Following is the output of an example execution with this configuration:
 - com.github.emw7.platform.log.trace-data-not-available-label=N/A.
 
 The rest of the section will refer to this output as a reference to explain some concepts.
@@ -123,7 +123,7 @@ The `actionC` (that is `@Observed`):
   4240eac59ceb21df281d7715b1754819/ee0c1f87609f4aee.
 - Start a new tracing context when called from the `SpringBootApplication`: ef198c000a3d31681a900d189184f3b5/1634ddeb1b571c32.
 
-Another interesting thing to be stressed is that then of `ExampleServiceA#serviceAActionSAA` is 
+Another interesting thing to be stressed is that when `ExampleServiceA#serviceAActionSAA` is 
 called from within `ExampleController#actionA` a new span-id is started but the trace-id is 
 preserved: ef198c000a3d31681a900d189184f3b5/0d147832cdf99a9e.
 
